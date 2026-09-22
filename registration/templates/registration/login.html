@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page - Varsity Connect{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+
+    <!-- Top Greeting Box -->
+    <div style="width: 100%; max-width: 600px; background: var(--white); border: 1px solid var(--line); border-radius: 4px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+        <h2 style="font-family: 'Roboto Light', sans-serif; font-size: 20px; color: var(--ink); margin: 0 0 6px 0;">Home Page</h2>
+    </div>
+
+    <!-- Main Two-Column Container Layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
+
+        <!-- LEFT SIDE: REGISTRATION -->
+        <div style="background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+            <h3 style="font-family: 'Roboto Light', sans-serif; font-size: 22px; color: var(--ink); margin: 0 0 20px 0; font-weight: bolder;">Only for first time users!!!</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in register_form %}
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div style="font-size: 11px; color: var(--ink-soft); margin-top: 4px;">{{ field.help_text|safe }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div style="color: #c53030; font-size: 11px; margin-top: 4px;">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" name="save" style="background: var(--navy); color: var(--white); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 10px;">
+                    Create New Profile
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE: SIGN IN -->
+        <div style="background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+            <div class="create-form login-card" style="border-top: 4px solid var(--navy);">
+                <h2 style="font-family: 'Roboto Light', sans-serif; margin-top: 0; color: var(--ink); font-size: 22px; margin-bottom: 6px;">Sign In</h2>
+                <p style="color: var(--ink-soft); font-size: 13px; margin-bottom: 20px;">
+                    Access your account using your credentials.
+                </p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div style="background: #fff5f5; border: 1px solid #b2cafe; padding: 10px; border-radius: 4px; margin-bottom: 16px; color: #c53030; font-size: 12px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% for field in login_form %}
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" name="login_submit" style="background: var(--navy); color: var(--white); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 8px;">
+                        Log In
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    form input {
+        width: 100% !important;
+        padding: 12px 18px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 50px !important;
+        font-size: 14px !important;
+        font-family: 'IBM Plex Sans', sans-serif !important;
+        background: #fbfbfb !important;
+        box-sizing: border-box !important;
+        display: block !important;
+    }
+    form input:focus {
+        outline: none !important;
+        border-color: var(--navy) !important;
+        background: var(--white) !important;
+    }
+    form ul {
+        padding-left: 18px;
+        margin: 4px 0;
+        font-size: 11px;
+        color: var(--ink-soft);
+    }
+    form li {
+        margin-bottom: 2px;
+    }
+</style>
+{% endblock %}

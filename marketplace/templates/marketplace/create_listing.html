@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Listing - Varsity Connect{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto; background: var(--white); padding: 32px; border: 1px solid var(--line); border-radius: 4px;">
+    <h1 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin-top: 0; margin-bottom: 8px;">Create a Listing</h1>
+    <p style="color: var(--ink-soft); font-size: 14px; margin-bottom: 24px;">List an item or service for fellow students on campus.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+
+        <button type="submit" style="background: var(--gold); color: var(--navy); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: var(--radius); cursor: pointer; width: 100%; margin-top: 16px;">
+            Publish Listing
+        </button>
+    </form>
+</div>
+{% endblock %}

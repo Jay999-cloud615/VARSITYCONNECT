@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Varsity Connect{% endblock %}
+<!-- Assuming you have a base layout -->
+
+{% block content %}
+<div class="dashboard-container" style="padding: 30px;">
+    <h1>Platform Dashboard</h1>
+    <p>Welcome back, {{ request.user.username }}! Here is what's happening recently across Varsity Connect.</p>
+
+    <!-- Section 1: Recent Course Materials -->
+    <section style="margin-top: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Latest Course Materials</h2>
+            <a href="{% url 'course_material' %}" style="color: var(--navy); font-weight: 600; text-decoration: none;">View All &rarr;</a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+            {% for resource in recent_resources %}
+            <div style="background: white; padding: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <span style="font-size: 10px; background: var(--navy); color: white; padding: 2px 6px; border-radius: 3px;">{{ resource.get_category_display }}</span>
+                <h4 style="margin: 10px 0; color: var(--navy);">{{ resource.title }}</h4>
+                <a href="{% url 'resource-download' resource.id %}" style="font-size: 12px; color: var(--gold-deep); text-decoration: none; font-weight: bold;">Download PDF</a>
+            </div>
+            {% empty %}
+            <p style="color: #666;">No course materials uploaded yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Section 2: Recent Marketing / Student Listings (Placeholder) -->
+    <section style="margin-top: 50px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Latest Marketplace & Marketing Items</h2>
+            <a href="{% url 'course_material' %}" style="color: var(--navy); font-weight: 600; text-decoration: none;">View All &rarr;</a>
+        </div>
+        <p style="color: #666;">Marketing and student item feeds will appear here next.</p>
+    </section>
+
+    <!-- Accommodations Section on Dashboard -->
+    <section style="margin-top: 50px;">
+    <div style="margin: 40px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-family: 'Fraunces', serif; font-size: 22px; color: var(--navy); margin: 0;">Featured Accommodations</h2>
+            <a href="{% url 'housing' %}" style="font-size: 13px; font-weight: 600; color: var(--navy); text-decoration: none;">View all &rarr;</a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+            {% for item in accommodations %}
+                <div style="background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;">
+
+                    <!-- Card Header -->
+                    <div style="background: var(--navy); padding: 16px; color: var(--white);">
+                        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--gold); letter-spacing: 1px;">Accommodation</span>
+                        <h3 style="font-family: 'Fraunces', serif; font-size: 18px; margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</h3>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div style="padding: 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <p style="font-size: 13px; color: var(--ink-soft); margin: 0 0 12px 0;">📍 {{ item.location }}</p>
+
+                        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; color: #b5822b; margin-bottom: 16px;">
+                            R{{ item.price_per_month|floatformat:0 }} <span style="font-size: 12px; font-weight: normal; color: var(--ink-soft);">/ month</span>
+                        </div>
+
+                        <div style="margin-top: auto; display: flex; gap: 8px;">
+                            <a href="{% url 'housing-detail' item.id %}" style="flex-grow: 1; background: transparent; color: var(--navy); border: 1px solid var(--navy); padding: 10px; font-weight: 600; font-size: 13px; border-radius: var(--radius); text-align: center; text-decoration: none;">
+                                Details
+                            </a>
+                            <a href="{% url 'start_conversation' item.landlord.username %}" style="background: var(--navy); color: var(--white); padding: 10px 14px; font-weight: 600; font-size: 13px; border-radius: var(--radius); text-align: center; text-decoration: none;">
+                                Chat
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            {% empty %}
+                <p style="color: var(--ink-soft); grid-column: 1 / -1;">No accommodations listed yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Student Portal{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --paper:#EFEAE1;
+          --paper-2:#E6DFD1;
+          --ink:#1C2430;
+          --ink-soft:#4A5568;
+          --navy: #1c2430;
+          --gold:#D9A441;
+          --gold-deep:#B5822B;
+          --teal:#2F6F62;
+          --teal-soft:#E4EEEC;
+          --clay: #d9a441;
+          --clay-soft:#F3E4E0;
+          --line: #d6c4af;
+          --white: #ffffff;
+          --radius:3px;
+        }
+        *{box-sizing:border-box;}
+        html,body{margin:0;padding:0;}
+        body{
+          background:var(--paper);
+          color:var(--ink);
+          font-family:'IBM Plex Sans', sans-serif;
+          -webkit-font-smoothing:antialiased;
+        }
+
+
+        .display{font-family:'Fraunces', serif;}
+        .mono{font-family:'IBM Plex Mono', monospace;}
+
+        /* ---------- App shell ---------- */
+        .app{min-height:100vh; display:flex; flex-direction:column;}
+
+        .topbar{
+          display:flex; align-items:center; justify-content:space-between;
+          padding:14px 24px;
+          background:var(--navy);
+          color:var(--white);
+          border-bottom:3px solid var(--gold);
+          gap:16px;
+        }
+        .top-left{display:flex; align-items:center; gap:16px;}
+        .brand{display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--white);}
+        .brand-mark{
+          display:inline-flex; align-items:center; justify-content:center;
+          width:30px; height:30px; background:var(--gold); color:var(--navy);
+          font-family:'Fraunces', serif; font-weight:600; font-size:16px;
+          border-radius:2px;
+        }
+        .brand-name{font-family:'Fraunces', serif; font-size:20px; letter-spacing:0.2px;}
+
+        .top-right{display:flex; align-items:center; gap:14px;}
+        .hamburger{display:flex; align-items:center; justify-content:center; background:none; border:none; color:var(--white); font-size:20px; cursor:pointer; width:34px; height:34px;}
+
+        .role-toggle{
+          display:flex; border:1px solid #3A4A61; border-radius:2px; overflow:hidden;
+        }
+        .role-toggle button{
+          padding:6px 12px; font-size:11px; letter-spacing:0.4px; text-transform:uppercase;
+          background:#28374B; color:#B9C2CE; border:none; cursor:pointer; font-family:'IBM Plex Sans',sans-serif;
+        }
+        .role-toggle button.active{background:var(--gold); color:var(--navy); font-weight:600;}
+
+        .icon-btn{
+          position:relative; width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+          border:1px solid #3A4A61; background:#28374B; border-radius:2px; cursor:pointer; color:var(--white);
+        }
+        .icon-btn .dot{
+          position:absolute; top:-4px; right:-4px; width:9px; height:9px; background:var(--clay);
+          border-radius:50%; border:2px solid var(--navy);
+        }
+
+        .shell{display:flex; flex:1; min-height:0; position:relative;}
+
+        /* ---------- Sidebar ---------- */
+        .sidebar{
+          width:240px; background:var(--white); border-right:1px solid var(--line);
+          padding:20px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
+        }
+        .sidebar.collapsed {
+          margin-left: -240px;
+        }
+        .nav-section-label{
+          font-size:10px; text-transform:uppercase; letter-spacing:1px; color:#9A9080;
+          padding:4px 20px 8px;
+        }
+        .nav-item{
+          display:flex; align-items:center; gap:12px;
+          padding:10px 20px; cursor:pointer; color:var(--ink-soft);
+          border-left:3px solid transparent;
+          font-size:14px; text-decoration:none;
+        }
+        .nav-item:hover{background:var(--paper-2);}
+        .nav-item.active{
+          border-left:3px solid var(--gold); background:var(--paper-2); color:var(--ink); font-weight:600;
+        }
+        .nav-tag{
+          width:28px; height:22px; display:flex; align-items:center; justify-content:center;
+          font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600;
+          background:var(--navy); color:var(--gold); border-radius:2px; flex-shrink:0;
+        }
+        .nav-item.active .nav-tag{background:var(--gold); color:var(--navy);}
+
+        /* ---------- Main content ---------- */
+        .content{flex:1; padding:28px 32px; overflow-y:auto;}
+
+        /* ---------- Responsive / Toggle Styles ---------- */
+        @media (max-width:860px){
+          .sidebar{
+            position:absolute; top:0; left:0; height:100%; z-index:60; margin-left:0;
+            transform:translateX(-100%); box-shadow:4px 0 20px rgba(0,0,0,0.15);
+          }
+          .sidebar.open{transform:translateX(0);}
+        }
+
+        :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+    </style>
+
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+
+</head>
+    <body class="{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}">
+        <div class="app">
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="top-left">
+                    <button class="hamburger" id="sidebarToggle" aria-label="Toggle Menu">&#9776;</button>
+                    <a href="{% url 'marketplace' %}" class="brand">
+                        <span class="brand-mark">V</span>
+                        <span class="brand-name">Varsity Connect</span>
+                    </a>
+                </div>
+                <div class="top-right">
+                    <div class="role-toggle">
+                        <button type="button" class="active" onclick="document.body.classList.remove('role-admin')">Student</button>
+                        <button type="button" onclick="window.location.href='{% url 'admin:index' %}'">Admin</button>
+                    </div>
+                    <div class="icon-btn" aria-label="Notifications">
+                        🔔
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="shell">
+            {% block sidebar %}
+            {% if user.is_authenticated %}
+            <!-- Sidebar Navigation matching exact design -->
+            <aside class="sidebar" id="sidebar">
+                <div class="nav-section-label">Menu</div>
+
+                <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <span class="nav-tag">DB</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{% url 'marketplace' %}" class="nav-item {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}">
+                    <span class="nav-tag">MP</span>
+                    <span>Marketplace</span>
+                </a>
+
+                <a href="{% url 'course_material' %}" class="nav-item {% if request.resolver_match.url_name == 'course_material' %}active{% endif %}">
+                    <span class="nav-tag">CM</span>
+                    <span>Course Material</span>
+                </a>
+
+                <a href="{% url 'housing' %}" class="nav-item {% if request.resolver_match.url_name == 'housing_jobs' %}active{% endif %}">
+                    <span class="nav-tag">HJ</span>
+                    <span>Housing & Jobs</span>
+                </a>
+
+                <a href="{% url 'messaging' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+                    <span class="nav-tag">MS</span>
+                    <span>Messages</span>
+                </a>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-item" style="width: 100%; background: none; border: none; text-align: left; cursor: pointer;">
+                        <span class="nav-tag" style="background:var(--navy); color:var(--gold); border-radius:2px; flex-shrink:0; font-weight:600;">LO</span>
+                        <span>Log Out</span>
+                    </button>
+                </form>
+
+            </aside>
+        {% endif %}
+        {% endblock %}
+
+                <!-- Main Content Area -->
+                <main class="content">
+                    {% block content %}
+                    {% endblock %}
+                </main>
+            </div>
+        </div>
+        <script>
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+
+            sidebarToggle.addEventListener('click', () => {
+                if (window.innerWidth <= 860) {
+                    sidebar.classList.toggle('open');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                }
+            });
+        </script>
+    </body>
+</html>

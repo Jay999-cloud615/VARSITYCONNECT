@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 20px; background: white; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+    
+    <h2 style="color: var(--navy); margin-top: 0;">Chat with {{ other_user.username }}</h2>
+    <hr style="border: none; border-top: 1px solid var(--line); margin-bottom: 20px;">
+
+    <!-- Message History Box -->
+    <div style="height: 400px; overflow-y: auto; border: 1px solid var(--line); padding: 15px; border-radius: 6px; background: #fdfdfd; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+        {% for message in messages %}
+            <div style="max-width: 70%; padding: 10px 14px; border-radius: 8px; {% if message.sender == request.user %} background: var(--navy); color: white; align-self: flex-end; {% else %} background: #eef2f6; color: #333; align-self: flex-start; {% endif %}">
+                <p style="margin: 0; font-size: 14px;">{{ message.body }}</p>
+                <span style="font-size: 10px; opacity: 0.7; display: block; margin-top: 4px; text-align: right;">{{ message.timestamp|time:"H:i" }}</span>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #888; margin-top: 150px;">No messages yet. Send a message to start the conversation!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Send Message Form -->
+    <form method="POST" style="display: flex; gap: 10px;">
+        {% csrf_token %}
+        <input type="text" name="body" placeholder="Type your message here..." required style="flex-grow: 1; padding: 12px; border: 1px solid var(--line); border-radius: 4px; outline: none;">
+        <button type="submit" style="background: var(--gold-deep); color: white; border: none; padding: 0 20px; font-weight: bold; border-radius: 4px; cursor: pointer;">Send</button>
+    </form>
+
+</div>
+{% endblock %}

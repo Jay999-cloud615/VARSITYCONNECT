@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Top Header with Title and Upload Action Button -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--line); padding-bottom: 15px;">
+    <div>
+        <h2 class="display" style="color: var(--navy); margin: 0; font-size: 26px;">Course Materials</h2>
+        <p style="margin: 4px 0 0 0; color: var(--ink-soft); font-size: 14px;">Scroll, browse, and download study resources shared on campus.</p>
+    </div>
+    <button type="button" onclick="toggleUploadForm()" id="uploadToggleBtn" style="background: var(--navy); color: var(--white); border: none; padding: 10px 18px; border-radius: 3px; font-weight: 600; font-size: 13px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span>+ Upload Document</span>
+    </button>
+</div>
+
+<!-- Hidden Upload Form Container (Toggles open when button is clicked) -->
+<div id="uploadSection" style="display: none; background: white; padding: 24px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid var(--gold); margin-bottom: 30px;">
+    <h3 class="display" style="margin-top: 0; color: var(--navy); font-size: 20px; margin-bottom: 16px;">Publish a New Document</h3>
+
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 14px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+            <button type="button" onclick="toggleUploadForm()" style="background: transparent; border: 1px solid var(--line); color: var(--ink-soft); padding: 10px 16px; border-radius: 3px; cursor: pointer; font-weight: 500;">Cancel</button>
+            <button type="submit" style="background: var(--gold-deep); color: var(--white); border: none; padding: 10px 20px; font-weight: 600; border-radius: 3px; cursor: pointer; text-transform: uppercase; font-size: 12px;">Submit & Publish</button>
+        </div>
+    </form>
+</div>
+
+<!-- Scrolling Grid of Documents -->
+<div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding-bottom: 40px;">
+    {% for resource in resources %}
+    <div class="card" style="background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.08); transition: transform 0.2s ease;">
+        <div class="card-image-container" style="background-color: var(--gold-deep); height: 130px; position: relative; padding: 10px;">
+            <span class="badge" style="background: var(--navy); color: white; padding: 3px 8px; font-size: 10px; font-weight: bold; border-radius: 3px; text-transform: uppercase;">
+                {{ resource.get_category_display }}
+            </span>
+        </div>
+
+        <div class="card-body" style="padding: 16px;">
+            <h3 style="margin: 0 0 6px 0; font-size: 16px; color: var(--navy); font-weight: 600;">{{ resource.title }}</h3>
+
+
+            <a href="{% url 'resource-download' resource.id %}" style="display: block; text-align: center; background: var(--navy); color: white; padding: 9px; text-decoration: none; border-radius: 3px; font-size: 13px; font-weight: 500; margin-bottom: 12px;">
+                Download PDF
+            </a>
+
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #666; border-top: 1px solid var(--line); padding-top: 8px;">
+                <span style="color: var(--gold);">★★★★★</span>
+                <span>By {{ resource.uploaded_by.username }}</span>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 4px; border: 1px dashed var(--line);">
+        <p style="color: var(--ink-soft); margin: 0 0 10px 0;">No course materials available yet.</p>
+        <span style="color: var(--gold-deep); font-weight: 600; cursor: pointer;" onclick="toggleUploadForm()">Click the upload button above to add the first one!</span>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Toggle Script & Form Styling -->
+<script>
+    function toggleUploadForm() {
+        const section = document.getElementById('uploadSection');
+        if (section.style.display === 'none' || section.style.display === '') {
+            section.style.display = 'block';
+            section.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            section.style.display = 'none';
+        }
+    }
+</script>
+
+<style>
+    /* Styling Django generated form fields to fit your design system */
+    #uploadSection form p {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        margin: 0;
+    }
+    #uploadSection form input[type="text"],
+    #uploadSection form input[type="number"],
+    #uploadSection form select,
+    #uploadSection form input[type="file"] {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        font-family: 'IBM Plex Sans', sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        font-weight: normal;
+    }
+    #uploadSection form input[type="file"] {
+        background: white;
+    }
+</style>
+{% endblock %}

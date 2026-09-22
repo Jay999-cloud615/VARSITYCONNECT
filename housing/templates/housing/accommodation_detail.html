@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+    
+    <a href="{% url 'housing' %}" style="color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 20px;">&larr; Back to Listings</a>
+
+    <span style="font-size: 10px; font-weight: bold; color: var(--navy); text-transform: uppercase; background: #eef2f6; padding: 3px 8px; border-radius: 3px;">Accommodation</span>
+    
+    <h1 style="color: var(--navy); margin: 15px 0 10px 0;">{{ accommodation.title }}</h1>
+    <p style="font-size: 15px; color: #555; margin-bottom: 20px;"> {{ accommodation.location }}</p>
+
+    <div style="font-size: 24px; font-weight: bold; color: var(--navy); margin-bottom: 25px;">
+        R{{ accommodation.price_per_month|floatformat:0 }} <span style="font-size: 14px; font-weight: normal; color: #666;">/ month</span>
+    </div>
+
+    {% if accommodation.image %}
+    <div style="margin-bottom: 25px;">
+        <img src="{{ accommodation.image.url }}" alt="{{ accommodation.title }}" style="max-width: 100%; height: auto; opacity:0.5 ; border-radius: 6px;">
+    </div>
+    {% endif %}
+
+    <hr style="border: none; border-top: 1px solid var(--line); margin: 20px 0;">
+
+    <h3 style="color: var(--navy);">Amenities & Features</h3>
+    <p style="color: #444; font-size: 14px;">{{ accommodation.amenities }}</p>
+
+    {% if accommodation.description %}
+    <h3 style="color: var(--navy); margin-top: 20px;">Description</h3>
+    <p style="color: #444; font-size: 14px; line-height: 1.5;">{{ accommodation.description }}</p>
+    {% endif %}
+
+    <hr style=" border: none; border-top: 20px solid var(--line); margin: 30px 0;">
+
+    <!-- Messaging App Integration Box -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 6px; border: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h4 style="margin: 0 0 5px 0; color: var(--navy);">Listed by {{ accommodation.landlord.username }}</h4>
+            <p style="margin: 0; font-size: 12px; color: #666;">Chat directly with the property owner about this listing.</p>
+        </div>
+        <div>
+            <!-- Links to your messaging app, passing the landlord's username -->
+            <a href="{% url 'start_conversation' accommodation.landlord.username %}" style="background: var(--gold-deep); color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;">
+                Message Landlord
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

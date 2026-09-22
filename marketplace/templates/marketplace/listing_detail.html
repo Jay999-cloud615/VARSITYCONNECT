@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing.title }} - Varsity Connect{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 30px auto; background: var(--white); border: 1px solid var(--line); border-radius: 4px; overflow: hidden;">
+    
+    <!-- Top Header Banner matching card colors -->
+    <div style="background: var(--navy); padding: 24px 32px; color: var(--white); position: relative;">
+        <a href="{% url 'marketplace' %}" style="position: absolute; top: 24px; right: 24px; color: var(--white); text-decoration: none; font-size: 20px;">✕</a>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--gold); letter-spacing: 1px;">Marketplace Listing</span>
+        <h1 style="font-family: 'Fraunces', serif; font-size: 26px; margin: 6px 0 0 0;">{{ listing.title }}</h1>
+    </div>
+
+    <!-- Gradient preview section -->
+    <div style="height: 180px; background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); padding: 16px; display: flex; align-items: flex-start;">
+        <span style="background: var(--navy); color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; padding: 4px 8px; border-radius: 2px;">{{ listing.get_category_display }}</span>
+    </div>
+
+    <!-- Content Body -->
+    <div style="padding: 32px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #b5822b; margin-bottom: 24px;">
+            R{{ listing.price }}{% if listing.price_suffix %}{{ listing.price_suffix }}{% endif %}
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">Description</h4>
+            <p style="font-size: 14px; color: var(--ink); line-height: 1.6; margin: 0;">{{ listing.description }}</p>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">Seller</h4>
+            <p style="font-size: 14px; color: var(--ink); margin: 0;">
+                {{ listing.seller.username }} · <span style="color: #d9a441;">★★★★★</span> ({{ listing.seller_sales_count }} completed sales) · {{ listing.location }}
+            </p>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">Posted</h4>
+            <p style="font-size: 14px; color: var(--ink); margin: 0;">
+                {{ listing.created_at|timesince }} ago · Category: {{ listing.get_category_display }} · Condition: {{ listing.condition }}
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="{% url 'start_conversation' listing.seller.username %}" style="background: var(--navy); color: var(--white); border: none; padding: 14px; font-weight: 600; font-size: 14px; border-radius: var(--radius); cursor: pointer; text-align: center; text-decoration: none; display: block;">
+                Contact seller
+            </a>
+            <button style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 14px; font-weight: 600; font-size: 14px; border-radius: var(--radius); cursor: pointer; text-align: center;">
+                Report listing
+            </button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

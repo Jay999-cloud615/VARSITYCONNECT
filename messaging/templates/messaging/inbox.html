@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 20px; background: white; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+    
+    <h2 style="color: var(--navy); margin-top: 0;">Your Messages</h2>
+    <hr style="border: none; border-top: 1px solid var(--line); margin-bottom: 20px;">
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        {% for item in chat_list %}
+            <a href="{% url 'chat-room' item.conversation.id %}" style="display: block; padding: 15px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; background: #fdfdfd; transition: background 0.2s;">
+                <h4 style="margin: 0 0 5px 0; color: var(--navy);">Chat with {{ item.other_user.username }}</h4>
+                <p style="margin: 0; font-size: 13px; color: #666;">
+                    {% if item.last_message %}
+                        {{ item.last_message.sender.username }}: {{ item.last_message.body|truncatechars:50 }}
+                    {% else %}
+                        No messages yet. Click to start chatting.
+                    {% endif %}
+                </p>
+            </a>
+        {% empty %}
+            <p style="text-align: center; color: #888; margin-top: 40px;">You have no active conversations yet. Visit an accommodation listing to message a landlord!</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
