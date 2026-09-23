@@ -3,10 +3,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
-from django.contrib.auth.decorators import  login_required
 
 
-@login_required
 def landing_auth_view(request):
 	create_form = UserCreationForm()
 	login_form = AuthenticationForm()
