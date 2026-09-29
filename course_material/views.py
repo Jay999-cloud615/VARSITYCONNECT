@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
@@ -26,4 +27,5 @@ def course_material_view(request):
 @login_required
 def download_resource_view(request, pk):
     resource = get_object_or_404(Resource, pk=pk)
-    return FileResponse(resource.pdf_file.open(), as_attachment=False, filename=resource.pdf_file.name.split('_')[-11])
+    filename = os.path.basename(resource.pdf_file.name)
+    return FileResponse(resource.pdf_file.open(), as_attachment=True, filename=filename)
