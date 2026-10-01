@@ -2,7 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def logout_thank_you_view(request):
+	logout(request)
+	return render(request, "registration/logout_thanks.html")
 
 
 def landing_auth_view(request):
@@ -27,8 +34,6 @@ def landing_auth_view(request):
 			if login_form.is_valid():
 				user = login_form.get_user()
 				login(request, user)
-				identifier = getattr(user, "username", getattr(user, "email", "User"))
-				messages.success(request, f"Welcome back, {identifier}!")
 				return redirect("dashboard")
 			else:
 				messages.error(request, "Invalid username or password.")

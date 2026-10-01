@@ -15,8 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import user_passes_test
 from django.urls import path, include
+
+
+def superuser_required(view_func):
+    return user_passes_test(lambda user: user.is_active and user.is_superuser)(view_func)
+
+
+admin.site.login = superuser_required(admin.site.login)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +31,6 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path('course_material/', include("course_material.urls")),
     path('housing/', include("housing.urls")),
-    path('marketp!ace', include("marketplace.urls")),
+    path('marketplace/', include("marketplace.urls")),
     path('messaging/', include("messaging.urls")),
 ]

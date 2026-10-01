@@ -8,30 +8,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root{
-          --paper:#EFEAE1;
-          --paper-2:#E6DFD1;
-          --ink:#1C2430;
-          --ink-soft:#4A5568;
-          --navy: #1c2430;
-          --gold:#D9A441;
-          --gold-deep:#B5822B;
-          --teal:#2F6F62;
-          --teal-soft:#E4EEEC;
-          --clay: #d9a441;
-          --clay-soft:#F3E4E0;
-          --line: #d6c4af;
-          --white: #ffffff;
-          --radius:3px;
+          --paper:#f4efe7;
+          --paper-2:#ece2d1;
+          --ink:#1b2430;
+          --ink-soft:#5b6472;
+          --navy:#15273f;
+          --navy-soft:#21395a;
+          --gold:#f3bf59;
+          --gold-deep:#d89a2d;
+          --teal:#2d7f75;
+          --teal-soft:#e9f6f3;
+          --lime:#d9f2c9;
+          --clay:#f2b7a8;
+          --clay-soft:#fdf1ee;
+          --line:#e3d7c8;
+          --white:#ffffff;
+          --radius:18px;
+          --shadow-soft:0 18px 40px rgba(21,39,63,0.12);
+          --shadow-card:0 12px 30px rgba(21,39,63,0.08);
         }
         *{box-sizing:border-box;}
         html,body{margin:0;padding:0;}
         body{
-          background:var(--paper);
+          background:
+            radial-gradient(circle at top left, rgba(243,191,89,0.22), transparent 28%),
+            radial-gradient(circle at bottom right, rgba(45,127,117,0.18), transparent 25%),
+            linear-gradient(135deg, #f7f2ea 0%, #f0eadf 100%);
           color:var(--ink);
           font-family:'IBM Plex Sans', sans-serif;
           -webkit-font-smoothing:antialiased;
         }
-
 
         .display{font-family:'Fraunces', serif;}
         .mono{font-family:'IBM Plex Mono', monospace;}
@@ -41,40 +47,49 @@
 
         .topbar{
           display:flex; align-items:center; justify-content:space-between;
-          padding:14px 24px;
-          background:var(--navy);
+          padding:16px 28px;
+          background:linear-gradient(135deg, var(--navy), var(--navy-soft));
           color:var(--white);
           border-bottom:3px solid var(--gold);
           gap:16px;
+          box-shadow:0 10px 25px rgba(15, 27, 42, 0.16);
         }
         .top-left{display:flex; align-items:center; gap:16px;}
         .brand{display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--white);}
         .brand-mark{
           display:inline-flex; align-items:center; justify-content:center;
-          width:30px; height:30px; background:var(--gold); color:var(--navy);
-          font-family:'Fraunces', serif; font-weight:600; font-size:16px;
-          border-radius:2px;
+          width:34px; height:34px; background:linear-gradient(135deg, var(--gold), #f9d27f);
+          color:var(--navy); box-shadow:0 8px 18px rgba(243,191,89,0.35);
+          font-family:'Fraunces', serif; font-weight:700; font-size:18px;
+          border-radius:10px;
         }
-        .brand-name{font-family:'Fraunces', serif; font-size:20px; letter-spacing:0.2px;}
+        .brand-name{font-family:'Fraunces', serif; font-size:22px; letter-spacing:0.2px;}
 
         .top-right{display:flex; align-items:center; gap:14px;}
-        .hamburger{display:flex; align-items:center; justify-content:center; background:none; border:none; color:var(--white); font-size:20px; cursor:pointer; width:34px; height:34px;}
+        .hamburger{
+          display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.08);
+          border:1px solid rgba(255,255,255,0.12); color:var(--white); font-size:20px; cursor:pointer;
+          width:38px; height:38px; border-radius:12px; transition:transform 0.2s ease, background 0.2s ease;
+        }
+        .hamburger:hover{transform:translateY(-1px); background:rgba(255,255,255,0.12);}
 
         .role-toggle{
-          display:flex; border:1px solid #3A4A61; border-radius:2px; overflow:hidden;
+          display:flex; border:1px solid rgba(255,255,255,0.15); border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.04);
         }
-        .role-toggle button{
-          padding:6px 12px; font-size:11px; letter-spacing:0.4px; text-transform:uppercase;
-          background:#28374B; color:#B9C2CE; border:none; cursor:pointer; font-family:'IBM Plex Sans',sans-serif;
+        .role-status{
+          display:inline-flex; align-items:center; padding:8px 14px; font-size:11px; letter-spacing:0.4px; text-transform:uppercase;
+          background:linear-gradient(135deg, var(--gold), #f8d783); color:var(--navy); border:none; font-weight:700; font-family:'IBM Plex Sans',sans-serif;
+          text-decoration:none;
         }
-        .role-toggle button.active{background:var(--gold); color:var(--navy); font-weight:600;}
+        .role-status[href]:hover{filter:brightness(1.05);}
 
         .icon-btn{
-          position:relative; width:34px; height:34px; display:flex; align-items:center; justify-content:center;
-          border:1px solid #3A4A61; background:#28374B; border-radius:2px; cursor:pointer; color:var(--white);
+          position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+          border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); border-radius:12px; cursor:pointer; color:var(--white);
+          box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
         }
         .icon-btn .dot{
-          position:absolute; top:-4px; right:-4px; width:9px; height:9px; background:var(--clay);
+          position:absolute; top:-4px; right:-4px; width:10px; height:10px; background:linear-gradient(135deg, var(--gold), var(--gold-deep));
           border-radius:50%; border:2px solid var(--navy);
         }
 
@@ -82,35 +97,42 @@
 
         /* ---------- Sidebar ---------- */
         .sidebar{
-          width:240px; background:var(--white); border-right:1px solid var(--line);
-          padding:20px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
+          width:250px; background:rgba(255,255,255,0.8); backdrop-filter:blur(8px); border-right:1px solid rgba(21,39,63,0.06);
+          padding:22px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
+          box-shadow:8px 0 22px rgba(21,39,63,0.04);
         }
-        .sidebar.collapsed {
-          margin-left: -240px;
-        }
+        .sidebar.collapsed {margin-left:-250px;}
         .nav-section-label{
-          font-size:10px; text-transform:uppercase; letter-spacing:1px; color:#9A9080;
+          font-size:10px; text-transform:uppercase; letter-spacing:1.4px; color:#8f9aa8;
           padding:4px 20px 8px;
         }
         .nav-item{
           display:flex; align-items:center; gap:12px;
-          padding:10px 20px; cursor:pointer; color:var(--ink-soft);
-          border-left:3px solid transparent;
-          font-size:14px; text-decoration:none;
+          padding:11px 18px; cursor:pointer; color:var(--ink-soft);
+          border-left:3px solid transparent; margin:4px 10px; border-radius:12px;
+          font-size:14px; text-decoration:none; transition:all 0.2s ease;
         }
-        .nav-item:hover{background:var(--paper-2);}
+        .nav-item:hover{background:linear-gradient(135deg, rgba(243,191,89,0.12), rgba(45,127,117,0.08)); transform:translateX(2px);}
         .nav-item.active{
-          border-left:3px solid var(--gold); background:var(--paper-2); color:var(--ink); font-weight:600;
+          border-left:3px solid var(--gold); background:linear-gradient(135deg, rgba(243,191,89,0.14), rgba(21,39,63,0.02)); color:var(--ink); font-weight:700;
+          box-shadow:inset 0 0 0 1px rgba(243,191,89,0.1);
         }
         .nav-tag{
-          width:28px; height:22px; display:flex; align-items:center; justify-content:center;
-          font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600;
-          background:var(--navy); color:var(--gold); border-radius:2px; flex-shrink:0;
+          width:30px; height:24px; display:flex; align-items:center; justify-content:center;
+          font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700;
+          background:linear-gradient(135deg, var(--navy), #21395a); color:var(--gold); border-radius:8px; flex-shrink:0;
         }
-        .nav-item.active .nav-tag{background:var(--gold); color:var(--navy);}
+        .nav-item.active .nav-tag{background:linear-gradient(135deg, var(--gold), #f7d98d); color:var(--navy);}
 
         /* ---------- Main content ---------- */
-        .content{flex:1; padding:28px 32px; overflow-y:auto;}
+        .content{flex:1; padding:32px 36px; overflow-y:auto;}
+        .content > *{
+          animation:fadeUp 0.45s ease both;
+        }
+        @keyframes fadeUp {
+          from {opacity:0; transform:translateY(10px);}
+          to {opacity:1; transform:translateY(0);}
+        }
 
         /* ---------- Responsive / Toggle Styles ---------- */
         @media (max-width:860px){
@@ -138,7 +160,9 @@
             <!-- Top Navigation Bar -->
             <header class="topbar">
                 <div class="top-left">
+                {% if user.is_authenticated %}
                     <button class="hamburger" id="sidebarToggle" aria-label="Toggle Menu">&#9776;</button>
+                {% endif %}
                     <a href="{% url 'marketplace' %}" class="brand">
                         <span class="brand-mark">V</span>
                         <span class="brand-name">Varsity Connect</span>
@@ -146,13 +170,19 @@
                 </div>
                 <div class="top-right">
                     <div class="role-toggle">
-                        <button type="button" class="active" onclick="document.body.classList.remove('role-admin')">Student</button>
-                        <button type="button" onclick="window.location.href='{% url 'admin:index' %}'">Admin</button>
+                    {% if user.is_authenticated and user.is_staff %}
+                      <a class="role-status" href="{% url 'admin:index' %}">Admin</a>
                     </div>
-                    <div class="icon-btn" aria-label="Notifications">
+                    {% else %}
+                      <span class="role-status">Student</span>
+                    </div>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'messaging' %}" class="icon-btn" aria-label="Open notifications and messages" title="Messages">
                         🔔
                         <span class="dot"></span>
-                    </div>
+                    </a>
+                    {% endif %}
                 </div>
             </header>
 
@@ -210,13 +240,15 @@
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebarToggle');
 
-            sidebarToggle.addEventListener('click', () => {
+            if (sidebar && sidebarToggle) {
+              sidebarToggle.addEventListener('click', () => {
                 if (window.innerWidth <= 860) {
-                    sidebar.classList.toggle('open');
+                  sidebar.classList.toggle('open');
                 } else {
-                    sidebar.classList.toggle('collapsed');
+                  sidebar.classList.toggle('collapsed');
                 }
-            });
+              });
+            }
         </script>
     </body>
 </html>

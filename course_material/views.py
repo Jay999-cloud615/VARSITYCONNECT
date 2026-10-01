@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
@@ -6,10 +8,10 @@ from .forms import ResourceUploadForm
 
 @login_required
 def course_material_view(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         form = ResourceUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            resource = form.save(commit=True)
+            resource = form.save(commit=False)
             resource.uploaded_by = request.user
             resource.save()
             return redirect('course_material')
@@ -26,4 +28,10 @@ def course_material_view(request):
 @login_required
 def download_resource_view(request, pk):
     resource = get_object_or_404(Resource, pk=pk)
-    return FileResponse(resource.pdf_file.open(), as_attachment=False, filename=resource.pdf_file.name.split('_')[-11])
+    filename = os.path.basename(resource.pdf_file.name)
+    return FileResponse(
+        resource.pdf_file.open('rb'),
+        as_attachment=True,
+        filename=filename,
+        content_type='application/pdf',
+    )

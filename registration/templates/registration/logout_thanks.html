@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="4;url={% url 'login' %}">
+    <title>Thanks for visiting | Varsity Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{--ink:#1b2430;--muted:#66717e;--navy:#15273f;--teal:#2d7f75;--gold:#f3bf59;--paper:#f4efe7;}
+        *{box-sizing:border-box;}
+        body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 15% 15%,rgba(243,191,89,.2),transparent 30%),radial-gradient(circle at 85% 85%,rgba(45,127,117,.16),transparent 28%),var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;}
+        main{width:min(100%,560px);padding:clamp(28px,7vw,56px);background:rgba(255,255,255,.9);border:1px solid rgba(21,39,63,.1);box-shadow:0 24px 60px rgba(21,39,63,.12);text-align:center;}
+        .brand{display:inline-flex;align-items:center;gap:10px;color:var(--navy);font:600 10px 'IBM Plex Mono',monospace;letter-spacing:1.2px;text-decoration:none;}
+        .brand-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--gold);font:600 20px 'Fraunces',serif;}
+        .eyebrow{margin:38px 0 12px;color:var(--teal);font:600 10px 'IBM Plex Mono',monospace;letter-spacing:1.4px;}
+        h1{margin:0;color:var(--navy);font:600 clamp(34px,7vw,48px)/1.05 'Fraunces',serif;}
+        .message{max-width:390px;margin:16px auto 0;color:var(--muted);font-size:15px;line-height:1.65;}
+        .redirect{display:flex;align-items:center;justify-content:center;gap:9px;margin:30px 0 20px;color:var(--muted);font-size:12px;}
+        .redirect-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(45,127,117,.12);}
+        .return-link{display:inline-block;padding:11px 16px;border-radius:4px;background:var(--navy);color:#fff;font-size:12px;font-weight:600;text-decoration:none;}
+        .return-link:hover{background:var(--teal);}
+    </style>
+</head>
+<body>
+    <main>
+        <a class="brand" href="{% url 'login' %}"><span class="brand-mark">V</span><span>VARSITY CONNECT</span></a>
+        <p class="eyebrow">SESSION ENDED</p>
+        <h1>Thanks for visiting.</h1>
+        <p class="message">You have been logged out successfully. We hope to see you back on campus soon.</p>
+        <p class="redirect"><span class="redirect-dot"></span>Taking you back to sign in shortly</p>
+        <a class="return-link" href="{% url 'login' %}">Return to login now</a>
+    </main>
+</body>
+</html>

@@ -32,7 +32,7 @@ def start_conversation_view(request, username):
 
 	# Prevent users from messaging themselves
 	if recipient == request.user:
-		return redirect('housing')
+		return redirect('messaging')
 
 	# Look for an existing conversation between these two users
 	conversation = Conversation.objects.filter(participants=request.user).filter(participants=recipient).first()

@@ -3,93 +3,115 @@
 {% block title %}Home Page - Varsity Connect{% endblock %}
 
 {% block content %}
-<div style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+<div style="max-width: 1200px; margin: 24px auto 40px; padding: 0 20px;">
+    <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: stretch;">
+        <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); color: white; border-radius: 28px; padding: 32px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; min-height: 220px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="position: absolute; inset: auto -40px -40px auto; width: 180px; height: 180px; background: rgba(243,191,89,0.13); border-radius: 50%;"></div>
+            <span style="display: inline-flex; align-items: center; width: fit-content; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #f5dca2; padding: 7px 12px; border-radius: 999px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600;">Student life, simplified</span>
+            <h1 style="margin: 16px 0 10px; font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 52px); line-height: 1.05; max-width: 440px;">Welcome back to your campus hub.</h1>
+            <p style="margin: 0; max-width: 440px; color: rgba(255,255,255,0.76); font-size: 15px; line-height: 1.6;">
+                Buy, sell, study, and connect with your campus community in one place.
+            </p>
+            <div style="margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px;">
+                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Marketplace</span>
+                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Course Notes</span>
+                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Housing</span>
+            </div>
+        </div>
 
-    <!-- Top Greeting Box -->
-    <div style="width: 100%; max-width: 600px; background: var(--white); border: 1px solid var(--line); border-radius: 4px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-        <h2 style="font-family: 'Roboto Light', sans-serif; font-size: 20px; color: var(--ink); margin: 0 0 6px 0;">Home Page</h2>
+        <div style="background: rgba(255,255,255,0.8); border: 1px solid rgba(21,39,63,0.06); border-radius: 28px; padding: 32px; box-shadow: var(--shadow-card); backdrop-filter: blur(8px);">
+            <h2 style="font-family: 'Fraunces', serif; color: var(--ink); margin: 0 0 8px; font-size: 32px;">Sign in</h2>
+            <p style="color: var(--ink-soft); margin: 0 0 20px; font-size: 14px;">Access your account using your credentials.</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="background: #fff2ee; border: 1px solid #f0c4b5; padding: 10px 12px; border-radius: 12px; margin-bottom: 16px; color: #a84c3a; font-size: 12px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in login_form %}
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" name="login_submit" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 14px 18px; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 8px; box-shadow: 0 12px 22px rgba(243,191,89,0.35); transition: transform 0.2s ease;">
+                    Log In
+                </button>
+            </form>
+        </div>
     </div>
 
-    <!-- Main Two-Column Container Layout -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-
-        <!-- LEFT SIDE: REGISTRATION -->
-        <div style="background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-            <h3 style="font-family: 'Roboto Light', sans-serif; font-size: 22px; color: var(--ink); margin: 0 0 20px 0; font-weight: bolder;">Only for first time users!!!</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; margin-top: 28px;">
+        <div style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 28px; padding: 30px; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0 0 10px;">Create profile</h3>
+            <p style="color: var(--ink-soft); margin: 0 0 20px; font-size: 14px;">New to the network? Set up your account in a minute.</p>
 
             <form method="POST">
                 {% csrf_token %}
 
                 {% for field in register_form %}
                     <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">{{ field.label }}</label>
+                        <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">{{ field.label }}</label>
                         {{ field }}
                         {% if field.help_text %}
-                            <div style="font-size: 11px; color: var(--ink-soft); margin-top: 4px;">{{ field.help_text|safe }}</div>
+                            <div style="font-size: 11px; color: var(--ink-soft); margin-top: 6px;">{{ field.help_text|safe }}</div>
                         {% endif %}
                         {% if field.errors %}
-                            <div style="color: #c53030; font-size: 11px; margin-top: 4px;">{{ field.errors.0 }}</div>
+                            <div style="color: #c53030; font-size: 11px; margin-top: 6px;">{{ field.errors.0 }}</div>
                         {% endif %}
                     </div>
                 {% endfor %}
 
-                <button type="submit" name="save" style="background: var(--navy); color: var(--white); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 10px;">
+                <button type="submit" name="save" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: var(--white); border: none; padding: 14px 18px; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 10px; box-shadow: 0 12px 20px rgba(21,39,63,0.18);">
                     Create New Profile
                 </button>
             </form>
         </div>
 
-        <!-- RIGHT SIDE: SIGN IN -->
-        <div style="background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-            <div class="create-form login-card" style="border-top: 4px solid var(--navy);">
-                <h2 style="font-family: 'Roboto Light', sans-serif; margin-top: 0; color: var(--ink); font-size: 22px; margin-bottom: 6px;">Sign In</h2>
-                <p style="color: var(--ink-soft); font-size: 13px; margin-bottom: 20px;">
-                    Access your account using your credentials.
-                </p>
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <div style="background: #fff5f5; border: 1px solid #b2cafe; padding: 10px; border-radius: 4px; margin-bottom: 16px; color: #c53030; font-size: 12px;">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    {% for field in login_form %}
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                    {% endfor %}
-
-                    <button type="submit" name="login_submit" style="background: var(--navy); color: var(--white); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 8px;">
-                        Log In
-                    </button>
-                </form>
+        <div style="background: linear-gradient(135deg, rgba(45,127,117,0.08), rgba(243,191,89,0.1)); border: 1px solid rgba(45,127,117,0.14); border-radius: 28px; padding: 30px; box-shadow: var(--shadow-card);">
+            <h3 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0 0 10px;">Why students use it</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px;">
+                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
+                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Find essentials fast</strong>
+                    <span style="color: var(--ink-soft); font-size: 13px;">Browse housing, campus items, and student services in one place.</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
+                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Study smarter</strong>
+                    <span style="color: var(--ink-soft); font-size: 13px;">Access shared course notes and study materials from fellow students.</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
+                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Stay connected</strong>
+                    <span style="color: var(--ink-soft); font-size: 13px;">Message landlords, buyers, and classmates without leaving the platform.</span>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <style>
     form input {
         width: 100% !important;
-        padding: 12px 18px !important;
-        border: 1px solid var(--line) !important;
-        border-radius: 50px !important;
+        padding: 13px 16px !important;
+        border: 1px solid rgba(21,39,63,0.12) !important;
+        border-radius: 12px !important;
         font-size: 14px !important;
         font-family: 'IBM Plex Sans', sans-serif !important;
-        background: #fbfbfb !important;
+        background: rgba(255,255,255,0.9) !important;
         box-sizing: border-box !important;
         display: block !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
     form input:focus {
         outline: none !important;
-        border-color: var(--navy) !important;
+        border-color: rgba(243,191,89,0.9) !important;
+        box-shadow: 0 0 0 4px rgba(243,191,89,0.1) !important;
         background: var(--white) !important;
     }
     form ul {
