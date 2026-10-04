@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -30,6 +31,44 @@ class LogoutTests(TestCase):
         self.assertRedirects(response, reverse('dashboard'))
         login_response = self.client.get(reverse('login'))
         self.assertNotContains(login_response, 'Welcome back, alice!')
+
+    def test_opening_login_page_logs_out_current_user(self):
+        response = self.client.get(reverse('login'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+        self.assertEqual(
+            self.client.get(reverse('dashboard')).status_code,
+            302,
+        )
+
+    def test_login_session_cookie_expires_when_browser_closes(self):
+        self.client.logout()
+        response = self.client.post(
+            reverse('login'),
+            {'username': 'alice', 'password': 'secret123', 'login_submit': '1'},
+        )
+
+        self.assertTrue(settings.SESSION_EXPIRE_AT_BROWSER_CLOSE)
+        self.assertEqual(response.cookies[settings.SESSION_COOKIE_NAME]['expires'], '')
+        self.assertEqual(response.cookies[settings.SESSION_COOKIE_NAME]['max-age'], '')
+
+    def test_another_user_can_log_in_after_opening_login_page(self):
+        get_user_model().objects.create_user(
+            username='bob',
+            password='secret456',
+        )
+        self.client.get(reverse('login'))
+
+        response = self.client.post(
+            reverse('login'),
+            {'username': 'bob', 'password': 'secret456', 'login_submit': '1'},
+        )
+
+        self.assertRedirects(response, reverse('dashboard'))
+        dashboard_response = self.client.get(reverse('dashboard'))
+        self.assertContains(dashboard_response, 'Welcome back, bob!')
+        self.assertNotContains(dashboard_response, 'Welcome back, alice!')
 
     def test_successful_login_returns_to_requested_page(self):
         self.client.logout()

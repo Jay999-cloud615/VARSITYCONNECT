@@ -14,6 +14,9 @@ def logout_thank_you_view(request):
 
 
 def landing_auth_view(request):
+	if request.user.is_authenticated:
+		logout(request)
+
 	create_form = UserCreationForm()
 	login_form = AuthenticationForm()
 

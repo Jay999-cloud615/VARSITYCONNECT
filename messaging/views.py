@@ -7,14 +7,17 @@ from .models import Conversation, Message
 
 @login_required
 def inbox_view(request):
-	# Get all conversations where the current user is a participant
-	conversations = request.user.conversations.order_by('-updated_at')
+	conversations = request.user.conversations.exclude(
+		hidden_for=request.user,
+	).order_by('-updated_at')
 
 	# Pre-fetch or structure the other participant for easy template rendering
 	chat_list = []
 	for conv in conversations:
 		other_user = conv.participants.exclude(id=request.user.id).first()
-		last_message = conv.messages.order_by('-timestamp').first()
+		last_message = conv.messages.exclude(
+			hidden_for=request.user,
+		).order_by('-timestamp').first()
 		chat_list.append({
 			'conversation': conv,
 			'other_user': other_user,
@@ -42,25 +45,33 @@ def start_conversation_view(request, username):
 	if not conversation:
 		conversation = Conversation.objects.create()
 		conversation.participants.add(request.user, recipient)
+	else:
+		conversation.hidden_for.remove(request.user)
 
 	return redirect('chat-room', conversation_id=conversation.id)
 
 
 @login_required
 def chat_room_view(request, conversation_id):
-	conversation = get_object_or_404(Conversation, id=conversation_id, participants=request.user)
+	conversation = get_object_or_404(
+		Conversation.objects.filter(participants=request.user).exclude(hidden_for=request.user),
+		id=conversation_id,
+	)
 
 	if request.method == 'POST':
 		body = request.POST.get('body')
 		if body:
+			other_users = conversation.participants.exclude(pk=request.user.pk)
 			Message.objects.create(
 				conversation=conversation,
 				sender=request.user,
 				body=body
 			)
+			conversation.hidden_for.remove(*other_users)
+			conversation.save()
 			return redirect('chat-room', conversation_id=conversation.id)
 
-	messages = conversation.messages.order_by('timestamp')
+	messages = conversation.messages.exclude(hidden_for=request.user).order_by('timestamp')
 	# Get the other user in the conversation for the header display
 	other_user = conversation.participants.exclude(id=request.user.id).first()
 
@@ -76,14 +87,24 @@ def chat_room_view(request, conversation_id):
 @require_POST
 def delete_message_view(request, conversation_id, message_id):
 	conversation = get_object_or_404(
-		Conversation.objects.filter(participants=request.user),
+		Conversation.objects.filter(participants=request.user).exclude(hidden_for=request.user),
 		pk=conversation_id,
 	)
 	message = get_object_or_404(
 		Message,
 		pk=message_id,
 		conversation=conversation,
-		sender=request.user,
 	)
-	message.delete()
+	message.hidden_for.add(request.user)
 	return redirect('chat-room', conversation_id=conversation.pk)
+
+
+@login_required
+@require_POST
+def delete_conversation_view(request, conversation_id):
+	conversation = get_object_or_404(
+		Conversation.objects.filter(participants=request.user).exclude(hidden_for=request.user),
+		pk=conversation_id,
+	)
+	conversation.hidden_for.add(request.user)
+	return redirect('messaging')

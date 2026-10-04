@@ -125,3 +125,4 @@ MEDIA_ROOT = BASE_DIR
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'  # Where users go after successfully logging in
 LOGOUT_REDIRECT_URL = '/dashboard/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

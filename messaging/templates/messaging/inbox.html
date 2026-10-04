@@ -7,16 +7,22 @@
     </div>
     <div style="display: flex; flex-direction: column; gap: 12px;">
         {% for item in chat_list %}
-            <a href="{% url 'chat-room' item.conversation.id %}" style="display: block; padding: 18px 18px; border: 1px solid rgba(21,39,63,0.08); border-radius: 18px; text-decoration: none; background: rgba(255,255,255,0.7); transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 8px 18px rgba(21,39,63,0.04);">
-                <h4 style="margin: 0 0 6px 0; color: var(--navy); font-size: 18px;">Chat with {{ item.other_user.username }}</h4>
-                <p style="margin: 0; font-size: 13px; color: var(--ink-soft);">
-                    {% if item.last_message %}
-                        {{ item.last_message.sender.username }}: {{ item.last_message.body|truncatechars:50 }}
-                    {% else %}
-                        No messages yet. Click to start chatting.
-                    {% endif %}
-                </p>
-            </a>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 18px; border: 1px solid rgba(21,39,63,0.08); border-radius: 18px; background: rgba(255,255,255,0.7); box-shadow: 0 8px 18px rgba(21,39,63,0.04);">
+                <a href="{% url 'chat-room' item.conversation.id %}" style="flex: 1; min-width: 0; text-decoration: none;">
+                    <h4 style="margin: 0 0 6px 0; color: var(--navy); font-size: 18px;">Chat with {{ item.other_user.username }}</h4>
+                    <p style="margin: 0; font-size: 13px; color: var(--ink-soft);">
+                        {% if item.last_message %}
+                            {{ item.last_message.sender.username }}: {{ item.last_message.body|truncatechars:50 }}
+                        {% else %}
+                            No messages yet. Click to start chatting.
+                        {% endif %}
+                    </p>
+                </a>
+                <form method="post" action="{% url 'delete-conversation' item.conversation.id %}" onsubmit="return confirm('Remove this conversation from your inbox? The other person will still have their messages.');">
+                    {% csrf_token %}
+                    <button type="submit" style="padding: 9px 12px; border: 0; border-radius: 10px; background: #a33b35; color: white; font-weight: 700; cursor: pointer;">Delete</button>
+                </form>
+            </div>
         {% empty %}
             <p style="text-align: center; color: var(--ink-soft); margin-top: 32px;">You have no active conversations yet. Visit a marketplace listing or job post to start chatting!</p>
         {% endfor %}

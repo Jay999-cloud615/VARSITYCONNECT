@@ -37,6 +37,12 @@
                 <a href="{% url 'job-detail' job.pk %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: var(--navy); background: rgba(21,39,63,0.05); border-radius: 12px; font-weight: 700;">Details</a>
                 <a href="{% url 'start_conversation' job.posted_by.username %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: white; background: var(--navy); border-radius: 12px; font-weight: 700;">Contact</a>
             </div>
+            {% if job.posted_by_id == request.user.id %}
+            <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');" style="margin-top: 10px;">
+                {% csrf_token %}
+                <button type="submit" style="width: 100%; padding: 10px; color: white; background: #a33b35; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Delete my job post</button>
+            </form>
+            {% endif %}
         </article>
         {% empty %}
         <p style="color: var(--ink-soft); grid-column: 1 / -1;">No jobs listed yet. Post the first opportunity for your campus.</p>

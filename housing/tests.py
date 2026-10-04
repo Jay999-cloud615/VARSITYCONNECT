@@ -38,6 +38,47 @@ class JobBoardTests(TestCase):
         self.assertNotIn('accommodation', self.client.get(reverse('jobs')).content.decode().lower())
         self.assertEqual(self.client.get('/housing/').status_code, 404)
 
+    def test_job_owner_can_delete_job_from_jobs_list(self):
+        job = Job.objects.create(
+            title='Weekend tutor',
+            location='On campus',
+            description='Tutor first-year students.',
+            posted_by=self.user,
+        )
+
+        list_response = self.client.get(reverse('jobs'))
+
+        self.assertContains(
+            list_response,
+            'action="{}"'.format(reverse('job-delete', args=[job.pk])),
+        )
+        self.assertContains(list_response, 'Delete my job post')
+
+        response = self.client.post(reverse('job-delete', args=[job.pk]))
+
+        self.assertRedirects(response, reverse('jobs'))
+        self.assertFalse(Job.objects.filter(pk=job.pk).exists())
+
+    def test_job_list_does_not_show_delete_button_for_another_users_job(self):
+        other_user = get_user_model().objects.create_user(
+            username='other',
+            password='secret123',
+        )
+        job = Job.objects.create(
+            title='Protected role',
+            location='Remote',
+            description='A protected job listing.',
+            posted_by=other_user,
+        )
+
+        response = self.client.get(reverse('jobs'))
+
+        self.assertNotContains(
+            response,
+            'action="{}"'.format(reverse('job-delete', args=[job.pk])),
+        )
+        self.assertNotContains(response, 'Delete my job post')
+
     def test_other_user_cannot_delete_job(self):
         other_user = get_user_model().objects.create_user(username='other', password='secret123')
         job = Job.objects.create(
