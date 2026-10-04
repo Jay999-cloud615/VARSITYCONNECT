@@ -3,126 +3,312 @@
 {% block title %}Home Page - Varsity Connect{% endblock %}
 
 {% block content %}
-<div style="max-width: 1200px; margin: 24px auto 40px; padding: 0 20px;">
-    <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: stretch;">
-        <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); color: white; border-radius: 28px; padding: 32px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; min-height: 220px; display: flex; flex-direction: column; justify-content: center;">
-            <div style="position: absolute; inset: auto -40px -40px auto; width: 180px; height: 180px; background: rgba(243,191,89,0.13); border-radius: 50%;"></div>
-            <span style="display: inline-flex; align-items: center; width: fit-content; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #f5dca2; padding: 7px 12px; border-radius: 999px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600;">Student life, simplified</span>
-            <h1 style="margin: 16px 0 10px; font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 52px); line-height: 1.05; max-width: 440px;">Welcome back to your campus hub.</h1>
-            <p style="margin: 0; max-width: 440px; color: rgba(255,255,255,0.76); font-size: 15px; line-height: 1.6;">
-                Buy, sell, study, and connect with your campus community in one place.
-            </p>
-            <div style="margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px;">
-                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Marketplace</span>
-                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Course Notes</span>
-                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Student Jobs</span>
-            </div>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.8); border: 1px solid rgba(21,39,63,0.06); border-radius: 28px; padding: 32px; box-shadow: var(--shadow-card); backdrop-filter: blur(8px);">
-            <h2 style="font-family: 'Fraunces', serif; color: var(--ink); margin: 0 0 8px; font-size: 32px;">Sign in</h2>
-            <p style="color: var(--ink-soft); margin: 0 0 20px; font-size: 14px;">Access your account using your credentials.</p>
+<div class="auth-page">
+    <section class="auth-shell">
+        <div class="auth-login-panel">
+            <div class="auth-brand-mark" aria-hidden="true">V</div>
+            <h1 class="auth-title">Welcome back!</h1>
+            <p class="auth-subtitle">Good to have you back. Sign in to see what’s happening on campus.</p>
 
             {% if messages %}
                 {% for message in messages %}
-                    <div style="background: #fff2ee; border: 1px solid #f0c4b5; padding: 10px 12px; border-radius: 12px; margin-bottom: 16px; color: #a84c3a; font-size: 12px;">
-                        {{ message }}
-                    </div>
+                    <div class="auth-message">{{ message }}</div>
                 {% endfor %}
             {% endif %}
 
-            <form method="POST">
+            <form method="POST" class="auth-login-form">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
 
                 {% for field in login_form %}
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">{{ field.label }}</label>
+                    <div class="auth-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
+                        {% if field.errors %}
+                            <div class="auth-field-error">{{ field.errors.0 }}</div>
+                        {% endif %}
                     </div>
                 {% endfor %}
 
-                <button type="submit" name="login_submit" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 14px 18px; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 8px; box-shadow: 0 12px 22px rgba(243,191,89,0.35); transition: transform 0.2s ease;">
+                <button type="submit" name="login_submit" class="auth-submit">
                     Log In
                 </button>
             </form>
-        </div>
-    </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; margin-top: 28px;">
-        <div style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 28px; padding: 30px; box-shadow: var(--shadow-card);">
-            <h3 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0 0 10px;">Create profile</h3>
-            <p style="color: var(--ink-soft); margin: 0 0 20px; font-size: 14px;">New to the network? Set up your account in a minute.</p>
-
-            <form method="POST">
-                {% csrf_token %}
-
-                {% for field in register_form %}
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <div style="font-size: 11px; color: var(--ink-soft); margin-top: 6px;">{{ field.help_text|safe }}</div>
-                        {% endif %}
-                        {% if field.errors %}
-                            <div style="color: #c53030; font-size: 11px; margin-top: 6px;">{{ field.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-
-                <button type="submit" name="save" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: var(--white); border: none; padding: 14px 18px; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 10px; box-shadow: 0 12px 20px rgba(21,39,63,0.18);">
-                    Create New Profile
-                </button>
-            </form>
+            <p class="auth-switch">New to Varsity Connect? <a href="{% url 'register' %}">Create your profile</a></p>
         </div>
 
-        <div style="background: linear-gradient(135deg, rgba(45,127,117,0.08), rgba(243,191,89,0.1)); border: 1px solid rgba(45,127,117,0.14); border-radius: 28px; padding: 30px; box-shadow: var(--shadow-card);">
-            <h3 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0 0 10px;">Why students use it</h3>
-            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px;">
-                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
-                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Find essentials fast</strong>
-                    <span style="color: var(--ink-soft); font-size: 13px;">Browse student jobs, campus items, and student services in one place.</span>
-                </div>
-                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
-                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Study smarter</strong>
-                    <span style="color: var(--ink-soft); font-size: 13px;">Access shared course notes and study materials from fellow students.</span>
-                </div>
-                <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
-                    <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Stay connected</strong>
-                    <span style="color: var(--ink-soft); font-size: 13px;">Message landlords, buyers, and classmates without leaving the platform.</span>
-                </div>
+        <aside class="auth-art" aria-label="Varsity Connect campus community">
+            <div class="auth-art-copy">
+                <span class="auth-art-label">For campus life</span>
+                <h2>Find your people.<br>Share what you know.</h2>
+                <p>Swap useful finds, pass along study notes, and stay in touch with your campus community.</p>
             </div>
-        </div>
-    </div>
+            <div class="auth-art-orb" aria-hidden="true"></div>
+        </aside>
+    </section>
+
 </div>
 
 <style>
-    form input {
-        width: 100% !important;
-        padding: 13px 16px !important;
-        border: 1px solid rgba(21,39,63,0.12) !important;
-        border-radius: 12px !important;
-        font-size: 14px !important;
-        font-family: 'IBM Plex Sans', sans-serif !important;
-        background: rgba(255,255,255,0.9) !important;
-        box-sizing: border-box !important;
-        display: block !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    .auth-page {
+        width: min(1120px, 100%);
+        margin: 8px auto 40px;
     }
-    form input:focus {
-        outline: none !important;
-        border-color: rgba(243,191,89,0.9) !important;
-        box-shadow: 0 0 0 4px rgba(243,191,89,0.1) !important;
-        background: var(--white) !important;
+    .auth-shell {
+        min-height: 540px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--white);
+        box-shadow: var(--shadow-soft);
     }
-    form ul {
-        padding-left: 18px;
-        margin: 4px 0;
-        font-size: 11px;
+    .auth-login-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: min(420px, 100%);
+        margin: 0 auto;
+        padding: 48px 32px;
+    }
+    .auth-brand-mark {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 20px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--gold), #f9d27f);
+        color: var(--navy);
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 23px;
+    }
+    .auth-title {
+        margin: 0;
+        color: var(--ink);
+        text-align: center;
+        font-family: 'Fraunces', serif;
+        font-size: clamp(28px, 3vw, 36px);
+    }
+    .auth-subtitle {
+        margin: 9px 0 26px;
         color: var(--ink-soft);
+        text-align: center;
+        font-size: 14px;
     }
-    form li {
-        margin-bottom: 2px;
+    .auth-login-form,
+    .auth-register-form {
+        display: grid;
+        gap: 16px;
+    }
+    .auth-field label {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+    }
+    .auth-field input {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 13px 15px;
+        border: 1px solid rgba(21,39,63,0.2);
+        border-radius: 12px;
+        background: var(--white);
+        color: var(--ink);
+        font: 14px 'IBM Plex Sans', sans-serif;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .auth-field input:focus {
+        outline: none;
+        border-color: var(--gold-deep);
+        box-shadow: 0 0 0 4px rgba(243,191,89,0.14);
+    }
+    .auth-field-error {
+        margin-top: 6px;
+        color: #a84c3a;
+        font-size: 12px;
+    }
+    .auth-help-text {
+        margin-top: 6px;
+        color: var(--ink-soft);
+        font-size: 11px;
+    }
+    .auth-help-text ul {
+        margin: 4px 0;
+        padding-left: 18px;
+    }
+    .auth-submit,
+    .auth-register-submit {
+        width: 100%;
+        margin-top: 4px;
+        padding: 13px 18px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--gold), #f7d98d);
+        color: var(--navy);
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(243,191,89,0.25);
+        transition: transform 0.2s ease;
+    }
+    .auth-submit:hover,
+    .auth-register-submit:hover {
+        transform: translateY(-1px);
+    }
+    .auth-switch {
+        margin: 20px 0 0;
+        color: var(--ink-soft);
+        text-align: center;
+        font-size: 13px;
+    }
+    .auth-switch a {
+        color: var(--gold-deep);
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .auth-switch a:hover {
+        text-decoration: underline;
+    }
+    .auth-message {
+        margin-bottom: 16px;
+        padding: 10px 12px;
+        border: 1px solid #f0c4b5;
+        border-radius: 12px;
+        background: #fff2ee;
+        color: #a84c3a;
+        font-size: 12px;
+    }
+    .auth-art {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        min-height: 100%;
+        overflow: hidden;
+        padding: 40px;
+        background-color: var(--navy);
+        background-image: radial-gradient(circle at 100% 100%, var(--navy-soft) 0 69%, transparent 70%);
+        background-size: 126px 126px;
+        color: var(--white);
+    }
+    .auth-art-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 310px;
+    }
+    .auth-art-label {
+        display: inline-flex;
+        margin-bottom: 14px;
+        padding: 7px 11px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 999px;
+        color: #f5dca2;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .auth-art h2 {
+        margin: 0 0 12px;
+        font-family: 'Fraunces', serif;
+        font-size: clamp(30px, 3.5vw, 44px);
+        line-height: 1.08;
+    }
+    .auth-art p {
+        margin: 0;
+        color: rgba(255,255,255,0.78);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .auth-art-orb {
+        position: absolute;
+        top: 28px;
+        right: 28px;
+        width: 86px;
+        height: 86px;
+        border: 1px solid rgba(243,191,89,0.45);
+        border-radius: 50%;
+        box-shadow: 0 0 0 14px rgba(243,191,89,0.08), 0 0 0 28px rgba(243,191,89,0.05);
+    }
+    .auth-secondary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 24px;
+    }
+    .auth-card {
+        padding: 28px;
+        border: 1px solid rgba(21,39,63,0.06);
+        border-radius: 24px;
+        background: rgba(255,255,255,0.82);
+        box-shadow: var(--shadow-card);
+    }
+    .auth-card h2 {
+        margin: 0 0 8px;
+        color: var(--navy);
+        font-family: 'Fraunces', serif;
+        font-size: 27px;
+    }
+    .auth-card-intro {
+        margin: 0 0 20px;
+        color: var(--ink-soft);
+        font-size: 14px;
+    }
+    .auth-register-submit {
+        background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+        color: var(--white);
+        box-shadow: 0 10px 20px rgba(21,39,63,0.16);
+    }
+    .auth-benefits {
+        background: linear-gradient(135deg, rgba(45,127,117,0.08), rgba(243,191,89,0.1));
+        border-color: rgba(45,127,117,0.14);
+    }
+    .auth-benefit-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+    }
+    .auth-benefit {
+        display: grid;
+        gap: 5px;
+        padding: 14px 16px;
+        border: 1px solid rgba(21,39,63,0.05);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.7);
+    }
+    .auth-benefit strong {
+        color: var(--navy);
+        font-size: 14px;
+    }
+    .auth-benefit span {
+        color: var(--ink-soft);
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    @media (max-width: 760px) {
+        .auth-page {
+            margin-top: 0;
+        }
+        .auth-shell {
+            grid-template-columns: 1fr;
+        }
+        .auth-login-panel {
+            padding: 36px 24px;
+        }
+        .auth-art {
+            min-height: 230px;
+            padding: 28px;
+            background-size: 90px 90px;
+        }
+        .auth-secondary {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock %}

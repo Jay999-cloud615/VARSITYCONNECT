@@ -54,15 +54,15 @@
                 {% endif %}
 
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-soft); border-top: 1px solid rgba(21,39,63,0.08); padding-top: 10px;">
-                    <span style="color: var(--gold-deep); font-size: 12px; letter-spacing: 1px;">★★★★★</span>
-                    <span>By {{ resource.uploaded_by.username }}</span>
+                    <span>Shared by {{ resource.uploaded_by.username }}</span>
+                    <span>{{ resource.created_at|date:"j M Y" }}</span>
                 </div>
             </div>
         </div>
         {% empty %}
         <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(255,255,255,0.82); border-radius: 24px; border: 1px dashed rgba(21,39,63,0.14); box-shadow: var(--shadow-card);">
-            <p style="color: var(--ink-soft); margin: 0 0 10px 0;">No course materials available yet.</p>
-            <span style="color: var(--gold-deep); font-weight: 700; cursor: pointer;" onclick="toggleUploadForm()">Click the upload button above to add the first one!</span>
+            <p style="color: var(--navy); font-weight: 700; margin: 0 0 8px 0;">No study materials have been shared yet.</p>
+            <span style="color: var(--ink-soft); font-size: 13px;">Have notes to share? <button type="button" onclick="toggleUploadForm()" style="padding: 0; border: 0; background: none; color: var(--gold-deep); font: inherit; font-weight: 700; cursor: pointer;">Add the first resource</button></span>
         </div>
         {% endfor %}
     </div>

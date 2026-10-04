@@ -47,12 +47,12 @@
 
         .topbar{
           display:flex; align-items:center; justify-content:space-between;
-          padding:16px 28px;
+          padding:13px 24px;
           background:linear-gradient(135deg, var(--navy), var(--navy-soft));
           color:var(--white);
           border-bottom:3px solid var(--gold);
           gap:16px;
-          box-shadow:0 10px 25px rgba(15, 27, 42, 0.16);
+          box-shadow:0 8px 22px rgba(15, 27, 42, 0.14);
         }
         .top-left{display:flex; align-items:center; gap:16px;}
         .brand{display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--white);}
@@ -98,7 +98,7 @@
         /* ---------- Sidebar ---------- */
         .sidebar{
           width:250px; background:rgba(255,255,255,0.8); backdrop-filter:blur(8px); border-right:1px solid rgba(21,39,63,0.06);
-          padding:22px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
+          padding:20px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
           box-shadow:8px 0 22px rgba(21,39,63,0.04);
         }
         .sidebar.collapsed {margin-left:-250px;}
@@ -108,9 +108,9 @@
         }
         .nav-item{
           display:flex; align-items:center; gap:12px;
-          padding:11px 18px; cursor:pointer; color:var(--ink-soft);
+          padding:10px 16px; cursor:pointer; color:var(--ink-soft);
           border-left:3px solid transparent; margin:4px 10px; border-radius:12px;
-          font-size:14px; text-decoration:none; transition:all 0.2s ease;
+          font-size:13px; font-weight:500; text-decoration:none; transition:all 0.2s ease;
         }
         .nav-item:hover{background:linear-gradient(135deg, rgba(243,191,89,0.12), rgba(45,127,117,0.08)); transform:translateX(2px);}
         .nav-item.active{
@@ -120,15 +120,29 @@
         .nav-tag{
           width:30px; height:24px; display:flex; align-items:center; justify-content:center;
           font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700;
-          background:linear-gradient(135deg, var(--navy), #21395a); color:var(--gold); border-radius:8px; flex-shrink:0;
+          background:transparent; color:var(--navy); border-radius:0; flex-shrink:0;
         }
-        .nav-item.active .nav-tag{background:linear-gradient(135deg, var(--gold), #f7d98d); color:var(--navy);}
+        .nav-tag svg{width:16px; height:16px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.7;}
+        .nav-item.active .nav-tag{background:transparent; color:var(--gold-deep);}
 
         /* ---------- Main content ---------- */
-        .content{flex:1; padding:32px 36px; overflow-y:auto;}
+        .content{flex:1; min-width:0; padding:28px clamp(18px, 3vw, 36px); overflow-y:auto;}
         .content > *{
           animation:fadeUp 0.45s ease both;
         }
+        .content h1,.content h2,.content h3{overflow-wrap:anywhere;}
+        .content form p{margin:0 0 14px;}
+        .content form p label{display:block;margin-bottom:7px;color:var(--navy);font-size:13px;font-weight:700;}
+        .content form p input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        .content form p select,
+        .content form p textarea{
+          display:block;width:100%;max-width:100%;padding:12px 14px;border:1px solid rgba(21,39,63,.16);border-radius:12px;background:var(--white);color:var(--ink);font:14px 'IBM Plex Sans',sans-serif;
+        }
+        .content form p textarea{min-height:110px;resize:vertical;}
+        .content form p input:focus,.content form p select:focus,.content form p textarea:focus{
+          outline:none;border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(243,191,89,.15);
+        }
+        .content form p .helptext{display:block;margin-top:5px;color:var(--ink-soft);font-size:11px;line-height:1.5;}
         @keyframes fadeUp {
           from {opacity:0; transform:translateY(10px);}
           to {opacity:1; transform:translateY(0);}
@@ -144,6 +158,14 @@
         }
 
         :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+        button,a{-webkit-tap-highlight-color:transparent;}
+        button{font-family:inherit;}
+        @media (max-width:600px){
+          .topbar{padding:12px 16px;}
+          .brand-name{font-size:19px;}
+          .top-right{gap:8px;}
+          .content{padding:20px 14px;}
+        }
     </style>
 
     <script>
@@ -194,33 +216,38 @@
                 <div class="nav-section-label">Menu</div>
 
                 <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <span class="nav-tag">DB</span>
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect></svg></span>
                     <span>Dashboard</span>
                 </a>
 
+                <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.8 3-5.8 7-5.8s6.5 2 7 5.8"></path></svg></span>
+                    <span>My Profile</span>
+                </a>
+
                 <a href="{% url 'marketplace' %}" class="nav-item {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}">
-                    <span class="nav-tag">MP</span>
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg></span>
                     <span>Marketplace</span>
                 </a>
 
                 <a href="{% url 'course_material' %}" class="nav-item {% if request.resolver_match.url_name == 'course_material' %}active{% endif %}">
-                    <span class="nav-tag">CM</span>
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg></span>
                     <span>Course Material</span>
                 </a>
 
                 <a href="{% url 'jobs' %}" class="nav-item {% if request.resolver_match.url_name == 'jobs' or request.resolver_match.url_name == 'job-detail' %}active{% endif %}">
-                    <span class="nav-tag">JB</span>
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg></span>
                     <span>Jobs</span>
                 </a>
 
                 <a href="{% url 'messaging' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-                    <span class="nav-tag">MS</span>
+                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-7.5A7.5 7.5 0 1 1 20 11.5Z"></path><path d="M8 11h8m-8 3h5"></path></svg></span>
                     <span>Messages</span>
                 </a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="nav-item" style="width: 100%; background: none; border: none; text-align: left; cursor: pointer;">
-                        <span class="nav-tag" style="background:var(--navy); color:var(--gold); border-radius:2px; flex-shrink:0; font-weight:600;">LO</span>
+                        <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m15 16 4-4-4-4m4 4H9"></path></svg></span>
                         <span>Log Out</span>
                     </button>
                 </form>

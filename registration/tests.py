@@ -67,8 +67,8 @@ class LogoutTests(TestCase):
 
         self.assertRedirects(response, reverse('dashboard'))
         dashboard_response = self.client.get(reverse('dashboard'))
-        self.assertContains(dashboard_response, 'Welcome back, bob!')
-        self.assertNotContains(dashboard_response, 'Welcome back, alice!')
+        self.assertContains(dashboard_response, 'Hello, bob')
+        self.assertNotContains(dashboard_response, 'Hello, alice')
 
     def test_successful_login_returns_to_requested_page(self):
         self.client.logout()
@@ -102,6 +102,62 @@ class LogoutTests(TestCase):
         )
 
         self.assertRedirects(response, reverse('dashboard'))
+
+    def test_login_page_links_to_separate_registration_page(self):
+        self.client.logout()
+
+        response = self.client.get(reverse('login'))
+
+        self.assertContains(response, 'href="{}"'.format(reverse('register')))
+        self.assertNotContains(response, 'Create New Profile')
+        self.assertNotContains(response, 'name="password1"')
+
+    def test_registration_page_shows_registration_form_and_login_link(self):
+        self.client.logout()
+
+        response = self.client.get(reverse('register'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Create New Profile')
+        self.assertContains(response, 'name="password1"')
+        self.assertContains(response, 'href="{}"'.format(reverse('login')))
+        self.assertNotContains(response, 'name="login_submit"')
+
+    def test_successful_registration_creates_user_and_logs_them_in(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'newstudent',
+                'password1': 'StrongPassword123!',
+                'password2': 'StrongPassword123!',
+            },
+        )
+
+        self.assertRedirects(response, reverse('dashboard'))
+        self.assertTrue(
+            get_user_model().objects.filter(username='newstudent').exists()
+        )
+        self.assertContains(self.client.get(reverse('dashboard')), 'Hello, newstudent')
+
+    def test_invalid_registration_stays_on_registration_page(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'newstudent',
+                'password1': 'different-password-123',
+                'password2': 'different-password-456',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['register_form'].errors)
+        self.assertFalse(
+            get_user_model().objects.filter(username='newstudent').exists()
+        )
 
     def test_admin_tab_hidden_for_non_staff_users(self):
         response = self.client.get(reverse('dashboard'))

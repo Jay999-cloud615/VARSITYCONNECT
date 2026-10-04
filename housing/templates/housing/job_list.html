@@ -9,9 +9,9 @@
             <div>
                 <span style="display: inline-flex; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #f5dca2; font-weight: 700;">Campus opportunities</span>
                 <h1 style="font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 40px); margin: 16px 0 8px;">Student Jobs</h1>
-                <p style="color: rgba(255,255,255,0.8); margin: 0; max-width: 620px; line-height: 1.6;">Find flexible work and share opportunities with fellow students.</p>
+                <p style="color: rgba(255,255,255,0.8); margin: 0; max-width: 620px; line-height: 1.6;">Looking for a campus gig? Find an opportunity—or share one with other students.</p>
             </div>
-            <button type="button" onclick="toggleJobForm()" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 12px 18px; font-weight: 800; border-radius: 12px; cursor: pointer;">+ Post a job</button>
+            <button type="button" onclick="toggleJobForm()" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 12px 18px; font-weight: 800; border-radius: 12px; cursor: pointer;">＋ Share a job</button>
         </div>
     </div>
 
@@ -45,7 +45,10 @@
             {% endif %}
         </article>
         {% empty %}
-        <p style="color: var(--ink-soft); grid-column: 1 / -1;">No jobs listed yet. Post the first opportunity for your campus.</p>
+        <div style="color: var(--ink-soft); grid-column: 1 / -1; padding: 38px 24px; text-align: center; background: rgba(255,255,255,0.78); border: 1px dashed var(--line); border-radius: 22px;">
+            <p style="margin: 0 0 8px; color: var(--navy); font-weight: 700;">No opportunities posted just yet.</p>
+            <p style="margin: 0; font-size: 13px;">Know of a good campus job? Share it with everyone.</p>
+        </div>
         {% endfor %}
     </div>
 </div>

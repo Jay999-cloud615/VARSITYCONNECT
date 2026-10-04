@@ -17,23 +17,10 @@ def landing_auth_view(request):
 	if request.user.is_authenticated:
 		logout(request)
 
-	create_form = UserCreationForm()
 	login_form = AuthenticationForm()
 
 	if request.method == "POST":
-		if "save" in request.POST:
-			create_form = UserCreationForm(request.POST)
-			if create_form.is_valid():
-				user = create_form.save()
-				login(request, user)
-				messages.success(
-					request, "Registration Successful! You Are Now Logged In."
-				)
-				return redirect("dashboard")
-			else:
-				messages.error(request, "Registration Failed. Check errors below.")
-
-		elif "login_submit" in request.POST:
+		if "login_submit" in request.POST:
 			login_form = AuthenticationForm(request, data=request.POST)
 			if login_form.is_valid():
 				user = login_form.get_user()
@@ -50,8 +37,26 @@ def landing_auth_view(request):
 				messages.error(request, "Invalid username or password.")
 
 	context = {
-		"register_form": create_form,
 		"login_form": login_form,
 		"next": request.POST.get("next") or request.GET.get("next", ""),
 	}
 	return render(request, "registration/login.html", context)
+
+
+def registration_view(request):
+	create_form = UserCreationForm()
+
+	if request.method == "POST":
+		create_form = UserCreationForm(request.POST)
+		if create_form.is_valid():
+			user = create_form.save()
+			login(request, user)
+			messages.success(
+				request, "Registration Successful! You Are Now Logged In."
+			)
+			return redirect("dashboard")
+
+	context = {
+		"register_form": create_form,
+	}
+	return render(request, "registration/register.html", context)

@@ -1,80 +1,459 @@
 {% extends 'base.html' %}
 
 {% block title %}Dashboard - Varsity Connect{% endblock %}
-<!-- Assuming you have a base layout -->
 
 {% block content %}
-<div class="dashboard-container" style="padding: 12px 0 32px;">
-    <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); border-radius: 30px; padding: 32px; color: white; box-shadow: var(--shadow-soft); margin-bottom: 28px; position: relative; overflow: hidden;">
-        <div style="position: absolute; right: -30px; bottom: -30px; width: 180px; height: 180px; background: rgba(243,191,89,0.12); border-radius: 50%;"></div>
-        <span style="display: inline-flex; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #f5dca2; font-weight: 700;">Overview</span>
-        <h1 style="font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 42px); margin: 16px 0 10px;">Platform Dashboard</h1>
-        <p style="margin: 0; font-size: 15px; max-width: 620px; color: rgba(255,255,255,0.8); line-height: 1.6;">
-            Welcome back, {{ request.user.username }}! Here is what’s happening across Varsity Connect today.
-        </p>
+<div class="dashboard-page">
+    <header class="dashboard-heading">
+        <div>
+            <span class="dashboard-kicker">Your campus hub</span>
+            <h1>Hello, {% if request.user.first_name %}{{ request.user.first_name }}{% else %}{{ request.user.username }}{% endif %} <span aria-hidden="true">👋</span></h1>
+            <p>Here’s what’s happening across Varsity Connect today.</p>
+        </div>
+        <a class="dashboard-profile-link" href="{% url 'profile' %}" aria-label="Open my profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.8 3-5.8 7-5.8s6.5 2 7 5.8"></path></svg>
+        </a>
+    </header>
+
+    <section class="dashboard-stats" aria-label="Varsity Connect activity">
+        <a class="dashboard-stat" href="{% url 'marketplace' %}">
+            <span class="dashboard-stat-icon icon-gold">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
+            </span>
+            <span class="dashboard-stat-copy"><strong>{{ marketplace_count }}</strong><span>Marketplace listings</span></span>
+            <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <a class="dashboard-stat" href="{% url 'jobs' %}">
+            <span class="dashboard-stat-icon icon-teal">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18m-11 0v2h4v-2"></path></svg>
+            </span>
+            <span class="dashboard-stat-copy"><strong>{{ job_count }}</strong><span>Student jobs</span></span>
+            <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <a class="dashboard-stat" href="{% url 'course_material' %}">
+            <span class="dashboard-stat-icon icon-clay">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg>
+            </span>
+            <span class="dashboard-stat-copy"><strong>{{ resource_count }}</strong><span>Study resources</span></span>
+            <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+    </section>
+
+    <section class="dashboard-panel quick-actions">
+        <div class="dashboard-panel-heading">
+            <div>
+                <span class="dashboard-section-kicker">Get started</span>
+                <h2>Quick actions</h2>
+            </div>
+        </div>
+        <div class="quick-action-grid">
+            <a class="quick-action" href="{% url 'create_listing' %}">
+                <span class="quick-action-icon icon-gold">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"></path></svg>
+                </span>
+                <span><strong>Sell an item</strong><small>List an item in the campus marketplace</small></span>
+                <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+            </a>
+            <a class="quick-action" href="{% url 'jobs' %}">
+                <span class="quick-action-icon icon-teal">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg>
+                </span>
+                <span><strong>Find or post a job</strong><small>Explore campus work opportunities</small></span>
+                <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+            </a>
+            <a class="quick-action" href="{% url 'course_material' %}">
+                <span class="quick-action-icon icon-clay">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5"></path><path d="M4 14v6h16v-6"></path></svg>
+                </span>
+                <span><strong>Share course materials</strong><small>Upload notes and study resources</small></span>
+                <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+            </a>
+            <a class="quick-action" href="{% url 'messaging' %}">
+                <span class="quick-action-icon icon-lime">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-7.5A7.5 7.5 0 1 1 20 11.5Z"></path><path d="M8 11h8m-8 3h5"></path></svg>
+                </span>
+                <span><strong>Open messages</strong><small>View and continue your conversations</small></span>
+                <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <div class="dashboard-content-grid">
+        <section class="dashboard-panel">
+            <div class="dashboard-panel-heading">
+                <div>
+                    <span class="dashboard-section-kicker">Buy and sell</span>
+                    <h2>Recent marketplace listings</h2>
+                </div>
+                <a class="dashboard-view-all" href="{% url 'marketplace' %}">View all <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="dashboard-list">
+                {% for listing in recent_marketing %}
+                <a class="dashboard-list-item" href="{% url 'listing_detail' listing.pk %}">
+                    {% if listing.image %}
+                        <img class="dashboard-thumbnail" src="{{ listing.image.url }}" alt="">
+                    {% else %}
+                        <span class="dashboard-thumbnail dashboard-thumbnail-icon icon-gold">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
+                        </span>
+                    {% endif %}
+                    <span class="dashboard-list-copy">
+                        <strong>{{ listing.title }}</strong>
+                        <small>{{ listing.get_category_display }} · {{ listing.seller.username }} · R{{ listing.price }}</small>
+                    </span>
+                    <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                </a>
+                {% empty %}
+                <p class="dashboard-empty">There are no marketplace listings yet. Check back soon or list an item to get started.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="dashboard-panel-heading">
+                <div>
+                    <span class="dashboard-section-kicker">Study smarter</span>
+                    <h2>Latest course materials</h2>
+                </div>
+                <a class="dashboard-view-all" href="{% url 'course_material' %}">View all <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="dashboard-list">
+                {% for resource in recent_resources %}
+                <a class="dashboard-list-item" href="{% url 'resource-download' resource.pk %}">
+                    <span class="dashboard-thumbnail dashboard-thumbnail-icon icon-clay">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg>
+                    </span>
+                    <span class="dashboard-list-copy">
+                        <strong>{{ resource.title }}</strong>
+                        <small>{{ resource.get_category_display }} · {{ resource.uploaded_by.username }}</small>
+                    </span>
+                    <svg class="dashboard-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                </a>
+                {% empty %}
+                <p class="dashboard-empty">No course materials have been shared yet. Check back soon or upload a resource.</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 
-    <section style="margin-top: 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
-            <h2 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0;">Latest Course Materials</h2>
-            <a href="{% url 'course_material' %}" style="background: rgba(21,39,63,0.05); color: var(--navy); border: 1px solid rgba(21,39,63,0.08); border-radius: 999px; font-weight: 700; text-decoration: none; padding: 10px 16px;">View All &rarr;</a>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px;">
-            {% for resource in recent_resources %}
-            <div style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 22px; padding: 18px; box-shadow: var(--shadow-card);">
-                <span style="display: inline-block; font-size: 10px; background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; padding: 6px 8px; border-radius: 999px; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700;">{{ resource.get_category_display }}</span>
-                <h4 style="margin: 12px 0 10px; color: var(--navy); font-size: 17px;">{{ resource.title }}</h4>
-                <a href="{% url 'resource-download' resource.id %}" style="display: inline-block; font-size: 12px; color: var(--gold-deep); text-decoration: none; font-weight: 800; letter-spacing: 0.2px;">Download PDF</a>
+    <section class="dashboard-panel dashboard-jobs-panel">
+        <div class="dashboard-panel-heading">
+            <div>
+                <span class="dashboard-section-kicker">Campus opportunities</span>
+                <h2>Latest student jobs</h2>
             </div>
-            {% empty %}
-            <p style="color: var(--ink-soft); grid-column: 1 / -1; margin: 0;">No course materials uploaded yet.</p>
-            {% endfor %}
+            <a class="dashboard-view-all" href="{% url 'jobs' %}">View all <span aria-hidden="true">→</span></a>
         </div>
-    </section>
-
-    <section style="margin-top: 42px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
-            <h2 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0;">Marketplace & Student Finds</h2>
-            <a href="{% url 'marketplace' %}" style="background: rgba(243,191,89,0.14); color: var(--navy); border: 1px solid rgba(243,191,89,0.4); border-radius: 999px; font-weight: 700; text-decoration: none; padding: 10px 16px;">View All &rarr;</a>
-        </div>
-        <div style="background: rgba(255,255,255,0.75); border: 1px solid rgba(21,39,63,0.06); border-radius: 22px; padding: 24px; box-shadow: var(--shadow-card); color: var(--ink-soft);">
-            Marketing and student item feeds will appear here next.
-        </div>
-    </section>
-
-    <section style="margin-top: 42px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
-            <h2 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin: 0;">Latest Student Jobs</h2>
-            <a href="{% url 'jobs' %}" style="background: rgba(21,39,63,0.05); color: var(--navy); border: 1px solid rgba(21,39,63,0.08); border-radius: 999px; font-weight: 700; text-decoration: none; padding: 10px 16px;">View all &rarr;</a>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        <div class="job-grid">
             {% for item in jobs %}
-                <div style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-card);">
-                    <div style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); padding: 18px 18px 14px; color: var(--white);">
-                        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--gold); letter-spacing: 1px; font-weight: 700;">Student Job</span>
-                        <h3 style="font-family: 'Fraunces', serif; font-size: 19px; margin: 8px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</h3>
-                    </div>
-
-                    <div style="padding: 20px; display: flex; flex-direction: column; flex-grow: 1;">
-                        <p style="font-size: 13px; color: var(--ink-soft); margin: 0 0 12px 0;">{{ item.organization }}{% if item.organization %} · {% endif %}{{ item.location }}</p>
-                        {% if item.pay %}<div style="font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; color: var(--gold-deep); margin-bottom: 16px;">{{ item.pay }}</div>{% endif %}
-
-                        <div style="margin-top: auto; display: flex; gap: 8px;">
-                            <a href="{% url 'job-detail' item.id %}" style="flex-grow: 1; background: rgba(21,39,63,0.04); color: var(--navy); border: 1px solid rgba(21,39,63,0.08); padding: 10px; font-weight: 700; font-size: 13px; border-radius: 12px; text-align: center; text-decoration: none;">
-                                Details
-                            </a>
-                            <a href="{% url 'start_conversation' item.posted_by.username %}" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: var(--white); padding: 10px 14px; font-weight: 700; font-size: 13px; border-radius: 12px; text-align: center; text-decoration: none; box-shadow: 0 10px 18px rgba(21,39,63,0.2);">
-                                Chat
-                            </a>
-                        </div>
-                    </div>
+            <article class="job-card">
+                <span class="job-icon icon-teal">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18m-11 0v2h4v-2"></path></svg>
+                </span>
+                <div class="job-card-copy">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.organization }}{% if item.organization %} · {% endif %}{{ item.location }}</p>
+                    {% if item.pay %}<strong>{{ item.pay }}</strong>{% endif %}
                 </div>
+                <a href="{% url 'job-detail' item.id %}" class="job-card-link" aria-label="View {{ item.title }}">View <span aria-hidden="true">→</span></a>
+            </article>
             {% empty %}
-                <p style="color: var(--ink-soft); grid-column: 1 / -1; margin: 0;">No jobs listed yet.</p>
+            <p class="dashboard-empty">No student jobs have been posted yet. Check back soon for new opportunities.</p>
             {% endfor %}
         </div>
     </section>
 </div>
+
+<style>
+    .dashboard-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 4px 0 32px;
+    }
+    .dashboard-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 0 0 22px;
+    }
+    .dashboard-kicker,
+    .dashboard-section-kicker {
+        color: var(--teal);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+    }
+    .dashboard-heading h1 {
+        margin: 5px 0 3px;
+        color: var(--ink);
+        font-family: 'Fraunces', serif;
+        font-size: clamp(28px, 3vw, 36px);
+    }
+    .dashboard-heading p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 14px;
+    }
+    .dashboard-profile-link {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--navy);
+    }
+    .dashboard-profile-link svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.7;
+    }
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+    .dashboard-stat {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid rgba(21,39,63,0.07);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.86);
+        box-shadow: var(--shadow-card);
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .dashboard-stat:hover,
+    .quick-action:hover,
+    .dashboard-list-item:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-soft);
+    }
+    .dashboard-stat-icon,
+    .quick-action-icon,
+    .job-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+    }
+    .icon-gold { color: var(--gold-deep); }
+    .icon-teal { color: var(--teal); }
+    .icon-clay { color: #a84c3a; }
+    .icon-lime { color: var(--teal); }
+    .dashboard-stat-icon svg,
+    .quick-action-icon svg,
+    .job-icon svg,
+    .dashboard-thumbnail-icon svg {
+        width: 21px;
+        height: 21px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.7;
+    }
+    .dashboard-stat-copy {
+        display: grid;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+    .dashboard-stat-copy strong {
+        color: var(--navy);
+        font-size: 21px;
+    }
+    .dashboard-stat-copy span {
+        color: var(--ink-soft);
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+    .dashboard-chevron {
+        flex: 0 0 17px;
+        width: 17px;
+        height: 17px;
+        fill: none;
+        stroke: #8f9aa8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.8;
+    }
+    .dashboard-panel {
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid rgba(21,39,63,0.06);
+        border-radius: 20px;
+        background: rgba(255,255,255,0.88);
+        box-shadow: var(--shadow-card);
+    }
+    .dashboard-panel-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .dashboard-panel-heading h2 {
+        margin: 4px 0 0;
+        color: var(--navy);
+        font-family: 'Fraunces', serif;
+        font-size: 22px;
+    }
+    .dashboard-view-all {
+        flex-shrink: 0;
+        color: var(--gold-deep);
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .dashboard-view-all:hover { text-decoration: underline; }
+    .quick-actions { margin-bottom: 18px; }
+    .quick-action-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+    .quick-action {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        padding: 12px;
+        border: 1px solid rgba(21,39,63,0.07);
+        border-radius: 15px;
+        background: rgba(244,239,231,0.42);
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .quick-action > span:nth-child(2) {
+        display: grid;
+        gap: 3px;
+        flex: 1;
+        min-width: 0;
+    }
+    .quick-action strong { color: var(--navy); font-size: 13px; }
+    .quick-action small { color: var(--ink-soft); font-size: 11px; line-height: 1.4; }
+    .dashboard-content-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+    .dashboard-list {
+        display: grid;
+    }
+    .dashboard-list-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        padding: 11px 2px;
+        border-top: 1px solid rgba(21,39,63,0.08);
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .dashboard-thumbnail {
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+    .dashboard-thumbnail-icon {
+        display: grid;
+        place-items: center;
+    }
+    .dashboard-list-copy {
+        display: grid;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+    }
+    .dashboard-list-copy strong {
+        color: var(--navy);
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .dashboard-list-copy small {
+        color: var(--ink-soft);
+        font-size: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .dashboard-empty {
+        margin: 0;
+        padding: 20px 8px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: center;
+    }
+    .dashboard-jobs-panel { margin-top: 18px; }
+    .job-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+    .job-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        min-width: 0;
+        padding: 13px;
+        border: 1px solid rgba(21,39,63,0.07);
+        border-radius: 15px;
+        background: rgba(244,239,231,0.42);
+    }
+    .job-icon { flex-basis: 38px; width: 38px; height: 38px; }
+    .job-card-copy { flex: 1; min-width: 0; }
+    .job-card-copy h3 {
+        margin: 0 0 4px;
+        color: var(--navy);
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+    .job-card-copy p {
+        margin: 0 0 5px;
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    .job-card-copy > strong { color: var(--gold-deep); font-size: 11px; }
+    .job-card-link {
+        flex-shrink: 0;
+        color: var(--gold-deep);
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    @media (max-width: 920px) {
+        .dashboard-content-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+        .dashboard-page { padding-top: 0; }
+        .dashboard-stats { grid-template-columns: 1fr; }
+        .quick-action-grid,
+        .job-grid { grid-template-columns: 1fr; }
+        .dashboard-panel { padding: 16px; }
+        .dashboard-panel-heading h2 { font-size: 20px; }
+    }
+</style>
 {% endblock %}

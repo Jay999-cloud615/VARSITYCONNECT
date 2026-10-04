@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Profile - Varsity Connect{% endblock %}
+
+{% block content %}
+<div class="register-page">
+    <section class="register-shell">
+        <div class="register-form-panel">
+            <div class="register-brand-mark" aria-hidden="true">V</div>
+            <h1>Create your profile</h1>
+            <p class="register-intro">Create an account to share, discover, and connect with other students.</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="register-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="register-form">
+                {% csrf_token %}
+                {% for field in register_form %}
+                    <div class="register-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="register-help">{{ field.help_text|safe }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="register-error">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" name="save" class="register-submit">Create New Profile</button>
+            </form>
+
+            <p class="register-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+        </div>
+
+        <aside class="register-art" aria-label="Varsity Connect campus community">
+            <div class="register-art-copy">
+                <span class="register-art-label">For campus life</span>
+                <h2>Good things happen<br>when we share.</h2>
+                <p>Find campus opportunities, trade useful things, and help each other study.</p>
+            </div>
+            <div class="register-art-orb" aria-hidden="true"></div>
+        </aside>
+    </section>
+</div>
+
+<style>
+    .register-page {
+        width: min(1120px, 100%);
+        margin: 8px auto 40px;
+    }
+    .register-shell {
+        min-height: 540px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--white);
+        box-shadow: var(--shadow-soft);
+    }
+    .register-form-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: min(440px, 100%);
+        margin: 0 auto;
+        padding: 40px 32px;
+    }
+    .register-brand-mark {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 16px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--gold), #f9d27f);
+        color: var(--navy);
+        font-family: 'Fraunces', serif;
+        font-size: 23px;
+        font-weight: 700;
+    }
+    .register-form-panel h1 {
+        margin: 0;
+        color: var(--ink);
+        text-align: center;
+        font-family: 'Fraunces', serif;
+        font-size: clamp(28px, 3vw, 36px);
+    }
+    .register-intro {
+        margin: 9px 0 22px;
+        color: var(--ink-soft);
+        text-align: center;
+        font-size: 14px;
+    }
+    .register-form {
+        display: grid;
+        gap: 13px;
+    }
+    .register-field label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+    }
+    .register-field input {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid rgba(21,39,63,0.2);
+        border-radius: 12px;
+        background: var(--white);
+        color: var(--ink);
+        font: 14px 'IBM Plex Sans', sans-serif;
+    }
+    .register-field input:focus {
+        outline: none;
+        border-color: var(--gold-deep);
+        box-shadow: 0 0 0 4px rgba(243,191,89,0.14);
+    }
+    .register-help {
+        margin-top: 5px;
+        color: var(--ink-soft);
+        font-size: 11px;
+    }
+    .register-help ul {
+        margin: 4px 0;
+        padding-left: 18px;
+    }
+    .register-error {
+        margin-top: 5px;
+        color: #a84c3a;
+        font-size: 12px;
+    }
+    .register-submit {
+        width: 100%;
+        margin-top: 4px;
+        padding: 13px 18px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(21,39,63,0.16);
+    }
+    .register-switch {
+        margin: 18px 0 0;
+        color: var(--ink-soft);
+        text-align: center;
+        font-size: 13px;
+    }
+    .register-switch a {
+        color: var(--gold-deep);
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .register-message {
+        margin-bottom: 14px;
+        padding: 10px 12px;
+        border: 1px solid #f0c4b5;
+        border-radius: 12px;
+        background: #fff2ee;
+        color: #a84c3a;
+        font-size: 12px;
+    }
+    .register-art {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        min-height: 100%;
+        overflow: hidden;
+        padding: 40px;
+        background-color: var(--navy);
+        background-image: radial-gradient(circle at 100% 100%, var(--navy-soft) 0 69%, transparent 70%);
+        background-size: 126px 126px;
+        color: var(--white);
+    }
+    .register-art-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 310px;
+    }
+    .register-art-label {
+        display: inline-flex;
+        margin-bottom: 14px;
+        padding: 7px 11px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 999px;
+        color: #f5dca2;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .register-art h2 {
+        margin: 0 0 12px;
+        font-family: 'Fraunces', serif;
+        font-size: clamp(30px, 3.5vw, 44px);
+        line-height: 1.08;
+    }
+    .register-art p {
+        margin: 0;
+        color: rgba(255,255,255,0.78);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .register-art-orb {
+        position: absolute;
+        top: 28px;
+        right: 28px;
+        width: 86px;
+        height: 86px;
+        border: 1px solid rgba(243,191,89,0.45);
+        border-radius: 50%;
+        box-shadow: 0 0 0 14px rgba(243,191,89,0.08), 0 0 0 28px rgba(243,191,89,0.05);
+    }
+    @media (max-width: 760px) {
+        .register-page {
+            margin-top: 0;
+        }
+        .register-shell {
+            grid-template-columns: 1fr;
+        }
+        .register-form-panel {
+            padding: 32px 24px;
+        }
+        .register-art {
+            min-height: 230px;
+            padding: 28px;
+            background-size: 90px 90px;
+        }
+    }
+</style>
+{% endblock %}

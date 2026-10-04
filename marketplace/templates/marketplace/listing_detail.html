@@ -3,27 +3,27 @@
 {% block title %}{{ listing.title }} - Varsity Connect{% endblock %}
 
 {% block content %}
-<div style="max-width: 700px; margin: 30px auto; background: var(--white); border: 1px solid var(--line); border-radius: 4px; overflow: hidden;">
+<div style="max-width: 760px; margin: 24px auto 40px; background: rgba(255,255,255,0.94); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-soft);">
     
     <!-- Top Header Banner matching card colors -->
     <div style="background: var(--navy); padding: 24px 32px; color: var(--white); position: relative;">
-        <a href="{% url 'marketplace' %}" style="position: absolute; top: 24px; right: 24px; color: var(--white); text-decoration: none; font-size: 20px;">✕</a>
+        <a href="{% url 'marketplace' %}" style="position: absolute; top: 24px; right: 24px; color: var(--white); text-decoration: none; font-size: 13px; font-weight: 700;">&larr; Back</a>
         <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--gold); letter-spacing: 1px;">Marketplace Listing</span>
         <h1 style="font-family: 'Fraunces', serif; font-size: 26px; margin: 6px 0 0 0;">{{ listing.title }}</h1>
     </div>
 
     <!-- Gradient preview section -->
     <div style="height: 240px; background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); padding: 16px; display: flex; align-items: flex-start;{% if listing.image %} background-image: linear-gradient(rgba(21,39,63,0.12), rgba(21,39,63,0.12)), url('{{ listing.image.url }}'); background-size: cover; background-position: center;{% endif %}">
-        <span style="background: var(--navy); color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; padding: 4px 8px; border-radius: 2px;">{{ listing.get_category_display }}</span>
+        <span style="background: var(--navy); color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; padding: 6px 10px; border-radius: 999px;">{{ listing.get_category_display }}</span>
     </div>
 
     <!-- Content Body -->
     <div style="padding: 32px;">
-        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #b5822b; margin-bottom: 24px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 27px; font-weight: 600; color: var(--gold-deep); margin-bottom: 12px;">
             R{{ listing.price }}{% if listing.price_suffix %}{{ listing.price_suffix }}{% endif %}
         </div>
-        <div style="margin-bottom: 24px; font-weight: 700; color: {% if listing.quantity_available %}var(--teal){% else %}#a33b35{% endif %};">
-            {% if listing.quantity_available %}{{ listing.quantity_available }} available{% else %}Sold out{% endif %}
+        <div style="display: inline-flex; margin-bottom: 24px; padding: 6px 10px; border-radius: 999px; background: {% if listing.quantity_available %}var(--teal-soft){% else %}var(--clay-soft){% endif %}; font-size: 12px; font-weight: 700; color: {% if listing.quantity_available %}var(--teal){% else %}#a33b35{% endif %};">
+            {% if listing.quantity_available %}{{ listing.quantity_available }} available{% else %}Currently sold out{% endif %}
         </div>
 
         <div style="margin-bottom: 24px;">
@@ -32,14 +32,14 @@
         </div>
 
         <div style="margin-bottom: 24px;">
-            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">Seller</h4>
+            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">From</h4>
             <p style="font-size: 14px; color: var(--ink); margin: 0;">
-                {{ listing.seller.username }} · <span style="color: #d9a441;">★★★★★</span> ({{ listing.seller_sales_count }} completed sales) · {{ listing.location }}
+                {{ listing.seller.username }} · {{ listing.seller_sales_count }} completed sales · {{ listing.location }}
             </p>
         </div>
 
         <div style="margin-bottom: 32px;">
-            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">Posted</h4>
+            <h4 style="font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 8px 0;">A few details</h4>
             <p style="font-size: 14px; color: var(--ink); margin: 0;">
                 {{ listing.created_at|timesince }} ago · Category: {{ listing.get_category_display }} · Condition: {{ listing.condition }}
             </p>
@@ -51,7 +51,7 @@
                 <form method="post" action="{% url 'update_listing_stock' listing.pk %}" style="display: grid; gap: 8px;">
                     {% csrf_token %}
                     {{ stock_form.quantity_available.errors }}
-                    <label for="{{ stock_form.quantity_available.id_for_label }}" style="font-weight: 700; color: var(--ink-soft);">Update quantity left</label>
+                    <label for="{{ stock_form.quantity_available.id_for_label }}" style="font-weight: 700; color: var(--ink-soft);">How many are still available?</label>
                     {{ stock_form.quantity_available }}
                     <button type="submit" style="background: var(--teal); color: white; border: none; padding: 12px; font-weight: 700; font-size: 14px; border-radius: var(--radius); cursor: pointer;">Save quantity</button>
                 </form>
