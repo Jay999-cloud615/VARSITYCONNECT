@@ -3,55 +3,57 @@
 {% block title %}Student Jobs - Varsity Connect{% endblock %}
 
 {% block content %}
-<div style="padding: 10px 0 32px;">
-    <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); border-radius: 30px; padding: 30px 32px; color: white; box-shadow: var(--shadow-soft); margin-bottom: 26px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-            <div>
-                <span style="display: inline-flex; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #f5dca2; font-weight: 700;">Campus opportunities</span>
-                <h1 style="font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 40px); margin: 16px 0 8px;">Student Jobs</h1>
-                <p style="color: rgba(255,255,255,0.8); margin: 0; max-width: 620px; line-height: 1.6;">Looking for a campus gig? Find an opportunity—or share one with other students.</p>
-            </div>
-            <button type="button" onclick="toggleJobForm()" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 12px 18px; font-weight: 800; border-radius: 12px; cursor: pointer;">＋ Share a job</button>
+<div class="jobs-page">
+    <header class="jobs-hero">
+        <div class="jobs-hero-content">
+            <h1 class="jobs-title">Student Jobs</h1>
+            <p class="jobs-subtitle">Explore on-campus roles, student assistantships, and tutoring gigs—or post an opportunity.</p>
         </div>
-    </div>
+        <button type="button" onclick="toggleJobForm()" class="jobs-post-btn">＋ Share a job</button>
+    </header>
 
-    <div id="jobForm" style="display: {% if form.errors %}block{% else %}none{% endif %}; background: rgba(255,255,255,0.82); padding: 24px; border-radius: 24px; box-shadow: var(--shadow-card); border: 1px solid rgba(21,39,63,0.06); margin-bottom: 26px;">
-        <h2 style="font-family: 'Fraunces', serif; margin-top: 0; color: var(--navy);">Post a student job</h2>
-        <form method="post" style="display: grid; gap: 14px;">
+    <div id="jobForm" class="jobs-form-panel" style="display: {% if form.errors %}block{% else %}none{% endif %};">
+        <h2 class="jobs-form-title">Post a student job</h2>
+        <form method="post" class="jobs-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; border: none; padding: 12px 18px; border-radius: 12px; cursor: pointer; font-weight: 700;">Publish job</button>
+            <button type="submit" class="jobs-submit-btn">Publish job</button>
         </form>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 22px;">
+    <div class="jobs-grid">
         {% for job in jobs %}
-        <article style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 24px; box-shadow: var(--shadow-card); padding: 22px; display: flex; flex-direction: column;">
-            <span style="font-size: 10px; font-weight: 700; color: var(--navy); text-transform: uppercase; background: rgba(21,39,63,0.06); padding: 6px 8px; border-radius: 999px; align-self: flex-start;">Student job</span>
-            <h2 style="margin: 14px 0 6px; font-size: 20px;"><a href="{% url 'job-detail' job.pk %}" style="color: var(--navy); text-decoration: none;">{{ job.title }}</a></h2>
-            {% if job.organization %}<p style="margin: 0 0 8px; color: var(--ink-soft);">{{ job.organization }}</p>{% endif %}
-            <p style="margin: 0 0 10px; color: var(--ink-soft);">{{ job.location }}</p>
-            {% if job.pay %}<p style="margin: 0 0 12px; color: var(--gold-deep); font-weight: 700;">{{ job.pay }}</p>{% endif %}
-            <p style="color: var(--ink-soft); line-height: 1.5; margin: 0 0 18px;">{{ job.description|truncatechars:140 }}</p>
-            <div style="display: flex; gap: 10px; margin-top: auto;">
-                <a href="{% url 'job-detail' job.pk %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: var(--navy); background: rgba(21,39,63,0.05); border-radius: 12px; font-weight: 700;">Details</a>
-                <a href="{% url 'start_conversation' job.posted_by.username %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: white; background: var(--navy); border-radius: 12px; font-weight: 700;">Contact</a>
+        <article class="job-item-card">
+            <div class="job-item-header">
+                <span class="job-item-badge">Student job</span>
+                {% if job.pay %}<span class="job-item-pay">{{ job.pay }}</span>{% endif %}
+            </div>
+            <h2 class="job-item-title"><a href="{% url 'job-detail' job.pk %}">{{ job.title }}</a></h2>
+            <div class="job-item-meta">
+                {% if job.organization %}<span>{{ job.organization }}</span> · {% endif %}
+                <span>{{ job.location }}</span>
+            </div>
+            <p class="job-item-desc">{{ job.description|truncatechars:140 }}</p>
+            <div class="job-item-actions">
+                <a href="{% url 'job-detail' job.pk %}" class="job-btn-secondary">Details</a>
+                <a href="{% url 'start_conversation' job.posted_by.username %}" class="job-btn-primary">Contact</a>
             </div>
             {% if job.posted_by_id == request.user.id %}
-            <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');" style="margin-top: 10px;">
+            <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');" class="job-delete-form">
                 {% csrf_token %}
-                <button type="submit" style="width: 100%; padding: 10px; color: white; background: #a33b35; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Delete my job post</button>
+                <button type="submit" class="job-btn-danger">Delete my job post</button>
             </form>
             {% endif %}
         </article>
         {% empty %}
-        <div style="color: var(--ink-soft); grid-column: 1 / -1; padding: 38px 24px; text-align: center; background: rgba(255,255,255,0.78); border: 1px dashed var(--line); border-radius: 22px;">
-            <p style="margin: 0 0 8px; color: var(--navy); font-weight: 700;">No opportunities posted just yet.</p>
-            <p style="margin: 0; font-size: 13px;">Know of a good campus job? Share it with everyone.</p>
+        <div class="jobs-empty">
+            <p class="jobs-empty-title">No opportunities posted just yet.</p>
+            <p class="jobs-empty-desc">Know of a good campus job? Share it with other students.</p>
         </div>
         {% endfor %}
     </div>
 </div>
+
 <script>
 function toggleJobForm() {
     const form = document.getElementById('jobForm');
@@ -59,4 +61,234 @@ function toggleJobForm() {
     if (form.style.display === 'block') form.scrollIntoView({ behavior: 'smooth' });
 }
 </script>
+
+<style>
+    .jobs-page {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 4px 0 32px;
+    }
+    .jobs-hero {
+        background: var(--navy);
+        border: 1px solid rgba(52,46,45,0.18);
+        border-radius: 8px;
+        padding: 26px 30px;
+        color: var(--white);
+        box-shadow: var(--shadow-card);
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .jobs-hero-content {
+        max-width: 620px;
+    }
+    .jobs-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(26px, 3vw, 34px);
+        font-weight: 600;
+        margin: 12px 0 6px;
+        color: var(--white);
+    }
+    .jobs-subtitle {
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.5;
+    }
+    .jobs-post-btn {
+        background: var(--gold);
+        color: var(--navy);
+        border: 1px solid var(--gold-deep);
+        padding: 10px 16px;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        align-self: flex-start;
+        transition: filter 0.15s ease;
+    }
+    .jobs-post-btn:hover {
+        filter: brightness(1.05);
+    }
+    .jobs-form-panel {
+        background: var(--white);
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--line);
+        margin-bottom: 24px;
+    }
+    .jobs-form-title {
+        font-family: 'Fraunces', serif;
+        font-size: 22px;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 16px;
+        color: var(--navy);
+    }
+    .jobs-form {
+        display: grid;
+        gap: 14px;
+    }
+    .jobs-submit-btn {
+        background: var(--navy);
+        color: var(--white);
+        border: 1px solid var(--navy);
+        padding: 10px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+        justify-self: flex-start;
+        transition: background 0.15s ease;
+    }
+    .jobs-submit-btn:hover {
+        background: var(--navy-soft);
+    }
+    .jobs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 20px;
+    }
+    .job-item-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .job-item-card:hover {
+        border-color: rgba(52,46,45,0.28);
+        box-shadow: var(--shadow-soft);
+    }
+    .job-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .job-item-badge {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--teal);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        background: var(--teal-soft);
+        padding: 3px 7px;
+        border-radius: 4px;
+    }
+    .job-item-pay {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--navy);
+    }
+    .job-item-title {
+        margin: 0 0 6px;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    .job-item-title a {
+        color: var(--navy);
+        text-decoration: none;
+    }
+    .job-item-title a:hover {
+        text-decoration: underline;
+    }
+    .job-item-meta {
+        font-size: 12px;
+        color: var(--ink-soft);
+        margin-bottom: 12px;
+    }
+    .job-item-desc {
+        color: var(--ink-soft);
+        line-height: 1.5;
+        font-size: 13px;
+        margin: 0 0 16px;
+        flex: 1;
+    }
+    .job-item-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+    }
+    .job-btn-secondary {
+        flex: 1;
+        padding: 8px 12px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--navy);
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: border-color 0.15s ease;
+    }
+    .job-btn-secondary:hover {
+        border-color: rgba(52,46,45,0.3);
+    }
+    .job-btn-primary {
+        flex: 1;
+        padding: 8px 12px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--white);
+        background: var(--navy);
+        border: 1px solid var(--navy);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: background 0.15s ease;
+    }
+    .job-btn-primary:hover {
+        background: var(--navy-soft);
+    }
+    .job-delete-form {
+        margin-top: 10px;
+    }
+    .job-btn-danger {
+        width: 100%;
+        padding: 7px;
+        color: #706969;
+        background: transparent;
+        border: 1px solid rgba(112,105,105,0.3);
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .job-btn-danger:hover {
+        background: var(--clay-soft);
+    }
+    .jobs-empty {
+        color: var(--ink-soft);
+        grid-column: 1 / -1;
+        padding: 40px 24px;
+        text-align: center;
+        background: var(--white);
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+    }
+    .jobs-empty-title {
+        margin: 0 0 6px;
+        color: var(--navy);
+        font-weight: 600;
+        font-size: 15px;
+    }
+    .jobs-empty-desc {
+        margin: 0;
+        font-size: 13px;
+    }
+</style>
 {% endblock %}

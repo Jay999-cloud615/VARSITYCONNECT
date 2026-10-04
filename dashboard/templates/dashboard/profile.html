@@ -6,7 +6,10 @@
 <div class="profile-page">
     <section class="profile-header">
         <div class="profile-avatar" aria-hidden="true">
-            {% if request.user.first_name %}{{ request.user.first_name|first|upper }}{% else %}{{ request.user.username|first|upper }}{% endif %}
+            <svg viewBox="0 0 100 100" focusable="false">
+                <circle cx="50" cy="34" r="19"></circle>
+                <path d="M15 91c2-22 15-35 35-35s33 13 35 35H15Z"></path>
+            </svg>
         </div>
         <div class="profile-identity">
             <span class="profile-eyebrow">Your campus profile</span>
@@ -14,119 +17,29 @@
             <p class="profile-username">@{{ request.user.username }}</p>
             <p class="profile-joined">Member since {{ request.user.date_joined|date:"F Y" }}</p>
         </div>
-        <div class="profile-total">
-            <strong>{{ marketplace_count|add:job_count|add:resource_count }}</strong>
-            <span>Shared items</span>
-        </div>
     </section>
 
-    <section class="profile-stats" aria-label="Your contributions">
-        <div class="profile-stat">
-            <span class="profile-stat-icon profile-icon-market">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
-            </span>
-            <div><strong>{{ marketplace_count }}</strong><span>Marketplace listings</span></div>
-        </div>
-        <div class="profile-stat">
-            <span class="profile-stat-icon profile-icon-jobs">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg>
-            </span>
-            <div><strong>{{ job_count }}</strong><span>Jobs posted</span></div>
-        </div>
-        <div class="profile-stat">
-            <span class="profile-stat-icon profile-icon-course">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg>
-            </span>
-            <div><strong>{{ resource_count }}</strong><span>Course materials</span></div>
-        </div>
-    </section>
-
-    <section class="profile-section">
-        <div class="profile-section-heading">
-            <div>
-                <span class="profile-section-kicker">Buy and sell</span>
-                <h2>Marketplace listings</h2>
-            </div>
-            <a href="{% url 'marketplace' %}" class="profile-section-link">Visit marketplace &rarr;</a>
-        </div>
-        <div class="profile-items">
-            {% for listing in marketplace_listings %}
-            <article class="profile-item">
-                {% if listing.image %}
-                    <img class="profile-item-image" src="{{ listing.image.url }}" alt="{{ listing.title }}">
-                {% else %}
-                    <div class="profile-item-image profile-item-placeholder profile-icon-market" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
-                    </div>
-                {% endif %}
-                <div class="profile-item-content">
-                    <span class="profile-item-category">{{ listing.get_category_display }}</span>
-                    <h3><a href="{% url 'listing_detail' listing.pk %}">{{ listing.title }}</a></h3>
-                    <p class="profile-item-meta">R{{ listing.price }}{% if listing.price_suffix %}{{ listing.price_suffix }}{% endif %} · {{ listing.created_at|date:"j M Y" }}</p>
-                </div>
-                <a href="{% url 'listing_detail' listing.pk %}" class="profile-item-action">View listing</a>
-            </article>
-            {% empty %}
-            <p class="profile-empty">You haven’t shared any marketplace listings yet.</p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="profile-section">
-        <div class="profile-section-heading">
-            <div>
-                <span class="profile-section-kicker">Campus opportunities</span>
-                <h2>Jobs you posted</h2>
-            </div>
-            <a href="{% url 'jobs' %}" class="profile-section-link">Visit jobs &rarr;</a>
-        </div>
-        <div class="profile-items">
-            {% for job in jobs %}
-            <article class="profile-item">
-                <div class="profile-item-image profile-item-placeholder profile-icon-jobs" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg>
-                </div>
-                <div class="profile-item-content">
-                    <span class="profile-item-category">Student job</span>
-                    <h3><a href="{% url 'job-detail' job.pk %}">{{ job.title }}</a></h3>
-                    <p class="profile-item-meta">{% if job.organization %}{{ job.organization }} · {% endif %}{{ job.location }} · {{ job.created_at|date:"j M Y" }}</p>
-                </div>
-                <a href="{% url 'job-detail' job.pk %}" class="profile-item-action">View job</a>
-            </article>
-            {% empty %}
-            <p class="profile-empty">You haven’t posted any jobs yet.</p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="profile-section">
-        <div class="profile-section-heading">
-            <div>
-                <span class="profile-section-kicker">Study and share</span>
-                <h2>Course materials</h2>
-            </div>
-            <a href="{% url 'course_material' %}" class="profile-section-link">Browse materials &rarr;</a>
-        </div>
-        <div class="profile-items">
-            {% for resource in resources %}
-            <article class="profile-item">
-                {% if resource.image %}
-                    <img class="profile-item-image" src="{{ resource.image.url }}" alt="{{ resource.title }}">
-                {% else %}
-                    <div class="profile-item-image profile-item-placeholder profile-icon-course" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg>
-                    </div>
-                {% endif %}
-                <div class="profile-item-content">
-                    <span class="profile-item-category">{{ resource.get_category_display }}</span>
-                    <h3>{{ resource.title }}</h3>
-                    <p class="profile-item-meta">Shared {{ resource.created_at|date:"j M Y" }}</p>
-                </div>
-                <a href="{% url 'resource-download' resource.pk %}" class="profile-item-action">Download</a>
-            </article>
-            {% empty %}
-            <p class="profile-empty">You haven’t shared any course materials yet.</p>
-            {% endfor %}
+    <section class="profile-overview" aria-labelledby="profile-statistics-heading">
+        <h2 class="profile-stats-heading" id="profile-statistics-heading">Statistics</h2>
+        <div class="profile-stats">
+            <a class="profile-stat" href="{% url 'marketplace' %}" aria-label="View marketplace listings">
+                <span class="profile-stat-icon profile-icon-market">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
+                </span>
+                <div><strong>{{ marketplace_count }}</strong><span>Marketplace listings</span></div>
+            </a>
+            <a class="profile-stat" href="{% url 'jobs' %}" aria-label="View jobs">
+                <span class="profile-stat-icon profile-icon-jobs">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg>
+                </span>
+                <div><strong>{{ job_count }}</strong><span>Jobs you posted</span></div>
+            </a>
+            <a class="profile-stat" href="{% url 'course_material' %}" aria-label="View course materials">
+                <span class="profile-stat-icon profile-icon-course">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg>
+                </span>
+                <div><strong>{{ resource_count }}</strong><span>Course materials</span></div>
+            </a>
         </div>
     </section>
 </div>
@@ -134,273 +47,211 @@
 <style>
     .profile-page {
         max-width: 1080px;
-        margin: 8px auto 36px;
+        margin: 4px auto 36px;
     }
     .profile-header {
         display: flex;
         align-items: center;
         gap: 22px;
-        padding: 30px;
-        border: 1px solid rgba(21,39,63,0.06);
-        border-radius: 26px;
-        background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94));
-        box-shadow: var(--shadow-soft);
+        padding: 26px 30px;
+        border: 1px solid rgba(52,46,45,0.2);
+        border-radius: 8px;
+        background: var(--navy);
+        box-shadow: var(--shadow-card);
         color: var(--white);
     }
     .profile-avatar {
         display: grid;
         place-items: center;
-        flex: 0 0 94px;
-        width: 94px;
-        height: 94px;
-        border: 4px solid rgba(243,191,89,0.9);
-        border-radius: 50%;
-        background: rgba(255,255,255,0.1);
-        color: var(--gold);
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--gold);
+        color: var(--navy);
         font-family: 'Fraunces', serif;
-        font-size: 42px;
+        font-size: 32px;
         font-weight: 700;
     }
     .profile-identity {
         flex: 1;
         min-width: 0;
     }
-    .profile-eyebrow,
-    .profile-section-kicker {
+    .profile-eyebrow {
         color: var(--gold);
+        font-family: 'IBM Plex Mono', monospace;
         font-size: 10px;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 1.2px;
         text-transform: uppercase;
     }
     .profile-identity h1 {
-        margin: 5px 0 2px;
+        margin: 4px 0 2px;
         font-family: 'Fraunces', serif;
-        font-size: clamp(27px, 3vw, 38px);
+        font-size: clamp(26px, 3vw, 34px);
+        font-weight: 600;
         line-height: 1.15;
         overflow-wrap: anywhere;
+        color: var(--white);
     }
     .profile-username,
     .profile-joined {
-        margin: 4px 0 0;
-        color: rgba(255,255,255,0.72);
+        margin: 3px 0 0;
+        color: rgba(255,255,255,0.75);
         font-size: 13px;
     }
-    .profile-total {
-        display: grid;
-        gap: 3px;
-        min-width: 116px;
-        padding: 15px;
-        border: 1px solid rgba(255,255,255,0.14);
-        border-radius: 16px;
-        background: rgba(255,255,255,0.07);
-        text-align: center;
-    }
-    .profile-total strong {
-        color: var(--gold);
-        font-family: 'Fraunces', serif;
-        font-size: 30px;
-    }
-    .profile-total span {
-        color: rgba(255,255,255,0.8);
+    .profile-joined {
+        font-family: 'IBM Plex Mono', monospace;
         font-size: 11px;
     }
     .profile-stats {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
-        margin: 20px 0 30px;
+        margin: 20px 0 28px;
+    }
+    .profile-stats-heading {
+        margin: 0;
+        color: var(--navy);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 800;
     }
     .profile-stat {
         display: flex;
         align-items: center;
-        gap: 13px;
-        padding: 17px;
+        gap: 14px;
+        padding: 16px 18px;
         border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(255,255,255,0.82);
+        border-radius: 8px;
+        background: var(--white);
         box-shadow: var(--shadow-card);
+        color: inherit;
+        text-decoration: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     }
-    .profile-stat-icon,
-    .profile-item-placeholder {
+    .profile-stat:hover {
+        border-color: rgba(52,46,45,0.25);
+        box-shadow: var(--shadow-soft);
+        transform: translateY(-1px);
+    }
+    .profile-stat:focus-visible {
+        outline: 3px solid var(--gold-deep);
+        outline-offset: 3px;
+    }
+    .profile-stat-icon {
         display: grid;
         place-items: center;
-        flex: 0 0 42px;
-        width: 42px;
-        height: 42px;
-        color: var(--teal);
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
     }
     .profile-stat-icon svg {
-        width: 23px;
-        height: 23px;
+        width: 20px;
+        height: 20px;
         fill: none;
         stroke: currentColor;
         stroke-linecap: round;
         stroke-linejoin: round;
-        stroke-width: 1.7;
+        stroke-width: 1.8;
     }
-    .profile-icon-market { color: var(--gold-deep); }
-    .profile-icon-jobs { color: var(--teal); }
-    .profile-icon-course { color: #a84c3a; }
-    .profile-item-placeholder svg {
-        width: 27px;
-        height: 27px;
-        fill: none;
-        stroke: currentColor;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 1.7;
+    .profile-icon-market {
+        color: var(--gold-deep);
+        background: rgba(158,175,169,0.18);
+    }
+    .profile-icon-jobs {
+        color: var(--teal);
+        background: var(--teal-soft);
+    }
+    .profile-icon-course {
+        color: var(--ink-soft);
+        background: var(--clay-soft);
     }
     .profile-stat div {
         display: grid;
-        gap: 3px;
+        gap: 2px;
     }
     .profile-stat strong {
         color: var(--navy);
-        font-size: 20px;
+        font-family: 'Fraunces', serif;
+        font-size: 22px;
+        line-height: 1.1;
     }
     .profile-stat div span {
         color: var(--ink-soft);
         font-size: 11px;
-    }
-    .profile-section {
-        margin-top: 26px;
-    }
-    .profile-section-heading {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 12px;
-    }
-    .profile-section-kicker {
-        color: var(--teal);
-    }
-    .profile-section-heading h2 {
-        margin: 4px 0 0;
-        color: var(--navy);
-        font-family: 'Fraunces', serif;
-        font-size: 25px;
-    }
-    .profile-section-link {
-        flex-shrink: 0;
-        color: var(--gold-deep);
-        font-size: 12px;
-        font-weight: 700;
-        text-decoration: none;
-    }
-    .profile-section-link:hover,
-    .profile-item-content h3 a:hover {
-        text-decoration: underline;
-    }
-    .profile-items {
-        display: grid;
-        gap: 10px;
-    }
-    .profile-item {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        min-width: 0;
-        padding: 13px;
-        border: 1px solid rgba(21,39,63,0.07);
-        border-radius: 17px;
-        background: rgba(255,255,255,0.82);
-        box-shadow: 0 6px 16px rgba(21,39,63,0.04);
-    }
-    .profile-item-image {
-        flex: 0 0 58px;
-        width: 58px;
-        height: 58px;
-        border-radius: 13px;
-        object-fit: cover;
-    }
-    .profile-item-placeholder {
-        flex-basis: 58px;
-        width: 58px;
-        height: 58px;
-    }
-    .profile-item-content {
-        flex: 1;
-        min-width: 0;
-    }
-    .profile-item-category {
-        color: var(--teal);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-    }
-    .profile-item-content h3 {
-        margin: 3px 0;
-        color: var(--navy);
-        font-size: 15px;
-        overflow-wrap: anywhere;
-    }
-    .profile-item-content h3 a {
-        color: inherit;
-        text-decoration: none;
-    }
-    .profile-item-meta {
-        margin: 0;
-        color: var(--ink-soft);
-        font-size: 11px;
-        line-height: 1.5;
-    }
-    .profile-item-action {
-        flex-shrink: 0;
-        padding: 8px 11px;
-        border: 1px solid rgba(21,39,63,0.1);
-        border-radius: 10px;
-        background: rgba(21,39,63,0.04);
-        color: var(--navy);
-        font-size: 11px;
-        font-weight: 700;
-        text-decoration: none;
-    }
-    .profile-empty {
-        margin: 0;
-        padding: 22px;
-        border: 1px dashed rgba(21,39,63,0.16);
-        border-radius: 16px;
-        background: rgba(255,255,255,0.62);
-        color: var(--ink-soft);
-        font-size: 13px;
-        text-align: center;
+        font-weight: 500;
     }
     @media (max-width: 720px) {
         .profile-header {
             align-items: flex-start;
             flex-wrap: wrap;
-            padding: 22px;
-        }
-        .profile-avatar {
-            flex-basis: 72px;
-            width: 72px;
-            height: 72px;
-            font-size: 32px;
-        }
-        .profile-total {
-            width: 100%;
+            padding: 20px;
         }
         .profile-stats {
             grid-template-columns: 1fr;
         }
     }
+</style>
+
+<style>
+    .profile-page {
+        max-width: 1080px;
+    }
+    .profile-header {
+        gap: 20px;
+        padding: 24px 28px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--white);
+        color: var(--ink);
+    }
+    .profile-avatar {
+        flex-basis: 60px;
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: 32px;
+    }
+    .profile-identity h1 {
+        color: var(--ink);
+    }
+    .profile-username,
+    .profile-joined {
+        color: var(--ink-soft);
+    }
+    .profile-overview {
+        margin-top: 24px;
+    }
+    .profile-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0 0 28px;
+    }
+    .profile-stat {
+        padding: 14px 16px;
+        border-radius: 12px;
+        min-height: 94px;
+    }
+    .profile-stat-icon {
+        background: transparent;
+    }
+    .profile-stat strong {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 800;
+    }
+    @media (max-width: 720px) {
+        .profile-header {
+            align-items: center;
+        }
+    }
     @media (max-width: 480px) {
-        .profile-item {
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-        .profile-item-content {
-            width: calc(100% - 75px);
-        }
-        .profile-item-action {
-            margin-left: 72px;
-        }
-        .profile-section-heading {
-            align-items: flex-start;
-            flex-direction: column;
+        .profile-stats {
+            grid-template-columns: 1fr;
         }
     }
 </style>

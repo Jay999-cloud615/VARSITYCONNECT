@@ -31,7 +31,7 @@ class ProfileTests(TestCase):
         )
         self.client.force_login(self.user)
 
-    def test_profile_shows_users_name_and_all_their_shared_content(self):
+    def test_profile_shows_name_and_clickable_contribution_counts(self):
         MarketplaceListing.objects.create(
             title='My textbook',
             price='100.00',
@@ -59,17 +59,42 @@ class ProfileTests(TestCase):
         response = self.client.get(reverse('profile'))
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "font-family:'Plus Jakarta Sans', sans-serif !important;",
+        )
         self.assertContains(response, 'Profile User')
         self.assertContains(response, '@profileuser')
-        self.assertContains(response, 'My textbook')
-        self.assertContains(response, 'My campus job')
-        self.assertContains(response, 'My lecture notes')
+        self.assertContains(response, 'class="profile-avatar" aria-hidden="true"')
+        self.assertContains(response, 'class="sidebar-avatar" aria-hidden="true"')
+        self.assertContains(response, '<circle cx="50" cy="34" r="19"></circle>')
+        self.assertNotContains(response, 'class="brand-mark"')
         self.assertContains(response, 'Marketplace listings')
         self.assertContains(response, 'Jobs you posted')
         self.assertContains(response, 'Course materials')
-        self.assertContains(response, 'class="profile-total">\n            <strong>3</strong>')
+        self.assertContains(
+            response,
+            'class="profile-stat" href="{}"'.format(reverse('marketplace')),
+        )
+        self.assertContains(
+            response,
+            'class="profile-stat" href="{}"'.format(reverse('jobs')),
+        )
+        self.assertContains(
+            response,
+            'class="profile-stat" href="{}"'.format(reverse('course_material')),
+        )
+        self.assertContains(response, '<strong>1</strong>', count=3)
+        self.assertNotContains(response, 'My textbook')
+        self.assertNotContains(response, 'My campus job')
+        self.assertNotContains(response, 'My lecture notes')
+        self.assertNotContains(response, 'Your campus footprint')
+        self.assertNotContains(response, 'Explore the community')
+        self.assertNotContains(response, 'Buy and sell')
+        self.assertNotContains(response, 'Campus opportunities')
+        self.assertNotContains(response, 'Study and share')
 
-    def test_profile_only_shows_content_shared_by_current_user(self):
+    def test_profile_counts_only_content_shared_by_current_user(self):
         MarketplaceListing.objects.create(
             title='Someone elses listing',
             price='100.00',
@@ -99,9 +124,7 @@ class ProfileTests(TestCase):
         self.assertNotContains(response, 'Someone elses listing')
         self.assertNotContains(response, 'Someone elses job')
         self.assertNotContains(response, 'Someone elses notes')
-        self.assertContains(response, 'You haven’t shared any marketplace listings yet.')
-        self.assertContains(response, 'You haven’t posted any jobs yet.')
-        self.assertContains(response, 'You haven’t shared any course materials yet.')
+        self.assertContains(response, '<strong>0</strong>', count=3)
 
     def test_profile_requires_login_and_is_linked_from_sidebar(self):
         self.client.logout()
@@ -134,7 +157,7 @@ class DashboardHomeTests(TestCase):
         )
         self.client.force_login(self.user)
 
-    def test_dashboard_shows_project_activity_and_quick_actions(self):
+    def test_dashboard_shows_only_greeting_and_activity_cards(self):
         MarketplaceListing.objects.create(
             title='Campus calculator',
             price='150.00',
@@ -162,11 +185,18 @@ class DashboardHomeTests(TestCase):
         response = self.client.get(reverse('dashboard'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Hello, Alex')
-        self.assertContains(response, 'Campus calculator')
-        self.assertContains(response, 'Library assistant')
-        self.assertContains(response, 'Biology notes')
-        self.assertContains(response, 'href="{}"'.format(reverse('create_listing')))
+        self.assertContains(response, 'Home')
+        self.assertContains(response, 'Hello Alex')
+        self.assertContains(response, 'Here’s what’s happening across your campus hub today.')
+        self.assertContains(response, 'Marketplace items')
+        self.assertContains(response, 'Student jobs')
+        self.assertContains(response, 'Course resources')
+        self.assertNotContains(response, 'Campus calculator')
+        self.assertNotContains(response, 'Library assistant')
+        self.assertNotContains(response, 'Biology notes')
+        self.assertNotContains(response, 'Quick actions')
+        self.assertNotContains(response, 'Latest student jobs')
+        self.assertContains(response, 'href="{}"'.format(reverse('marketplace')))
         self.assertContains(response, 'href="{}"'.format(reverse('jobs')))
         self.assertContains(response, 'href="{}"'.format(reverse('course_material')))
         self.assertContains(response, '<strong>1</strong>')

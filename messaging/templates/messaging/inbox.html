@@ -46,32 +46,86 @@
 </div>
 
 <style>
-    .inbox-page { max-width: 900px; margin: 8px auto 36px; }
-    .inbox-heading { margin: 0 0 22px; }
-    .inbox-eyebrow { color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-    .inbox-heading h1 { margin: 6px 0; color: var(--navy); font: 600 clamp(29px, 4vw, 38px) 'Fraunces', serif; }
+    .inbox-page { max-width: 860px; margin: 4px auto 36px; }
+    .inbox-heading { margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .inbox-eyebrow { color: var(--teal); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .inbox-heading h1 { margin: 4px 0 2px; color: var(--navy); font: 600 clamp(26px, 3.5vw, 34px) 'Fraunces', serif; }
     .inbox-heading p { margin: 0; color: var(--ink-soft); font-size: 14px; }
-    .inbox-list { display: grid; gap: 10px; }
-    .inbox-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid rgba(21,39,63,0.07); border-radius: 18px; background: rgba(255,255,255,0.88); box-shadow: var(--shadow-card); transition: transform .18s ease, box-shadow .18s ease; }
-    .inbox-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-soft); }
-    .inbox-card-link { display: flex; align-items: center; gap: 13px; flex: 1; min-width: 0; color: inherit; text-decoration: none; }
-    .inbox-avatar { display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px; border: 2px solid rgba(243,191,89,.72); border-radius: 50%; background: rgba(243,191,89,.12); color: var(--navy); font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; }
-    .inbox-copy { display: grid; gap: 4px; flex: 1; min-width: 0; }
-    .inbox-copy strong { color: var(--navy); font-size: 14px; }
+    .inbox-list { display: grid; gap: 8px; }
+    .inbox-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--white);
+        box-shadow: var(--shadow-card);
+        transition: border-color .15s ease, background .15s ease;
+    }
+    .inbox-card:hover {
+        border-color: rgba(52,46,45,0.28);
+        background: #f5f7f5;
+    }
+    .inbox-card-link { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; color: inherit; text-decoration: none; }
+    .inbox-avatar {
+        display: grid;
+        place-items: center;
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        background: var(--navy);
+        color: var(--gold);
+        font-family: 'Fraunces', serif;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .inbox-copy { display: grid; gap: 3px; flex: 1; min-width: 0; }
+    .inbox-copy strong { color: var(--navy); font-size: 14px; font-weight: 600; }
     .inbox-copy span { overflow: hidden; color: var(--ink-soft); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-    .inbox-card time { flex-shrink: 0; color: #8f9aa8; font-size: 10px; }
-    .inbox-delete { padding: 7px 9px; border: 1px solid rgba(163,59,53,.2); border-radius: 9px; background: transparent; color: #a33b35; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .inbox-card time {
+        flex-shrink: 0;
+        color: #7b8887;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+    }
+    .inbox-delete {
+        padding: 6px 9px;
+        border: 1px solid rgba(112,105,105,.3);
+        border-radius: 6px;
+        background: transparent;
+        color: #706969;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
     .inbox-delete:hover { background: var(--clay-soft); }
-    .inbox-empty { display: grid; justify-items: center; padding: 48px 24px; border: 1px dashed var(--line); border-radius: 22px; background: rgba(255,255,255,.7); text-align: center; }
-    .inbox-empty-icon { display: grid; place-items: center; width: 54px; height: 54px; color: var(--teal); }
-    .inbox-empty-icon svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
-    .inbox-empty h2 { margin: 10px 0 6px; color: var(--navy); font: 600 23px 'Fraunces', serif; }
-    .inbox-empty p { max-width: 420px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
-    .inbox-empty a { margin-top: 15px; color: var(--gold-deep); font-size: 13px; font-weight: 700; text-decoration: none; }
+    .inbox-empty {
+        display: grid;
+        justify-items: center;
+        padding: 48px 24px;
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        background: var(--white);
+        text-align: center;
+    }
+    .inbox-empty-icon { display: grid; place-items: center; width: 48px; height: 48px; color: var(--teal); }
+    .inbox-empty-icon svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
+    .inbox-empty h2 { margin: 12px 0 6px; color: var(--navy); font: 600 20px 'Fraunces', serif; }
+    .inbox-empty p { max-width: 420px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.5; }
+    .inbox-empty a {
+        margin-top: 14px;
+        color: var(--navy);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: underline;
+    }
     @media (max-width: 560px) {
         .inbox-card { align-items: flex-start; flex-wrap: wrap; }
         .inbox-card time { display: none; }
-        .inbox-delete { margin-left: 59px; }
+        .inbox-delete { margin-left: 54px; }
     }
 </style>
 {% endblock %}

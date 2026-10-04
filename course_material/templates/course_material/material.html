@@ -1,74 +1,72 @@
 {% extends 'base.html' %}
 
+{% block title %}Course Materials - Varsity Connect{% endblock %}
+
 {% block content %}
-<div style="padding: 10px 0 32px;">
-    <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); border-radius: 30px; padding: 30px 32px; color: white; box-shadow: var(--shadow-soft); margin-bottom: 26px; position: relative; overflow: hidden;">
-        <div style="position: absolute; right: -25px; bottom: -25px; width: 180px; height: 180px; background: rgba(243,191,89,0.12); border-radius: 50%;"></div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; position: relative; z-index: 1;">
-            <div>
-                <span style="display: inline-flex; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #f5dca2; font-weight: 700;">Study smarter</span>
-                <h2 class="display" style="color: white; margin: 16px 0 8px; font-size: clamp(28px, 3vw, 40px);">Course Materials</h2>
-                <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 15px; max-width: 620px; line-height: 1.6;">Scroll, browse, and download study resources shared on campus.</p>
-            </div>
-            <button type="button" onclick="toggleUploadForm()" id="uploadToggleBtn" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 12px 18px; border-radius: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 12px 22px rgba(243,191,89,0.3);">
-                + Upload Document
-            </button>
+<div class="materials-page">
+    <header class="materials-hero">
+        <div class="materials-hero-content">
+            <h1 class="materials-title">Course Materials</h1>
+            <p class="materials-subtitle">Browse, search, and download student-curated lecture notes, slides, and study resources.</p>
         </div>
-    </div>
+        <button type="button" onclick="toggleUploadForm()" id="uploadToggleBtn" class="materials-upload-btn">
+            + Upload Document
+        </button>
+    </header>
 
-    <div id="uploadSection" style="display: none; background: rgba(255,255,255,0.82); padding: 24px; border-radius: 24px; box-shadow: var(--shadow-card); border: 1px solid rgba(21,39,63,0.06); margin-bottom: 26px;">
-        <h3 class="display" style="margin-top: 0; color: var(--navy); font-size: 28px; margin-bottom: 18px;">Publish a New Document</h3>
+    <section id="uploadSection" class="materials-upload-section" style="display: none;">
+        <h2 class="materials-upload-heading">Publish a New Document</h2>
 
-        <form method="POST" enctype="multipart/form-data" style="display: grid; gap: 14px;">
+        <form method="POST" enctype="multipart/form-data" class="materials-upload-form">
             {% csrf_token %}
             {{ form.as_p }}
 
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
-                <button type="button" onclick="toggleUploadForm()" style="background: rgba(21,39,63,0.04); border: 1px solid rgba(21,39,63,0.08); color: var(--ink-soft); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 700;">Cancel</button>
-                <button type="submit" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: var(--white); border: none; padding: 10px 20px; font-weight: 700; border-radius: 12px; cursor: pointer;">Submit & Publish</button>
+            <div class="materials-upload-actions">
+                <button type="button" onclick="toggleUploadForm()" class="materials-btn-cancel">Cancel</button>
+                <button type="submit" class="materials-btn-submit">Submit & Publish</button>
             </div>
         </form>
-    </div>
+    </section>
 
-    <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; padding-bottom: 20px;">
+    <div class="materials-grid">
         {% for resource in resources %}
-        <div class="card" style="background: rgba(255,255,255,0.82); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid rgba(21,39,63,0.06); transition: transform 0.2s ease;">
-            <div class="card-image-container" style="background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); height: 160px; position: relative; padding: 14px;{% if resource.image %} background-image: linear-gradient(rgba(21,39,63,0.12), rgba(21,39,63,0.12)), url('{{ resource.image.url }}'); background-size: cover; background-position: center;{% endif %}">
-                <span class="badge" style="background: rgba(21,39,63,0.96); color: white; padding: 6px 8px; font-size: 10px; font-weight: 700; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px;">
+        <article class="materials-card">
+            <div class="materials-card-media" style="{% if resource.image %}background-image: url('{{ resource.image.url }}'); background-size: cover; background-position: center;{% endif %}">
+                <span class="materials-category-badge">
                     {{ resource.get_category_display }}
                 </span>
             </div>
 
-            <div class="card-body" style="padding: 18px 18px 16px;">
-                <h3 style="margin: 0 0 10px 0; font-size: 18px; color: var(--navy); font-weight: 700;">{{ resource.title }}</h3>
+            <div class="materials-card-body">
+                <h3 class="materials-card-title">{{ resource.title }}</h3>
 
-                <a href="{% url 'resource-download' resource.id %}" class="download-link" style="display: block; text-align: center; background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; padding: 10px; text-decoration: none; border-radius: 12px; font-size: 13px; font-weight: 700; margin-bottom: 12px; box-shadow: 0 14px 26px rgba(21,39,63,0.18); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                <a href="{% url 'resource-download' resource.id %}" class="download-link materials-download-btn">
                     Download PDF
                 </a>
 
                 {% if resource.uploaded_by_id == request.user.id %}
-                <form method="post" action="{% url 'resource-delete' resource.pk %}" onsubmit="return confirm('Remove this course material?');" style="margin-bottom: 12px;">
+                <form method="post" action="{% url 'resource-delete' resource.pk %}" onsubmit="return confirm('Remove this course material?');" class="materials-delete-form">
                     {% csrf_token %}
-                    <button type="submit" style="width: 100%; background: #a33b35; color: white; padding: 9px; border: 0; border-radius: 12px; font-weight: 700; cursor: pointer;">Remove my upload</button>
+                    <button type="submit" class="materials-delete-btn">Remove my upload</button>
                 </form>
                 {% endif %}
 
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-soft); border-top: 1px solid rgba(21,39,63,0.08); padding-top: 10px;">
+                <div class="materials-card-meta">
                     <span>Shared by {{ resource.uploaded_by.username }}</span>
-                    <span>{{ resource.created_at|date:"j M Y" }}</span>
+                    <time datetime="{{ resource.created_at|date:'Y-m-d' }}">{{ resource.created_at|date:"j M Y" }}</time>
                 </div>
             </div>
-        </div>
+        </article>
         {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(255,255,255,0.82); border-radius: 24px; border: 1px dashed rgba(21,39,63,0.14); box-shadow: var(--shadow-card);">
-            <p style="color: var(--navy); font-weight: 700; margin: 0 0 8px 0;">No study materials have been shared yet.</p>
-            <span style="color: var(--ink-soft); font-size: 13px;">Have notes to share? <button type="button" onclick="toggleUploadForm()" style="padding: 0; border: 0; background: none; color: var(--gold-deep); font: inherit; font-weight: 700; cursor: pointer;">Add the first resource</button></span>
+        <div class="materials-empty">
+            <p class="materials-empty-title">No study materials have been shared yet.</p>
+            <span class="materials-empty-desc">Have notes to share? <button type="button" onclick="toggleUploadForm()" class="materials-inline-upload-btn">Add the first resource</button></span>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<div id="downloadToast" style="position: fixed; right: 24px; bottom: 24px; background: rgba(21,39,63,0.96); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 18px 40px rgba(21,39,63,0.24); transform: translateY(20px); opacity: 0; pointer-events: none; transition: all 0.25s ease; z-index: 50; font-size: 13px; font-weight: 600;">
+<div id="downloadToast" class="materials-toast">
     Download started successfully.
 </div>
 
@@ -92,41 +90,276 @@
             clearTimeout(window.downloadToastTimer);
             window.downloadToastTimer = setTimeout(function() {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
+                toast.style.transform = 'translateY(16px)';
             }, 1800);
         });
     });
 </script>
 
 <style>
-    .download-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 16px 30px rgba(21,39,63,0.24);
+    .materials-page {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 4px 0 32px;
     }
-
+    .materials-hero {
+        background: var(--navy);
+        border: 1px solid rgba(52,46,45,0.18);
+        border-radius: 8px;
+        padding: 26px 30px;
+        color: var(--white);
+        box-shadow: var(--shadow-card);
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .materials-hero-content {
+        max-width: 620px;
+    }
+    .materials-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(26px, 3vw, 34px);
+        font-weight: 600;
+        margin: 12px 0 6px;
+        color: var(--white);
+    }
+    .materials-subtitle {
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.5;
+    }
+    .materials-upload-btn {
+        background: var(--gold);
+        color: var(--navy);
+        border: 1px solid var(--gold-deep);
+        padding: 10px 16px;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        align-self: flex-start;
+        transition: filter 0.15s ease;
+    }
+    .materials-upload-btn:hover {
+        filter: brightness(1.05);
+    }
+    .materials-upload-section {
+        background: var(--white);
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--line);
+        margin-bottom: 24px;
+    }
+    .materials-upload-heading {
+        margin-top: 0;
+        color: var(--navy);
+        font-family: 'Fraunces', serif;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .materials-upload-form {
+        display: grid;
+        gap: 14px;
+    }
+    .materials-upload-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 8px;
+    }
+    .materials-btn-cancel {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        color: var(--ink-soft);
+        padding: 9px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .materials-btn-submit {
+        background: var(--navy);
+        color: var(--white);
+        border: 1px solid var(--navy);
+        padding: 9px 18px;
+        font-weight: 600;
+        font-size: 13px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .materials-btn-submit:hover {
+        background: var(--navy-soft);
+    }
+    .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        padding-bottom: 20px;
+    }
+    .materials-card {
+        background: var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .materials-card:hover {
+        border-color: rgba(52,46,45,0.28);
+        box-shadow: var(--shadow-soft);
+    }
+    .materials-card-media {
+        background: #cbd8d0;
+        height: 150px;
+        position: relative;
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+    }
+    .materials-category-badge {
+        background: var(--navy);
+        color: var(--white);
+        padding: 4px 7px;
+        font-size: 10px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .materials-card-body {
+        padding: 16px 18px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .materials-card-title {
+        margin: 0 0 12px 0;
+        font-size: 16px;
+        color: var(--navy);
+        font-weight: 600;
+        line-height: 1.35;
+        flex: 1;
+    }
+    .materials-download-btn {
+        display: block;
+        text-align: center;
+        background: var(--navy);
+        color: var(--white);
+        padding: 9px 14px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        transition: background 0.15s ease;
+    }
+    .materials-download-btn:hover {
+        background: var(--navy-soft);
+    }
+    .materials-delete-form {
+        margin-bottom: 10px;
+    }
+    .materials-delete-btn {
+        width: 100%;
+        background: transparent;
+        color: #706969;
+        padding: 7px;
+        border: 1px solid rgba(112,105,105,0.3);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .materials-delete-btn:hover {
+        background: var(--clay-soft);
+    }
+    .materials-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--ink-soft);
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+        margin-top: auto;
+    }
+    .materials-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 24px;
+        background: var(--white);
+        border-radius: 8px;
+        border: 1px dashed var(--line);
+    }
+    .materials-empty-title {
+        color: var(--navy);
+        font-weight: 600;
+        font-size: 15px;
+        margin: 0 0 6px 0;
+    }
+    .materials-empty-desc {
+        color: var(--ink-soft);
+        font-size: 13px;
+    }
+    .materials-inline-upload-btn {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--navy);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .materials-toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        background: var(--navy);
+        color: var(--white);
+        border-left: 3px solid var(--gold);
+        padding: 12px 18px;
+        border-radius: 6px;
+        box-shadow: var(--shadow-soft);
+        transform: translateY(16px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        z-index: 50;
+        font-size: 13px;
+        font-weight: 500;
+    }
     #uploadSection form p {
         display: flex;
         flex-direction: column;
         gap: 6px;
         font-size: 13px;
-        font-weight: 700;
-        color: var(--ink-soft);
+        font-weight: 600;
+        color: var(--navy);
         margin: 0;
     }
     #uploadSection form input[type="text"],
     #uploadSection form input[type="number"],
     #uploadSection form select,
     #uploadSection form input[type="file"] {
-        padding: 12px 14px;
-        border: 1px solid rgba(21,39,63,0.12);
-        border-radius: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
         font-family: 'IBM Plex Sans', sans-serif;
-        background: rgba(255,255,255,0.9);
+        background: var(--white);
         color: var(--ink);
-        font-weight: normal;
-    }
-    #uploadSection form input[type="file"] {
-        background: white;
+        font-size: 14px;
     }
 </style>
 {% endblock %}

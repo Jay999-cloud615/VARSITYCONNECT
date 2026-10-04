@@ -5,166 +5,311 @@
     <title>{% block title %}Student Portal{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root{
-          --paper:#f4efe7;
-          --paper-2:#ece2d1;
-          --ink:#1b2430;
-          --ink-soft:#5b6472;
-          --navy:#15273f;
-          --navy-soft:#21395a;
-          --gold:#f3bf59;
-          --gold-deep:#d89a2d;
-          --teal:#2d7f75;
-          --teal-soft:#e9f6f3;
-          --lime:#d9f2c9;
-          --clay:#f2b7a8;
-          --clay-soft:#fdf1ee;
-          --line:#e3d7c8;
+          --paper:#f5f7f5;
+          --paper-2:#e8eeea;
+          --ink:#342e2d;
+          --ink-soft:#706969;
+          --navy:#342e2d;
+          --navy-soft:#4b4544;
+          --gold:#9eafa9;
+          --gold-deep:#7b8887;
+          --teal:#7b8887;
+          --teal-soft:#e8eeeb;
+          --lime:#cbd8d0;
+          --clay:#9eafa9;
+          --clay-soft:#e8eeeb;
+          --line:#d4ded8;
           --white:#ffffff;
-          --radius:18px;
-          --shadow-soft:0 18px 40px rgba(21,39,63,0.12);
-          --shadow-card:0 12px 30px rgba(21,39,63,0.08);
+          --radius:10px;
+          --shadow-soft:0 12px 30px rgba(52,46,45,0.10);
+          --shadow-card:0 4px 18px rgba(52,46,45,0.06);
         }
         *{box-sizing:border-box;}
-        html,body{margin:0;padding:0;}
+        body, body *{
+          font-family:'Plus Jakarta Sans', sans-serif !important;
+        }
+        html,body{margin:0;padding:0;font-size:15px;}
         body{
-          background:
-            radial-gradient(circle at top left, rgba(243,191,89,0.22), transparent 28%),
-            radial-gradient(circle at bottom right, rgba(45,127,117,0.18), transparent 25%),
-            linear-gradient(135deg, #f7f2ea 0%, #f0eadf 100%);
+          background-color:var(--paper);
           color:var(--ink);
-          font-family:'IBM Plex Sans', sans-serif;
+          font-family:'Plus Jakarta Sans', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           -webkit-font-smoothing:antialiased;
         }
 
-        .display{font-family:'Fraunces', serif;}
+        .display{font-family:'Plus Jakarta Sans', sans-serif; font-weight:800;}
+        .serif{font-family:'Fraunces', serif;}
         .mono{font-family:'IBM Plex Mono', monospace;}
+
+        /* ---------- Shared Page Styles Matching Reference ---------- */
+        .page-header{
+          margin-bottom:28px;
+        }
+        .page-kicker{
+          display:block;
+          font-size:14px;
+          font-weight:600;
+          color:var(--ink-soft);
+          margin-bottom:6px;
+          letter-spacing:0.2px;
+        }
+        .page-title{
+          font-size:clamp(32px, 3.5vw, 44px);
+          font-weight:800;
+          color:var(--ink);
+          margin:0 0 10px;
+          letter-spacing:-0.5px;
+          line-height:1.15;
+        }
+        .page-subtitle{
+          font-size:15px;
+          color:var(--ink-soft);
+          margin:0;
+          line-height:1.55;
+          max-width:720px;
+        }
+        .btn-more{
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          gap:8px;
+          background:var(--navy);
+          color:var(--white);
+          border:none;
+          border-radius:10px;
+          font-weight:700;
+          font-size:14px;
+          padding:14px 28px;
+          cursor:pointer;
+          text-decoration:none;
+          box-shadow:0 6px 18px rgba(52,46,45,0.18);
+          transition:background 0.15s ease, transform 0.15s ease;
+          white-space:nowrap;
+        }
+        .btn-more:hover{
+          background:var(--navy-soft);
+          transform:translateY(-1px);
+        }
 
         /* ---------- App shell ---------- */
         .app{min-height:100vh; display:flex; flex-direction:column;}
 
+        /* Topbar for mobile and responsive header */
         .topbar{
           display:flex; align-items:center; justify-content:space-between;
-          padding:13px 24px;
-          background:linear-gradient(135deg, var(--navy), var(--navy-soft));
+          padding:12px 28px;
+          background:var(--navy);
           color:var(--white);
-          border-bottom:3px solid var(--gold);
+          border-bottom:1px solid rgba(255,255,255,0.08);
           gap:16px;
-          box-shadow:0 8px 22px rgba(15, 27, 42, 0.14);
         }
         .top-left{display:flex; align-items:center; gap:16px;}
-        .brand{display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--white);}
-        .brand-mark{
-          display:inline-flex; align-items:center; justify-content:center;
-          width:34px; height:34px; background:linear-gradient(135deg, var(--gold), #f9d27f);
-          color:var(--navy); box-shadow:0 8px 18px rgba(243,191,89,0.35);
-          font-family:'Fraunces', serif; font-weight:700; font-size:18px;
-          border-radius:10px;
-        }
-        .brand-name{font-family:'Fraunces', serif; font-size:22px; letter-spacing:0.2px;}
+        .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--white);}
+        .brand-name{font-family:'Plus Jakarta Sans', sans-serif; font-size:19px; font-weight:700; letter-spacing:0.2px;}
 
         .top-right{display:flex; align-items:center; gap:14px;}
         .hamburger{
-          display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.08);
-          border:1px solid rgba(255,255,255,0.12); color:var(--white); font-size:20px; cursor:pointer;
-          width:38px; height:38px; border-radius:12px; transition:transform 0.2s ease, background 0.2s ease;
+          display:none; align-items:center; justify-content:center; background:rgba(255,255,255,0.08);
+          border:1px solid rgba(255,255,255,0.16); color:var(--white); font-size:18px; cursor:pointer;
+          width:36px; height:36px; border-radius:8px; transition:background 0.15s ease;
         }
-        .hamburger:hover{transform:translateY(-1px); background:rgba(255,255,255,0.12);}
+        .hamburger:hover{background:rgba(255,255,255,0.16);}
 
         .role-toggle{
-          display:flex; border:1px solid rgba(255,255,255,0.15); border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.04);
+          display:flex; border:1px solid rgba(255,255,255,0.18); border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.06);
         }
         .role-status{
-          display:inline-flex; align-items:center; padding:8px 14px; font-size:11px; letter-spacing:0.4px; text-transform:uppercase;
-          background:linear-gradient(135deg, var(--gold), #f8d783); color:var(--navy); border:none; font-weight:700; font-family:'IBM Plex Sans',sans-serif;
+          display:inline-flex; align-items:center; padding:6px 14px; font-size:12px; letter-spacing:0.6px; text-transform:uppercase;
+          background:var(--gold); color:var(--navy); border:none; font-weight:700; font-family:'IBM Plex Mono',monospace;
           text-decoration:none;
         }
         .role-status[href]:hover{filter:brightness(1.05);}
 
         .icon-btn{
-          position:relative; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
-          border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); border-radius:12px; cursor:pointer; color:var(--white);
-          box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+          position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+          border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.08); border-radius:8px; cursor:pointer; color:var(--white);
+          text-decoration:none; transition:background 0.15s ease;
         }
+        .icon-btn:hover{background:rgba(255,255,255,0.16);}
         .icon-btn .dot{
-          position:absolute; top:-4px; right:-4px; width:10px; height:10px; background:linear-gradient(135deg, var(--gold), var(--gold-deep));
+          position:absolute; top:-3px; right:-3px; width:8px; height:8px; background:var(--gold);
           border-radius:50%; border:2px solid var(--navy);
         }
 
         .shell{display:flex; flex:1; min-height:0; position:relative;}
 
-        /* ---------- Sidebar ---------- */
+        /* ---------- Campus navigation ---------- */
         .sidebar{
-          width:250px; background:rgba(255,255,255,0.8); backdrop-filter:blur(8px); border-right:1px solid rgba(21,39,63,0.06);
-          padding:20px 0; flex-shrink:0; transition: transform 0.25s ease, margin-left 0.25s ease;
-          box-shadow:8px 0 22px rgba(21,39,63,0.04);
+          width:250px;
+          background:var(--navy);
+          color:var(--white);
+          padding:18px 0 20px;
+          flex-shrink:0;
+          display:flex;
+          flex-direction:column;
+          transition: transform 0.22s ease, margin-left 0.22s ease;
+          border-right:1px solid rgba(255,255,255,0.08);
+          box-shadow:8px 0 22px rgba(52,46,45,0.12);
         }
         .sidebar.collapsed {margin-left:-250px;}
+
+        .sidebar-profile{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:0 18px 18px;
+          border-bottom:1px solid rgba(255,255,255,0.14);
+          margin:0 12px 12px;
+        }
+        .sidebar-avatar-wrap{
+          display:flex;
+          align-items:center;
+          gap:12px;
+          text-decoration:none;
+          color:var(--white);
+        }
+        .sidebar-avatar{
+          display:grid;
+          place-items:center;
+          width:50px;
+          height:50px;
+          border-radius:50%;
+          background:linear-gradient(135deg, var(--gold), var(--lime));
+          color:var(--navy);
+          font-weight:800;
+          font-size:20px;
+          box-shadow:0 4px 12px rgba(52,46,45,0.12);
+          overflow:hidden;
+        }
+        .sidebar-avatar svg{
+          width:100%;
+          height:100%;
+          fill:currentColor;
+        }
+        .sidebar-user-text{
+          display:grid;
+          gap:2px;
+        }
+        .sidebar-user-name{
+          font-size:15px;
+          font-weight:700;
+          color:var(--white);
+          line-height:1.2;
+        }
+        .sidebar-user-handle{
+          font-size:12px;
+          color:rgba(255,255,255,0.68);
+        }
+        .sidebar-bell{
+          position:relative;
+          width:38px;
+          height:38px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          border:1px solid rgba(255,255,255,0.2);
+          border-radius:10px;
+          background:transparent;
+          color:var(--white);
+          text-decoration:none;
+          transition:background 0.15s ease;
+        }
+        .sidebar-bell:hover{background:rgba(158,175,169,0.2);}
+        .sidebar-bell svg{width:18px; height:18px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8;}
+        .sidebar-bell-dot{
+          position:absolute; top:-3px; right:-3px; width:9px; height:9px; background:var(--teal);
+          border-radius:50%; border:2px solid var(--navy);
+        }
+
         .nav-section-label{
-          font-size:10px; text-transform:uppercase; letter-spacing:1.4px; color:#8f9aa8;
-          padding:4px 20px 8px;
+          font-family:'IBM Plex Mono', monospace; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.2px; color:rgba(255,255,255,0.56);
+          padding:10px 22px 7px;
         }
         .nav-item{
-          display:flex; align-items:center; gap:12px;
-          padding:10px 16px; cursor:pointer; color:var(--ink-soft);
-          border-left:3px solid transparent; margin:4px 10px; border-radius:12px;
-          font-size:13px; font-weight:500; text-decoration:none; transition:all 0.2s ease;
+          display:flex; align-items:center; gap:13px;
+          padding:10px 13px; cursor:pointer; color:rgba(255,255,255,0.76);
+          margin:3px 10px;
+          border:0; border-left:3px solid transparent; border-radius:13px;
+          font-size:13px; font-weight:500; text-decoration:none;
+          transition:background 0.16s ease, color 0.16s ease, transform 0.16s ease;
         }
-        .nav-item:hover{background:linear-gradient(135deg, rgba(243,191,89,0.12), rgba(45,127,117,0.08)); transform:translateX(2px);}
+        .nav-item:hover{
+          background:linear-gradient(90deg, rgba(158,175,169,0.22), rgba(255,255,255,0.04));
+          color:var(--white);
+          transform:translateX(2px);
+        }
         .nav-item.active{
-          border-left:3px solid var(--gold); background:linear-gradient(135deg, rgba(243,191,89,0.14), rgba(21,39,63,0.02)); color:var(--ink); font-weight:700;
-          box-shadow:inset 0 0 0 1px rgba(243,191,89,0.1);
+          background:linear-gradient(100deg, rgba(203,216,208,0.98), rgba(158,175,169,0.92));
+          color:var(--navy);
+          font-weight:700;
+          border-left-color:var(--gold-deep);
         }
-        .nav-tag{
-          width:30px; height:24px; display:flex; align-items:center; justify-content:center;
-          font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700;
-          background:transparent; color:var(--navy); border-radius:0; flex-shrink:0;
+        .nav-arrow{
+          display:grid; place-items:center;
+          flex:0 0 20px; width:20px; height:20px;
+          color:rgba(255,255,255,0.72);
+          transition:transform 0.15s ease, color 0.15s ease;
         }
-        .nav-tag svg{width:16px; height:16px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.7;}
-        .nav-item.active .nav-tag{background:transparent; color:var(--gold-deep);}
+        .nav-arrow svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.7;}
+        .nav-item:hover .nav-arrow,
+        .nav-item.active .nav-arrow{
+          color:var(--navy);
+        }
+        .nav-item:hover .nav-arrow{transform:scale(1.06);}
+        .nav-item.logout-item{color:rgba(255,255,255,0.76);}
+        .nav-item.logout-item:hover{background:rgba(203,216,208,0.2);color:var(--white);}
+        .nav-item.logout-item:hover .nav-arrow{color:var(--white);}
+        .sidebar-footer{
+          margin-top:auto;
+          padding:12px 0 0;
+          border-top:1px solid rgba(255,255,255,0.14);
+          margin-left:12px;
+          margin-right:12px;
+        }
 
-        /* ---------- Main content ---------- */
-        .content{flex:1; min-width:0; padding:28px clamp(18px, 3vw, 36px); overflow-y:auto;}
-        .content > *{
-          animation:fadeUp 0.45s ease both;
+        /* ---------- Main content area (Full Screen Occupation) ---------- */
+        .content{
+          flex:1;
+          min-width:0;
+          padding:36px clamp(24px, 4vw, 56px);
+          overflow-y:auto;
+          background:var(--paper);
         }
         .content h1,.content h2,.content h3{overflow-wrap:anywhere;}
-        .content form p{margin:0 0 14px;}
-        .content form p label{display:block;margin-bottom:7px;color:var(--navy);font-size:13px;font-weight:700;}
+        .content form p{margin:0 0 16px;}
+        .content form p label{display:block;margin-bottom:7px;color:var(--navy);font-size:14px;font-weight:600;}
         .content form p input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
         .content form p select,
         .content form p textarea{
-          display:block;width:100%;max-width:100%;padding:12px 14px;border:1px solid rgba(21,39,63,.16);border-radius:12px;background:var(--white);color:var(--ink);font:14px 'IBM Plex Sans',sans-serif;
+          display:block;width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--ink);font:15px 'Plus Jakarta Sans',sans-serif;
+          transition:border-color 0.15s ease, box-shadow 0.15s ease;
         }
         .content form p textarea{min-height:110px;resize:vertical;}
         .content form p input:focus,.content form p select:focus,.content form p textarea:focus{
-          outline:none;border-color:var(--gold-deep);box-shadow:0 0 0 3px rgba(243,191,89,.15);
+          outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(52,46,45,.1);
         }
-        .content form p .helptext{display:block;margin-top:5px;color:var(--ink-soft);font-size:11px;line-height:1.5;}
-        @keyframes fadeUp {
-          from {opacity:0; transform:translateY(10px);}
-          to {opacity:1; transform:translateY(0);}
-        }
+        .content form p .helptext{display:block;margin-top:6px;color:var(--ink-soft);font-size:12px;line-height:1.5;}
 
         /* ---------- Responsive / Toggle Styles ---------- */
-        @media (max-width:860px){
+        @media (max-width:960px){
+          .hamburger{display:flex;}
           .sidebar{
-            position:absolute; top:0; left:0; height:100%; z-index:60; margin-left:0;
-            transform:translateX(-100%); box-shadow:4px 0 20px rgba(0,0,0,0.15);
+            position:absolute; top:0; left:0; height:100%; z-index:70; margin-left:0;
+            transform:translateX(-100%); box-shadow:8px 0 28px rgba(0,0,0,0.3);
           }
           .sidebar.open{transform:translateX(0);}
         }
 
-        :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+        :focus-visible{outline:2px solid var(--navy); outline-offset:2px;}
         button,a{-webkit-tap-highlight-color:transparent;}
         button{font-family:inherit;}
-        @media (max-width:600px){
-          .topbar{padding:12px 16px;}
-          .brand-name{font-size:19px;}
-          .top-right{gap:8px;}
-          .content{padding:20px 14px;}
+        @media (max-width:640px){
+          .topbar{padding:10px 16px;}
+          .brand-name{font-size:17px;}
+          .content{padding:22px 16px;}
+          .page-title{font-size:28px;}
         }
     </style>
 
@@ -175,107 +320,126 @@
             }
         });
     </script>
-
 </head>
-    <body class="{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}">
-        <div class="app">
-            <!-- Top Navigation Bar -->
-            <header class="topbar">
-                <div class="top-left">
-                {% if user.is_authenticated %}
-                    <button class="hamburger" id="sidebarToggle" aria-label="Toggle Menu">&#9776;</button>
-                {% endif %}
-                    <a href="{% url 'marketplace' %}" class="brand">
-                        <span class="brand-mark">V</span>
-                        <span class="brand-name">Varsity Connect</span>
-                    </a>
-                </div>
-                <div class="top-right">
-                    <div class="role-toggle">
-                    {% if user.is_authenticated and user.is_staff %}
-                      <a class="role-status" href="{% url 'admin:index' %}">Admin</a>
-                    </div>
-                    {% else %}
-                      <span class="role-status">Student</span>
-                    </div>
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'messaging' %}" class="icon-btn" aria-label="Open notifications and messages" title="Messages">
-                        🔔
-                        <span class="dot"></span>
-                    </a>
-                    {% endif %}
-                </div>
-            </header>
-
-            <div class="shell">
-            {% block sidebar %}
+<body class="{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}">
+    <div class="app">
+        <!-- Top Navigation Bar -->
+        <header class="topbar">
+            <div class="top-left">
             {% if user.is_authenticated %}
-            <!-- Sidebar Navigation matching exact design -->
-            <aside class="sidebar" id="sidebar">
-                <div class="nav-section-label">Menu</div>
-
-                <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect></svg></span>
-                    <span>Dashboard</span>
+                <button class="hamburger" id="sidebarToggle" aria-label="Toggle Menu">&#9776;</button>
+            {% endif %}
+            <a href="{% url 'marketplace' %}" class="brand">
+                <span class="brand-name">Varsity Connect</span>
+            </a>
+            </div>
+            <div class="top-right">
+                <div class="role-toggle">
+                {% if user.is_authenticated and user.is_staff %}
+                  <a class="role-status" href="{% url 'admin:index' %}">Admin</a>
+                </div>
+                {% else %}
+                  <span class="role-status">Student</span>
+                </div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <a href="{% url 'messaging' %}" class="icon-btn" aria-label="Open notifications and messages" title="Messages">
+                    🔔
+                    <span class="dot"></span>
                 </a>
+                {% endif %}
+            </div>
+        </header>
 
-                <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.8 3-5.8 7-5.8s6.5 2 7 5.8"></path></svg></span>
-                    <span>My Profile</span>
+        <div class="shell">
+        {% block sidebar %}
+        {% if user.is_authenticated %}
+        <!-- Sidebar Navigation matching exact design in uploaded reference -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-profile">
+                <a href="{% url 'profile' %}" class="sidebar-avatar-wrap" title="View Profile">
+                    <div class="sidebar-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 100 100" focusable="false">
+                            <circle cx="50" cy="34" r="19"></circle>
+                            <path d="M15 91c2-22 15-35 35-35s33 13 35 35H15Z"></path>
+                        </svg>
+                    </div>
+                    <div class="sidebar-user-text">
+                        <span class="sidebar-user-name">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
+                        <span class="sidebar-user-handle">@{{ user.username }}</span>
+                    </div>
                 </a>
+                <a href="{% url 'messaging' %}" class="sidebar-bell" aria-label="Messages" title="Messages">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span class="sidebar-bell-dot"></span>
+                </a>
+            </div>
 
-                <a href="{% url 'marketplace' %}" class="nav-item {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg></span>
-                    <span>Marketplace</span>
-                </a>
+            <div class="nav-section-label">Menu</div>
 
-                <a href="{% url 'course_material' %}" class="nav-item {% if request.resolver_match.url_name == 'course_material' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg></span>
-                    <span>Course Material</span>
-                </a>
+            <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></span>
+                <span>Dashboard</span>
+            </a>
 
-                <a href="{% url 'jobs' %}" class="nav-item {% if request.resolver_match.url_name == 'jobs' or request.resolver_match.url_name == 'job-detail' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"></path></svg></span>
-                    <span>Jobs</span>
-                </a>
+            <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.8 3-5.8 7-5.8s6.5 2 7 5.8"></path></svg></span>
+                <span>My Profile</span>
+            </a>
 
-                <a href="{% url 'messaging' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-                    <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-7.5A7.5 7.5 0 1 1 20 11.5Z"></path><path d="M8 11h8m-8 3h5"></path></svg></span>
-                    <span>Messages</span>
-                </a>
+            <a href="{% url 'marketplace' %}" class="nav-item {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg></span>
+                <span>Marketplace</span>
+            </a>
+
+            <a href="{% url 'course_material' %}" class="nav-item {% if request.resolver_match.url_name == 'course_material' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"></path><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 6h8m-8 4h7"></path></svg></span>
+                <span>Course Material</span>
+            </a>
+
+            <a href="{% url 'jobs' %}" class="nav-item {% if request.resolver_match.url_name == 'jobs' or request.resolver_match.url_name == 'job-detail' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18m-11 0v2h4v-2"></path></svg></span>
+                <span>Jobs</span>
+            </a>
+
+            <a href="{% url 'messaging' %}" class="nav-item {% if request.resolver_match.url_name == 'messaging' or request.resolver_match.url_name == 'chat-room' %}active{% endif %}">
+                <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-7.5A7.5 7.5 0 1 1 20 11.5Z"></path><path d="M8 11h8m-8 3h5"></path></svg></span>
+                <span>Messages</span>
+            </a>
+
+            <div class="sidebar-footer">
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="nav-item" style="width: 100%; background: none; border: none; text-align: left; cursor: pointer;">
-                        <span class="nav-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m15 16 4-4-4-4m4 4H9"></path></svg></span>
+                    <button type="submit" class="nav-item logout-item" style="width:100%; text-align:left;">
+                        <span class="nav-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m15 16 4-4-4-4m4 4H9"></path></svg></span>
                         <span>Log Out</span>
                     </button>
                 </form>
-
-            </aside>
+            </div>
+        </aside>
         {% endif %}
         {% endblock %}
 
-                <!-- Main Content Area -->
-                <main class="content">
-                    {% block content %}
-                    {% endblock %}
-                </main>
-            </div>
+            <!-- Main Content Area -->
+            <main class="content">
+                {% block content %}
+                {% endblock %}
+            </main>
         </div>
-        <script>
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
+    </div>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
 
-            if (sidebar && sidebarToggle) {
-              sidebarToggle.addEventListener('click', () => {
-                if (window.innerWidth <= 860) {
-                  sidebar.classList.toggle('open');
-                } else {
-                  sidebar.classList.toggle('collapsed');
-                }
-              });
+        if (sidebar && sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            if (window.innerWidth <= 960) {
+              sidebar.classList.toggle('open');
+            } else {
+              sidebar.classList.toggle('collapsed');
             }
-        </script>
-    </body>
+          });
+        }
+    </script>
+</body>
 </html>

@@ -3,29 +3,172 @@
 {% block title %}{{ job.title }} - Student Jobs{% endblock %}
 
 {% block content %}
-<div style="max-width: 760px; margin: 24px auto 40px; background: rgba(255,255,255,0.94); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-soft);">
-    <div style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); padding: 26px 32px; color: white;">
-        <a href="{% url 'jobs' %}" style="color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 700;">&larr; Back to jobs</a>
-        <span style="display: block; margin-top: 20px; color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">A campus opportunity</span>
-        <h1 style="font-family: 'Fraunces', serif; margin: 6px 0 0; font-size: 30px;">{{ job.title }}</h1>
-    </div>
-    <div style="padding: 30px 32px;">
-        <div style="display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 24px;">
-            {% if job.organization %}<span style="padding: 8px 11px; border-radius: 999px; background: rgba(21,39,63,0.05); color: var(--ink-soft); font-size: 12px;">{{ job.organization }}</span>{% endif %}
-            <span style="padding: 8px 11px; border-radius: 999px; background: var(--teal-soft); color: var(--teal); font-size: 12px;">{{ job.location }}</span>
-            {% if job.pay %}<span style="padding: 8px 11px; border-radius: 999px; background: rgba(243,191,89,0.18); color: var(--gold-deep); font-size: 12px; font-weight: 700;">{{ job.pay }}</span>{% endif %}
+<div class="job-detail-card">
+    <header class="job-detail-header">
+        <a href="{% url 'jobs' %}" class="job-detail-back">&larr; Back to jobs</a>
+        <span class="job-detail-eyebrow">Campus Opportunity</span>
+        <h1 class="job-detail-title">{{ job.title }}</h1>
+    </header>
+    <div class="job-detail-body">
+        <div class="job-detail-tags">
+            {% if job.organization %}<span class="job-tag">{{ job.organization }}</span>{% endif %}
+            <span class="job-tag job-tag-teal">{{ job.location }}</span>
+            {% if job.pay %}<span class="job-tag job-tag-gold">{{ job.pay }}</span>{% endif %}
         </div>
-        <h2 style="font-family: 'Fraunces', serif; font-size: 23px; color: var(--navy);">About the role</h2>
-        <p style="line-height: 1.75; white-space: pre-line; color: var(--ink-soft);">{{ job.description }}</p>
-        <p style="color: var(--ink-soft); font-size: 13px; margin: 22px 0;">Shared by <strong style="color: var(--navy);">{{ job.posted_by.username }}</strong> · {{ job.created_at|timesince }} ago</p>
-        {% if job.posted_by_id == request.user.id %}
-        <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');">
-            {% csrf_token %}
-            <button type="submit" style="width: 100%; background: #a33b35; color: white; border: none; padding: 13px; border-radius: 12px; font-weight: 700; cursor: pointer;">Remove my job post</button>
-        </form>
-        {% else %}
-        <a href="{% url 'start_conversation' job.posted_by.username %}" style="display: block; text-align: center; text-decoration: none; color: white; background: var(--navy); padding: 13px; border-radius: 12px; font-weight: 700;">Message {{ job.posted_by.username }}</a>
-        {% endif %}
+
+        <section class="job-detail-section">
+            <h2 class="job-detail-section-title">About the role</h2>
+            <div class="job-detail-description">{{ job.description }}</div>
+        </section>
+
+        <p class="job-detail-poster">Shared by <strong>{{ job.posted_by.username }}</strong> · {{ job.created_at|timesince }} ago</p>
+
+        <div class="job-detail-actions">
+            {% if job.posted_by_id == request.user.id %}
+            <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');">
+                {% csrf_token %}
+                <button type="submit" class="job-btn-danger">Remove my job post</button>
+            </form>
+            {% else %}
+            <a href="{% url 'start_conversation' job.posted_by.username %}" class="job-btn-contact">Message {{ job.posted_by.username }}</a>
+            {% endif %}
+        </div>
     </div>
 </div>
+
+<style>
+    .job-detail-card {
+        max-width: 760px;
+        margin: 16px auto 40px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+    }
+    .job-detail-header {
+        background: var(--navy);
+        padding: 24px 28px;
+        color: var(--white);
+    }
+    .job-detail-back {
+        display: inline-block;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        transition: color 0.15s ease;
+    }
+    .job-detail-back:hover {
+        color: var(--gold);
+    }
+    .job-detail-eyebrow {
+        display: block;
+        color: var(--gold);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .job-detail-title {
+        font-family: 'Fraunces', serif;
+        margin: 4px 0 0;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--white);
+    }
+    .job-detail-body {
+        padding: 28px;
+    }
+    .job-detail-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+    }
+    .job-tag {
+        padding: 4px 9px;
+        border-radius: 4px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .job-tag-teal {
+        background: var(--teal-soft);
+        border-color: transparent;
+        color: var(--teal);
+        font-weight: 600;
+    }
+    .job-tag-gold {
+        background: rgba(158,175,169,0.18);
+        border-color: transparent;
+        color: var(--gold-deep);
+        font-weight: 700;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .job-detail-section {
+        margin-bottom: 20px;
+    }
+    .job-detail-section-title {
+        font-family: 'Fraunces', serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--navy);
+        margin: 0 0 10px;
+    }
+    .job-detail-description {
+        line-height: 1.7;
+        white-space: pre-line;
+        color: var(--ink);
+        font-size: 14px;
+    }
+    .job-detail-poster {
+        color: var(--ink-soft);
+        font-size: 12px;
+        margin: 20px 0;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+    }
+    .job-detail-poster strong {
+        color: var(--navy);
+    }
+    .job-detail-actions {
+        margin-top: 20px;
+    }
+    .job-btn-danger {
+        width: 100%;
+        background: transparent;
+        color: #706969;
+        border: 1px solid rgba(112,105,105,0.3);
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .job-btn-danger:hover {
+        background: var(--clay-soft);
+    }
+    .job-btn-contact {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        color: var(--white);
+        background: var(--navy);
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: background 0.15s ease;
+    }
+    .job-btn-contact:hover {
+        background: var(--navy-soft);
+    }
+</style>
 {% endblock %}

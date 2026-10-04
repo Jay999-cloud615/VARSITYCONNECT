@@ -3,20 +3,71 @@
 {% block title %}Create Listing - Varsity Connect{% endblock %}
 
 {% block content %}
-<div style="max-width: 680px; margin: 24px auto 40px; background: rgba(255,255,255,0.9); padding: clamp(22px, 4vw, 36px); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow-card);">
-    <a href="{% url 'marketplace' %}" style="display: inline-block; margin-bottom: 20px; color: var(--teal); font-size: 13px; font-weight: 700; text-decoration: none;">&larr; Back to marketplace</a>
-    <span style="display: block; color: var(--gold-deep); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Pass it on</span>
-    <h1 style="font-family: 'Fraunces', serif; font-size: clamp(28px, 4vw, 36px); color: var(--navy); margin: 7px 0;">List an item</h1>
-    <p style="color: var(--ink-soft); font-size: 14px; margin: 0 0 24px;">Add a few details so other students know what’s available.</p>
+<div class="create-listing-card">
+    <a href="{% url 'marketplace' %}" class="create-listing-back">&larr; Back to marketplace</a>
+    <h1 class="create-listing-title">List an item</h1>
+    <p class="create-listing-intro">Add details so other students can find your listing.</p>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" class="create-listing-form">
         {% csrf_token %}
         
         {{ form.as_p }}
 
-        <button type="submit" style="background: var(--gold); color: var(--navy); border: none; padding: 12px 20px; font-weight: 600; font-size: 14px; border-radius: var(--radius); cursor: pointer; width: 100%; margin-top: 16px;">
+        <button type="submit" class="create-listing-submit">
             Publish listing
         </button>
     </form>
 </div>
+
+<style>
+    .create-listing-card {
+        max-width: 640px;
+        margin: 16px auto 40px;
+        background: var(--white);
+        padding: clamp(24px, 4vw, 36px);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+    }
+    .create-listing-back {
+        display: inline-block;
+        margin-bottom: 16px;
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .create-listing-back:hover {
+        text-decoration: underline;
+    }
+    .create-listing-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(26px, 3.5vw, 32px);
+        font-weight: 600;
+        color: var(--navy);
+        margin: 6px 0;
+    }
+    .create-listing-intro {
+        color: var(--ink-soft);
+        font-size: 14px;
+        margin: 0 0 24px;
+        line-height: 1.5;
+    }
+    .create-listing-submit {
+        background: var(--navy);
+        color: var(--white);
+        border: 1px solid var(--navy);
+        padding: 12px 20px;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 16px;
+        transition: background 0.15s ease;
+    }
+    .create-listing-submit:hover {
+        background: var(--navy-soft);
+    }
+</style>
 {% endblock %}

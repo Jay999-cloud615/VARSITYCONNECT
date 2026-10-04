@@ -14,6 +14,10 @@ class LogoutTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Thanks for visiting')
+        self.assertContains(
+            response,
+            "font-family:'Plus Jakarta Sans', sans-serif !important;",
+        )
         self.assertContains(response, 'http-equiv="refresh"')
         self.assertContains(
             response,
