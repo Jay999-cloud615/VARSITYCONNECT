@@ -46,86 +46,173 @@
 </div>
 
 <style>
-    .inbox-page { max-width: 860px; margin: 4px auto 36px; }
-    .inbox-heading { margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-    .inbox-eyebrow { color: var(--teal); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-    .inbox-heading h1 { margin: 4px 0 2px; color: var(--navy); font: 600 clamp(26px, 3.5vw, 34px) 'Fraunces', serif; }
-    .inbox-heading p { margin: 0; color: var(--ink-soft); font-size: 14px; }
-    .inbox-list { display: grid; gap: 8px; }
+    .inbox-page {
+        width: 100%;
+        max-width: 1140px;
+        margin: 4px auto 40px;
+    }
+    .inbox-heading {
+        margin: 0 0 24px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+    }
+    .inbox-eyebrow {
+        color: var(--c-steel);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 4px;
+    }
+    .inbox-heading h1 {
+        margin: 0 0 6px;
+        color: var(--c-midnight);
+        font-size: clamp(28px, 3.5vw, 38px);
+        font-weight: 800;
+        letter-spacing: -0.4px;
+    }
+    .inbox-heading p {
+        margin: 0;
+        color: var(--c-slate);
+        font-size: 16px;
+    }
+    .inbox-list {
+        display: grid;
+        gap: 12px;
+    }
     .inbox-card {
         display: flex;
         align-items: center;
-        gap: 14px;
-        padding: 14px 18px;
+        gap: 18px;
+        padding: 18px 24px;
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 12px;
         background: var(--white);
         box-shadow: var(--shadow-card);
-        transition: border-color .15s ease, background .15s ease;
+        transition: all 0.15s ease;
     }
     .inbox-card:hover {
-        border-color: rgba(52,46,45,0.28);
-        background: #f5f7f5;
+        border-color: rgba(0, 75, 168, 0.35);
+        box-shadow: var(--shadow-soft);
+        transform: translateY(-2px);
     }
-    .inbox-card-link { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; color: inherit; text-decoration: none; }
+    .inbox-card-link {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex: 1;
+        min-width: 0;
+        color: inherit;
+        text-decoration: none;
+    }
     .inbox-avatar {
         display: grid;
         place-items: center;
-        flex: 0 0 40px;
-        width: 40px;
-        height: 40px;
-        border-radius: 6px;
-        background: var(--navy);
-        color: var(--gold);
-        font-family: 'Fraunces', serif;
-        font-size: 18px;
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--c-cobalt), var(--c-steel));
+        color: var(--white);
+        font-size: 20px;
+        font-weight: 800;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.3);
+    }
+    .inbox-copy {
+        display: grid;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+    }
+    .inbox-copy strong {
+        color: var(--c-midnight);
+        font-size: 16px;
         font-weight: 700;
     }
-    .inbox-copy { display: grid; gap: 3px; flex: 1; min-width: 0; }
-    .inbox-copy strong { color: var(--navy); font-size: 14px; font-weight: 600; }
-    .inbox-copy span { overflow: hidden; color: var(--ink-soft); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .inbox-copy span {
+        overflow: hidden;
+        color: var(--c-slate);
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .inbox-card time {
         flex-shrink: 0;
-        color: #7b8887;
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 11px;
+        color: var(--c-steel);
+        font-size: 13px;
+        font-weight: 600;
     }
     .inbox-delete {
-        padding: 6px 9px;
-        border: 1px solid rgba(112,105,105,.3);
-        border-radius: 6px;
+        padding: 8px 14px;
+        border: 1px solid rgba(217, 83, 79, 0.3);
+        border-radius: 8px;
         background: transparent;
-        color: #706969;
-        font-size: 11px;
+        color: #d9534f;
+        font-size: 12px;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.15s ease;
+        transition: all 0.15s ease;
     }
-    .inbox-delete:hover { background: var(--clay-soft); }
+    .inbox-delete:hover {
+        background: rgba(217, 83, 79, 0.1);
+    }
     .inbox-empty {
         display: grid;
         justify-items: center;
-        padding: 48px 24px;
+        padding: 60px 24px;
         border: 1px dashed var(--line);
-        border-radius: 8px;
+        border-radius: 14px;
         background: var(--white);
         text-align: center;
     }
-    .inbox-empty-icon { display: grid; place-items: center; width: 48px; height: 48px; color: var(--teal); }
-    .inbox-empty-icon svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
-    .inbox-empty h2 { margin: 12px 0 6px; color: var(--navy); font: 600 20px 'Fraunces', serif; }
-    .inbox-empty p { max-width: 420px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.5; }
+    .inbox-empty-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        color: var(--c-cobalt);
+        background: rgba(0, 75, 168, 0.1);
+        border-radius: 14px;
+        margin-bottom: 8px;
+    }
+    .inbox-empty-icon svg {
+        width: 32px;
+        height: 32px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.8;
+    }
+    .inbox-empty h2 {
+        margin: 12px 0 6px;
+        color: var(--c-midnight);
+        font-size: 22px;
+        font-weight: 800;
+    }
+    .inbox-empty p {
+        max-width: 440px;
+        margin: 0;
+        color: var(--c-slate);
+        font-size: 14px;
+        line-height: 1.5;
+    }
     .inbox-empty a {
-        margin-top: 14px;
-        color: var(--navy);
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: underline;
+        margin-top: 18px;
+        color: var(--white);
+        background: var(--c-cobalt);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.25);
     }
     @media (max-width: 560px) {
         .inbox-card { align-items: flex-start; flex-wrap: wrap; }
         .inbox-card time { display: none; }
-        .inbox-delete { margin-left: 54px; }
+        .inbox-delete { margin-left: 64px; }
     }
 </style>
 {% endblock %}

@@ -82,33 +82,33 @@
         transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     }
     .dashboard-stat:hover {
-        border-color: rgba(52,46,45,0.3);
+        border-color: rgba(0, 75, 168, 0.35);
         box-shadow: var(--shadow-soft);
         transform: translateY(-2px);
     }
     .dashboard-stat-icon {
         display: grid;
         place-items: center;
-        flex: 0 0 50px;
-        width: 50px;
-        height: 50px;
+        flex: 0 0 52px;
+        width: 52px;
+        height: 52px;
         border-radius: 12px;
     }
     .icon-gold {
-        color: var(--gold-deep);
-        background: rgba(158,175,169,0.2);
+        color: var(--c-cobalt);
+        background: rgba(0, 75, 168, 0.12);
     }
     .icon-teal {
-        color: var(--teal);
-        background: var(--teal-soft);
+        color: var(--c-steel);
+        background: rgba(62, 120, 178, 0.14);
     }
     .icon-clay {
-        color: var(--ink-soft);
-        background: var(--clay-soft);
+        color: var(--c-slate);
+        background: rgba(74, 82, 90, 0.12);
     }
     .icon-lime {
-        color: var(--teal);
-        background: rgba(123,136,135,0.12);
+        color: var(--c-steel);
+        background: rgba(62, 120, 178, 0.12);
     }
     .dashboard-stat-icon svg {
         width: 24px;
@@ -126,25 +126,25 @@
         min-width: 0;
     }
     .dashboard-stat-copy strong {
-        color: var(--ink);
+        color: var(--c-midnight);
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 30px;
+        font-size: 32px;
         font-weight: 800;
         line-height: 1;
     }
     .dashboard-stat-copy span {
-        color: var(--ink-soft);
+        color: var(--c-slate);
         font-size: 14px;
         font-weight: 600;
     }
     .dashboard-stat-arrow {
-        color: var(--ink-soft);
+        color: var(--c-steel);
         font-size: 18px;
         font-weight: 700;
         transition: transform 0.15s ease, color 0.15s ease;
     }
     .dashboard-stat:hover .dashboard-stat-arrow {
-        color: var(--ink);
+        color: var(--c-cobalt);
         transform: translateX(4px);
     }
     .dashboard-panel {
@@ -166,7 +166,7 @@
     }
     .dashboard-panel-heading h2 {
         margin: 0;
-        color: var(--ink);
+        color: var(--c-midnight);
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 22px;
         font-weight: 800;
@@ -185,14 +185,14 @@
         padding: 16px 20px;
         border: 1px solid var(--line);
         border-radius: 10px;
-        background: var(--paper);
+        background: var(--white);
         color: inherit;
         text-decoration: none;
-        transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+        transition: all 0.15s ease;
     }
     .quick-action:hover {
-        border-color: rgba(52,46,45,0.3);
-        background: var(--white);
+        border-color: rgba(0, 75, 168, 0.35);
+        box-shadow: var(--shadow-soft);
         transform: translateY(-1px);
     }
     .quick-action-icon {
@@ -202,6 +202,8 @@
         width: 44px;
         height: 44px;
         border-radius: 10px;
+        background: rgba(0, 75, 168, 0.1);
+        color: var(--c-cobalt);
     }
     .quick-action-icon svg {
         width: 22px;
@@ -219,17 +221,17 @@
         min-width: 0;
     }
     .quick-action strong {
-        color: var(--ink);
+        color: var(--c-midnight);
         font-size: 15px;
         font-weight: 700;
     }
     .quick-action small {
-        color: var(--ink-soft);
+        color: var(--c-slate);
         font-size: 13px;
         line-height: 1.4;
     }
     .quick-arrow {
-        color: var(--ink-soft);
+        color: var(--c-steel);
         font-size: 16px;
         font-weight: 700;
     }
@@ -245,16 +247,17 @@
         display: flex;
         align-items: center;
         gap: 16px;
-        padding: 14px 4px;
+        padding: 14px 8px;
         border-bottom: 1px solid var(--line);
         color: inherit;
         text-decoration: none;
         transition: background 0.15s ease;
+        border-radius: 8px;
     }
     .dashboard-list-item:first-child { border-top: none; }
     .dashboard-list-item:last-child { border-bottom: none; }
     .dashboard-list-item:hover {
-        background: rgba(203,216,208,0.2);
+        background: rgba(62, 120, 178, 0.08);
     }
     .dashboard-thumbnail {
         flex: 0 0 48px;
@@ -267,6 +270,8 @@
     .dashboard-thumbnail-icon {
         display: grid;
         place-items: center;
+        background: rgba(0, 75, 168, 0.1);
+        color: var(--c-cobalt);
     }
     .dashboard-thumbnail-icon svg {
         width: 22px;
@@ -284,7 +289,7 @@
         min-width: 0;
     }
     .dashboard-list-copy strong {
-        color: var(--ink);
+        color: var(--c-midnight);
         font-size: 15px;
         font-weight: 700;
         overflow: hidden;
@@ -292,14 +297,14 @@
         white-space: nowrap;
     }
     .dashboard-list-copy small {
-        color: var(--ink-soft);
+        color: var(--c-slate);
         font-size: 13px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
     .list-arrow {
-        color: var(--ink-soft);
+        color: var(--c-steel);
         font-size: 16px;
         font-weight: 700;
     }
@@ -313,7 +318,7 @@
     .dashboard-empty {
         margin: 0;
         padding: 32px 8px;
-        color: var(--ink-soft);
+        color: var(--c-slate);
         font-size: 14px;
         line-height: 1.5;
         text-align: center;
@@ -331,7 +336,8 @@
         padding: 16px 20px;
         border: 1px solid var(--line);
         border-radius: 10px;
-        background: var(--paper);
+        background: var(--white);
+        box-shadow: var(--shadow-card);
     }
     .job-icon {
         flex-basis: 42px;
@@ -340,6 +346,8 @@
         border-radius: 10px;
         display: grid;
         place-items: center;
+        background: rgba(62, 120, 178, 0.12);
+        color: var(--c-steel);
     }
     .job-icon svg {
         width: 22px;
@@ -353,31 +361,31 @@
     .job-card-copy { flex: 1; min-width: 0; }
     .job-card-copy h3 {
         margin: 0 0 4px;
-        color: var(--ink);
+        color: var(--c-midnight);
         font-size: 15px;
         font-weight: 700;
         overflow-wrap: anywhere;
     }
     .job-card-copy p {
         margin: 0 0 6px;
-        color: var(--ink-soft);
+        color: var(--c-slate);
         font-size: 13px;
         line-height: 1.4;
     }
     .job-card-copy > strong {
-        color: var(--gold-deep);
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 12px;
+        color: var(--c-cobalt);
+        font-size: 13px;
         font-weight: 700;
     }
     .job-card-link {
         flex-shrink: 0;
-        color: var(--navy);
+        color: var(--c-cobalt);
         font-size: 13px;
         font-weight: 700;
         text-decoration: none;
         align-self: center;
     }
+    .job-card-link:hover { text-decoration: underline; }
     .job-card-link:hover { text-decoration: underline; }
     @media (max-width: 640px) {
         .dashboard-content-grid { grid-template-columns: 1fr; }

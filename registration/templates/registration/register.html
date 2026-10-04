@@ -42,8 +42,8 @@
 
 <style>
     .register-page {
-        width: min(520px, 100%);
-        margin: 20px auto 40px;
+        width: min(540px, 100%);
+        margin: 24px auto 48px;
     }
     .register-shell {
         min-height: 0;
@@ -51,7 +51,7 @@
         grid-template-columns: 1fr;
         overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 14px;
         background: var(--white);
         box-shadow: var(--shadow-card);
     }
@@ -59,117 +59,120 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: min(400px, 100%);
+        width: min(420px, 100%);
         margin: 0 auto;
-        padding: 40px 28px;
+        padding: 44px 32px;
     }
     .register-brand-mark {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        margin: 0 auto 16px;
-        border-radius: 6px;
-        background: var(--gold);
-        color: var(--navy);
-        font-family: 'Fraunces', serif;
-        font-size: 20px;
-        font-weight: 700;
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 18px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--c-cobalt), var(--c-steel));
+        color: var(--white);
+        font-weight: 800;
+        font-size: 22px;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.35);
     }
     .register-form-panel h1 {
         margin: 0;
-        color: var(--navy);
+        color: var(--c-midnight);
         text-align: center;
-        font-family: 'Fraunces', serif;
-        font-size: clamp(24px, 3vw, 30px);
-        font-weight: 600;
+        font-size: clamp(26px, 3vw, 32px);
+        font-weight: 800;
+        letter-spacing: -0.4px;
     }
     .register-intro {
-        margin: 6px 0 20px;
-        color: var(--ink-soft);
+        margin: 8px 0 24px;
+        color: var(--c-slate);
         text-align: center;
-        font-size: 13px;
-        line-height: 1.45;
+        font-size: 14px;
+        line-height: 1.5;
     }
     .register-form {
         display: grid;
-        gap: 13px;
+        gap: 15px;
     }
     .register-field label {
         display: block;
-        margin-bottom: 5px;
-        color: var(--navy);
-        font-size: 12px;
-        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--c-midnight);
+        font-size: 14px;
+        font-weight: 700;
     }
     .register-field input {
         display: block;
         box-sizing: border-box;
         width: 100%;
-        padding: 10px 12px;
+        padding: 12px 16px;
         border: 1px solid var(--line);
-        border-radius: 6px;
+        border-radius: 8px;
         background: var(--white);
-        color: var(--ink);
-        font: 14px 'IBM Plex Sans', sans-serif;
+        color: var(--c-midnight);
+        font-size: 15px;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .register-field input:focus {
         outline: none;
-        border-color: var(--navy);
-        box-shadow: 0 0 0 3px rgba(52,46,45,0.08);
+        border-color: var(--c-cobalt);
+        box-shadow: 0 0 0 3px rgba(0, 75, 168, 0.15);
     }
     .register-help {
-        margin-top: 5px;
-        color: var(--ink-soft);
-        font-size: 11px;
+        margin-top: 6px;
+        color: var(--c-slate);
+        font-size: 12px;
     }
     .register-help ul {
         margin: 4px 0;
         padding-left: 18px;
     }
     .register-error {
-        margin-top: 5px;
-        color: #706969;
-        font-size: 11px;
+        margin-top: 6px;
+        color: #d9534f;
+        font-size: 12px;
+        font-weight: 600;
     }
     .register-submit {
         width: 100%;
-        margin-top: 6px;
-        padding: 11px 18px;
-        border: 1px solid var(--navy);
-        border-radius: 6px;
-        background: var(--navy);
+        margin-top: 10px;
+        padding: 13px 20px;
+        border: none;
+        border-radius: 8px;
+        background: var(--c-cobalt);
         color: var(--white);
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 700;
         cursor: pointer;
-        box-shadow: none;
-        transition: background 0.15s ease;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.25);
+        transition: all 0.15s ease;
     }
     .register-submit:hover {
-        background: var(--navy-soft);
+        background: var(--gold-deep);
+        box-shadow: 0 6px 18px rgba(0, 75, 168, 0.35);
     }
     .register-switch {
-        margin: 18px 0 0;
-        color: var(--ink-soft);
+        margin: 22px 0 0;
+        color: var(--c-slate);
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
     }
     .register-switch a {
-        color: var(--navy);
-        font-weight: 600;
+        color: var(--c-cobalt);
+        font-weight: 700;
         text-decoration: underline;
     }
     .register-message {
-        margin-bottom: 14px;
-        padding: 9px 12px;
-        border: 1px solid #d4ded8;
-        border-radius: 6px;
-        background: #e8eeeb;
-        color: #706969;
-        font-size: 12px;
+        margin-bottom: 16px;
+        padding: 11px 14px;
+        border: 1px solid rgba(0, 75, 168, 0.2);
+        border-radius: 8px;
+        background: rgba(0, 75, 168, 0.08);
+        color: var(--c-cobalt);
+        font-size: 13px;
+        font-weight: 600;
     }
     @media (max-width: 760px) {
         .register-page {

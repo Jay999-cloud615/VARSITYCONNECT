@@ -21,53 +21,59 @@
 
 <style>
     .create-listing-card {
-        max-width: 640px;
-        margin: 16px auto 40px;
+        width: 100%;
+        max-width: 820px;
+        margin: 20px auto 48px;
         background: var(--white);
-        padding: clamp(24px, 4vw, 36px);
+        padding: clamp(28px, 4vw, 44px);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 14px;
         box-shadow: var(--shadow-card);
     }
     .create-listing-back {
         display: inline-block;
-        margin-bottom: 16px;
-        color: var(--navy);
-        font-size: 12px;
-        font-weight: 600;
+        margin-bottom: 18px;
+        color: var(--c-cobalt);
+        font-size: 13px;
+        font-weight: 700;
         text-decoration: none;
+        transition: color 0.15s ease;
     }
     .create-listing-back:hover {
+        color: var(--gold-deep);
         text-decoration: underline;
     }
     .create-listing-title {
-        font-family: 'Fraunces', serif;
-        font-size: clamp(26px, 3.5vw, 32px);
-        font-weight: 600;
-        color: var(--navy);
-        margin: 6px 0;
+        font-size: clamp(28px, 3.5vw, 36px);
+        font-weight: 800;
+        color: var(--c-midnight);
+        margin: 0 0 8px;
+        letter-spacing: -0.4px;
     }
     .create-listing-intro {
-        color: var(--ink-soft);
-        font-size: 14px;
-        margin: 0 0 24px;
+        color: var(--c-slate);
+        font-size: 15px;
+        margin: 0 0 28px;
         line-height: 1.5;
     }
     .create-listing-submit {
-        background: var(--navy);
+        background: var(--c-cobalt);
         color: var(--white);
-        border: 1px solid var(--navy);
-        padding: 12px 20px;
-        font-weight: 600;
-        font-size: 14px;
-        border-radius: 6px;
+        border: none;
+        padding: 14px 24px;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 10px;
         cursor: pointer;
         width: 100%;
-        margin-top: 16px;
-        transition: background 0.15s ease;
+        margin-top: 20px;
+        box-shadow: 0 6px 20px rgba(0, 75, 168, 0.25);
+        transition: all 0.15s ease;
     }
     .create-listing-submit:hover {
-        background: var(--navy-soft);
+        background: var(--gold-deep);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(0, 75, 168, 0.35);
     }
 </style>
 {% endblock %}
