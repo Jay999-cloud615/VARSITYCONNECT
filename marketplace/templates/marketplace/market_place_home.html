@@ -20,23 +20,34 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px;">
         {% for listing in listings %}
-            <a href="{% url 'listing_detail' listing.pk %}" style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; box-shadow: var(--shadow-card); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-                <div style="height: 170px; padding: 16px; background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); display: flex; align-items: flex-start;">
-                    <span style="background: rgba(21,39,63,0.96); color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; padding: 5px 8px; border-radius: 8px; letter-spacing: 0.8px;">{{ listing.get_category_display }}</span>
-                </div>
-                <div style="padding: 18px 20px 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
-                    <div>
-                        <h3 style="font-size: 18px; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">{{ listing.title }}</h3>
-                        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; color: var(--gold-deep); margin-bottom: 14px;">
-                            R{{ listing.price }}{% if listing.price_suffix %}{{ listing.price_suffix }}{% endif %}
+            <div style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-card); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                <a href="{% url 'listing_detail' listing.pk %}" style="display: flex; flex-direction: column; flex: 1; text-decoration: none; color: inherit;">
+                    <div style="height: 170px; padding: 16px; background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); display: flex; align-items: flex-start;{% if listing.image %} background-image: linear-gradient(rgba(21,39,63,0.12), rgba(21,39,63,0.12)), url('{{ listing.image.url }}'); background-size: cover; background-position: center;{% endif %}">
+                        <span style="background: rgba(21,39,63,0.96); color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; padding: 5px 8px; border-radius: 8px; letter-spacing: 0.8px;">{{ listing.get_category_display }}</span>
+                    </div>
+                    <div style="padding: 18px 20px 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">{{ listing.title }}</h3>
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; color: var(--gold-deep); margin-bottom: 10px;">
+                                R{{ listing.price }}{% if listing.price_suffix %}{{ listing.price_suffix }}{% endif %}
+                            </div>
+                            <div style="font-size: 13px; font-weight: 700; color: {% if listing.quantity_available %}var(--teal){% else %}#a33b35{% endif %}; margin-bottom: 14px;">
+                                {% if listing.quantity_available %}{{ listing.quantity_available }} available{% else %}Sold out{% endif %}
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(21,39,63,0.08); padding-top: 12px; font-size: 12px; color: var(--ink-soft);">
+                            <span style="color: var(--gold-deep); letter-spacing: 1px;">★★★★★</span>
+                            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px;">{{ listing.location }}</span>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(21,39,63,0.08); padding-top: 12px; font-size: 12px; color: var(--ink-soft);">
-                        <span style="color: var(--gold-deep); letter-spacing: 1px;">★★★★★</span>
-                        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px;">{{ listing.location }}</span>
-                    </div>
-                </div>
-            </a>
+                </a>
+                {% if listing.seller_id == request.user.id %}
+                <form method="post" action="{% url 'delete_listing' listing.pk %}" onsubmit="return confirm('Remove this listing?');" style="padding: 0 20px 18px;">
+                    {% csrf_token %}
+                    <button type="submit" style="width: 100%; background: #a33b35; color: white; border: 0; padding: 9px; border-radius: 12px; font-weight: 700; cursor: pointer;">Delete my listing</button>
+                </form>
+                {% endif %}
+            </div>
         {% empty %}
             <p style="color: var(--ink-soft); grid-column: 1 / -1; margin: 0;">No marketplace listings available yet.</p>
         {% endfor %}

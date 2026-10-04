@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Conversation
+from .models import Conversation, Message
 
 
 class MessagingFlowTests(TestCase):
@@ -30,3 +30,54 @@ class MessagingFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'href="/messaging/"')
+
+    def test_sender_can_delete_own_message(self):
+        conversation = Conversation.objects.create()
+        conversation.participants.add(self.user, self.seller)
+        message = Message.objects.create(
+            conversation=conversation,
+            sender=self.user,
+            body='Please delete this',
+        )
+
+        response = self.client.post(reverse(
+            'delete-message',
+            args=[conversation.pk, message.pk],
+        ))
+
+        self.assertRedirects(response, reverse('chat-room', args=[conversation.pk]))
+        self.assertFalse(Message.objects.filter(pk=message.pk).exists())
+
+    def test_user_cannot_delete_another_users_message(self):
+        conversation = Conversation.objects.create()
+        conversation.participants.add(self.user, self.seller)
+        message = Message.objects.create(
+            conversation=conversation,
+            sender=self.seller,
+            body='Keep this message',
+        )
+
+        response = self.client.post(reverse(
+            'delete-message',
+            args=[conversation.pk, message.pk],
+        ))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Message.objects.filter(pk=message.pk).exists())
+
+    def test_message_delete_requires_post(self):
+        conversation = Conversation.objects.create()
+        conversation.participants.add(self.user, self.seller)
+        message = Message.objects.create(
+            conversation=conversation,
+            sender=self.user,
+            body='Keep this message',
+        )
+
+        response = self.client.get(reverse(
+            'delete-message',
+            args=[conversation.pk, message.pk],
+        ))
+
+        self.assertEqual(response.status_code, 405)
+        self.assertTrue(Message.objects.filter(pk=message.pk).exists())

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} - Student Jobs{% endblock %}
+
+{% block content %}
+<div style="max-width: 760px; margin: 30px auto; background: var(--white); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-card);">
+    <div style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); padding: 26px 32px; color: white;">
+        <a href="{% url 'jobs' %}" style="color: var(--gold); text-decoration: none;">&larr; All jobs</a>
+        <span style="display: block; margin-top: 18px; color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Student job</span>
+        <h1 style="font-family: 'Fraunces', serif; margin: 6px 0 0; font-size: 30px;">{{ job.title }}</h1>
+    </div>
+    <div style="padding: 30px 32px;">
+        {% if job.organization %}<p style="margin: 0 0 8px; color: var(--ink-soft);"><strong>Organization:</strong> {{ job.organization }}</p>{% endif %}
+        <p style="margin: 0 0 8px; color: var(--ink-soft);"><strong>Location:</strong> {{ job.location }}</p>
+        {% if job.pay %}<p style="margin: 0 0 20px; color: var(--gold-deep); font-weight: 700;"><strong>Pay:</strong> {{ job.pay }}</p>{% endif %}
+        <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft);">Description</h2>
+        <p style="line-height: 1.7; white-space: pre-line;">{{ job.description }}</p>
+        <p style="color: var(--ink-soft); font-size: 13px; margin: 22px 0;">Posted by {{ job.posted_by.username }} · {{ job.created_at|timesince }} ago</p>
+        {% if job.posted_by_id == request.user.id %}
+        <form method="post" action="{% url 'job-delete' job.pk %}" onsubmit="return confirm('Remove this job post?');">
+            {% csrf_token %}
+            <button type="submit" style="width: 100%; background: #a33b35; color: white; border: none; padding: 13px; border-radius: 12px; font-weight: 700; cursor: pointer;">Remove my job post</button>
+        </form>
+        {% else %}
+        <a href="{% url 'start_conversation' job.posted_by.username %}" style="display: block; text-align: center; text-decoration: none; color: white; background: var(--navy); padding: 13px; border-radius: 12px; font-weight: 700;">Contact poster</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

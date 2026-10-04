@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
 from .models import Conversation, Message
 
 
@@ -69,3 +70,20 @@ def chat_room_view(request, conversation_id):
 		'other_user': other_user,
 	}
 	return render(request, 'messaging/chat_room.html', context)
+
+
+@login_required
+@require_POST
+def delete_message_view(request, conversation_id, message_id):
+	conversation = get_object_or_404(
+		Conversation.objects.filter(participants=request.user),
+		pk=conversation_id,
+	)
+	message = get_object_or_404(
+		Message,
+		pk=message_id,
+		conversation=conversation,
+		sender=request.user,
+	)
+	message.delete()
+	return redirect('chat-room', conversation_id=conversation.pk)

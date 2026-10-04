@@ -4,10 +4,12 @@ from .models import MarketplaceListing
 class MarketplaceListingForm(forms.ModelForm):
     class Meta:
         model = MarketplaceListing
-        fields = ['title', 'price', 'price_suffix', 'category', 'condition', 'description', 'location']
+        fields = ['title', 'image', 'price', 'quantity_available', 'price_suffix', 'category', 'condition', 'description', 'location']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Casio fx-991 Calculator'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '280'}),
+            'quantity_available': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'price_suffix': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. /hr (optional)'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'condition': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Like new'}),
@@ -15,3 +17,16 @@ class MarketplaceListingForm(forms.ModelForm):
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Wits campus / 0.4 km'}),
         }
 
+
+class ListingStockForm(forms.ModelForm):
+    class Meta:
+        model = MarketplaceListing
+        fields = ['quantity_available']
+        labels = {'quantity_available': 'How many are left?'}
+        widgets = {
+            'quantity_available': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'style': 'padding: 12px; border: 1px solid var(--line); border-radius: 12px; font: inherit;',
+            }),
+        }

@@ -9,6 +9,12 @@
             <div style="max-width: 72%; padding: 12px 14px; border-radius: 16px; {% if message.sender == request.user %} background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; align-self: flex-end; {% else %} background: white; color: var(--ink); align-self: flex-start; box-shadow: 0 6px 16px rgba(21,39,63,0.04); {% endif %}">
                 <p style="margin: 0; font-size: 14px; line-height: 1.5;">{{ message.body }}</p>
                 <span style="font-size: 10px; opacity: 0.75; display: block; margin-top: 6px; text-align: right;">{{ message.timestamp|time:"H:i" }}</span>
+                {% if message.sender_id == request.user.id %}
+                <form method="post" action="{% url 'delete-message' conversation.id message.id %}" onsubmit="return confirm('Delete this message?');" style="margin-top: 8px; text-align: right;">
+                    {% csrf_token %}
+                    <button type="submit" style="border: 0; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,0.16); color: white; font-size: 11px; cursor: pointer;">Delete</button>
+                </form>
+                {% endif %}
             </div>
         {% empty %}
             <p style="text-align: center; color: var(--ink-soft); margin-top: 150px;">No messages yet. Send a message to start the conversation!</p>

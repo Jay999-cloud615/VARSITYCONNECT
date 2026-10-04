@@ -1,32 +1,41 @@
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Accommodation
-from .forms import AccommodationForm
+from .models import Job
+from .forms import JobForm
 
 @login_required
-def accommodation_list_view(request):
+def job_list_view(request):
     if request.method == 'POST':
-        form = AccommodationForm(request.POST, request.FILES)
+        form = JobForm(request.POST)
         if form.is_valid():
-            property_item = form.save(commit=False)
-            property_item.landlord = request.user
-            property_item.save()
-            return redirect('housing')
+            job = form.save(commit=False)
+            job.posted_by = request.user
+            job.save()
+            return redirect('jobs')
     else:
-        form = AccommodationForm()
+        form = JobForm()
 
-    accommodations = Accommodation.objects.all().order_by('-created_at')
+    jobs = Job.objects.all().order_by('-created_at')
 
     context = {
         'form': form,
-        'accommodations': accommodations,
+        'jobs': jobs,
     }
-    return render(request, 'housing/accommodation_list.html', context)
+    return render(request, 'housing/job_list.html', context)
 
 @login_required
-def accommodation_detail_view(request, pk):
-    accommodation = get_object_or_404(Accommodation, pk=pk)
+def job_detail_view(request, pk):
+    job = get_object_or_404(Job, pk=pk)
     context = {
-        'accommodation': accommodation,
+        'job': job,
     }
-    return render(request, 'housing/accommodation_detail.html', context)
+    return render(request, 'housing/job_detail.html', context)
+
+
+@login_required
+@require_POST
+def delete_job_view(request, pk):
+    job = get_object_or_404(Job, pk=pk, posted_by=request.user)
+    job.delete()
+    return redirect('jobs')

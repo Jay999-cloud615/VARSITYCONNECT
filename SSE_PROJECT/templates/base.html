@@ -208,9 +208,9 @@
                     <span>Course Material</span>
                 </a>
 
-                <a href="{% url 'housing' %}" class="nav-item {% if request.resolver_match.url_name == 'housing_jobs' %}active{% endif %}">
-                    <span class="nav-tag">HJ</span>
-                    <span>Housing & Jobs</span>
+                <a href="{% url 'jobs' %}" class="nav-item {% if request.resolver_match.url_name == 'jobs' or request.resolver_match.url_name == 'job-detail' %}active{% endif %}">
+                    <span class="nav-tag">JB</span>
+                    <span>Jobs</span>
                 </a>
 
                 <a href="{% url 'messaging' %}" class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">

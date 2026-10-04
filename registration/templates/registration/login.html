@@ -15,7 +15,7 @@
             <div style="margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px;">
                 <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Marketplace</span>
                 <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Course Notes</span>
-                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Housing</span>
+                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 14px; font-size: 12px;">Student Jobs</span>
             </div>
         </div>
 
@@ -33,6 +33,7 @@
 
             <form method="POST">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
 
                 {% for field in login_form %}
                     <div style="margin-bottom: 16px;">
@@ -80,7 +81,7 @@
             <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px;">
                 <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
                     <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Find essentials fast</strong>
-                    <span style="color: var(--ink-soft); font-size: 13px;">Browse housing, campus items, and student services in one place.</span>
+                    <span style="color: var(--ink-soft); font-size: 13px;">Browse student jobs, campus items, and student services in one place.</span>
                 </div>
                 <div style="background: rgba(255,255,255,0.7); border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(21,39,63,0.05);">
                     <strong style="display:block; margin-bottom: 6px; color: var(--navy);">Study smarter</strong>

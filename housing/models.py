@@ -13,3 +13,16 @@ class Accommodation(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Job(models.Model):
+    title = models.CharField(max_length=200)
+    organization = models.CharField(max_length=200, blank=True)
+    location = models.CharField(max_length=255)
+    pay = models.CharField(max_length=100, blank=True)
+    description = models.TextField()
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

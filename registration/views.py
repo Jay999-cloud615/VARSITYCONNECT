@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 
@@ -34,6 +35,13 @@ def landing_auth_view(request):
 			if login_form.is_valid():
 				user = login_form.get_user()
 				login(request, user)
+				next_url = request.POST.get("next") or request.GET.get("next")
+				if next_url and url_has_allowed_host_and_scheme(
+					next_url,
+					allowed_hosts={request.get_host()},
+					require_https=request.is_secure(),
+				):
+					return redirect(next_url)
 				return redirect("dashboard")
 			else:
 				messages.error(request, "Invalid username or password.")
@@ -41,5 +49,6 @@ def landing_auth_view(request):
 	context = {
 		"register_form": create_form,
 		"login_form": login_form,
+		"next": request.POST.get("next") or request.GET.get("next", ""),
 	}
 	return render(request, "registration/login.html", context)

@@ -31,6 +31,39 @@ class LogoutTests(TestCase):
         login_response = self.client.get(reverse('login'))
         self.assertNotContains(login_response, 'Welcome back, alice!')
 
+    def test_successful_login_returns_to_requested_page(self):
+        self.client.logout()
+        destination = '/messaging/chat/10/'
+        response = self.client.get(reverse('login'), {'next': destination})
+
+        self.assertContains(response, 'name="next" value="{}"'.format(destination))
+
+        response = self.client.post(
+            reverse('login'),
+            {
+                'username': 'alice',
+                'password': 'secret123',
+                'login_submit': '1',
+                'next': destination,
+            },
+        )
+
+        self.assertRedirects(response, destination, fetch_redirect_response=False)
+
+    def test_successful_login_rejects_external_next_url(self):
+        self.client.logout()
+        response = self.client.post(
+            reverse('login'),
+            {
+                'username': 'alice',
+                'password': 'secret123',
+                'login_submit': '1',
+                'next': 'https://malicious.example/',
+            },
+        )
+
+        self.assertRedirects(response, reverse('dashboard'))
+
     def test_admin_tab_hidden_for_non_staff_users(self):
         response = self.client.get(reverse('dashboard'))
 

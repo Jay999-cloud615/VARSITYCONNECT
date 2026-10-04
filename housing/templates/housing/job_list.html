@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Jobs - Varsity Connect{% endblock %}
+
+{% block content %}
+<div style="padding: 10px 0 32px;">
+    <div style="background: linear-gradient(135deg, rgba(21,39,63,0.98), rgba(33,57,90,0.94)); border-radius: 30px; padding: 30px 32px; color: white; box-shadow: var(--shadow-soft); margin-bottom: 26px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+            <div>
+                <span style="display: inline-flex; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #f5dca2; font-weight: 700;">Campus opportunities</span>
+                <h1 style="font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 40px); margin: 16px 0 8px;">Student Jobs</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 0; max-width: 620px; line-height: 1.6;">Find flexible work and share opportunities with fellow students.</p>
+            </div>
+            <button type="button" onclick="toggleJobForm()" style="background: linear-gradient(135deg, var(--gold), #f7d98d); color: var(--navy); border: none; padding: 12px 18px; font-weight: 800; border-radius: 12px; cursor: pointer;">+ Post a job</button>
+        </div>
+    </div>
+
+    <div id="jobForm" style="display: {% if form.errors %}block{% else %}none{% endif %}; background: rgba(255,255,255,0.82); padding: 24px; border-radius: 24px; box-shadow: var(--shadow-card); border: 1px solid rgba(21,39,63,0.06); margin-bottom: 26px;">
+        <h2 style="font-family: 'Fraunces', serif; margin-top: 0; color: var(--navy);">Post a student job</h2>
+        <form method="post" style="display: grid; gap: 14px;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" style="background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; border: none; padding: 12px 18px; border-radius: 12px; cursor: pointer; font-weight: 700;">Publish job</button>
+        </form>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 22px;">
+        {% for job in jobs %}
+        <article style="background: rgba(255,255,255,0.82); border: 1px solid rgba(21,39,63,0.06); border-radius: 24px; box-shadow: var(--shadow-card); padding: 22px; display: flex; flex-direction: column;">
+            <span style="font-size: 10px; font-weight: 700; color: var(--navy); text-transform: uppercase; background: rgba(21,39,63,0.06); padding: 6px 8px; border-radius: 999px; align-self: flex-start;">Student job</span>
+            <h2 style="margin: 14px 0 6px; font-size: 20px;"><a href="{% url 'job-detail' job.pk %}" style="color: var(--navy); text-decoration: none;">{{ job.title }}</a></h2>
+            {% if job.organization %}<p style="margin: 0 0 8px; color: var(--ink-soft);">{{ job.organization }}</p>{% endif %}
+            <p style="margin: 0 0 10px; color: var(--ink-soft);">{{ job.location }}</p>
+            {% if job.pay %}<p style="margin: 0 0 12px; color: var(--gold-deep); font-weight: 700;">{{ job.pay }}</p>{% endif %}
+            <p style="color: var(--ink-soft); line-height: 1.5; margin: 0 0 18px;">{{ job.description|truncatechars:140 }}</p>
+            <div style="display: flex; gap: 10px; margin-top: auto;">
+                <a href="{% url 'job-detail' job.pk %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: var(--navy); background: rgba(21,39,63,0.05); border-radius: 12px; font-weight: 700;">Details</a>
+                <a href="{% url 'start_conversation' job.posted_by.username %}" style="flex: 1; padding: 10px; text-align: center; text-decoration: none; color: white; background: var(--navy); border-radius: 12px; font-weight: 700;">Contact</a>
+            </div>
+        </article>
+        {% empty %}
+        <p style="color: var(--ink-soft); grid-column: 1 / -1;">No jobs listed yet. Post the first opportunity for your campus.</p>
+        {% endfor %}
+    </div>
+</div>
+<script>
+function toggleJobForm() {
+    const form = document.getElementById('jobForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    if (form.style.display === 'block') form.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+{% endblock %}

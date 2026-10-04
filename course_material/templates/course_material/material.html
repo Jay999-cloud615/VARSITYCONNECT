@@ -33,7 +33,7 @@
     <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; padding-bottom: 20px;">
         {% for resource in resources %}
         <div class="card" style="background: rgba(255,255,255,0.82); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid rgba(21,39,63,0.06); transition: transform 0.2s ease;">
-            <div class="card-image-container" style="background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); height: 130px; position: relative; padding: 14px;">
+            <div class="card-image-container" style="background: linear-gradient(135deg, #d49b48 0%, #8c5b30 100%); height: 160px; position: relative; padding: 14px;{% if resource.image %} background-image: linear-gradient(rgba(21,39,63,0.12), rgba(21,39,63,0.12)), url('{{ resource.image.url }}'); background-size: cover; background-position: center;{% endif %}">
                 <span class="badge" style="background: rgba(21,39,63,0.96); color: white; padding: 6px 8px; font-size: 10px; font-weight: 700; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px;">
                     {{ resource.get_category_display }}
                 </span>
@@ -45,6 +45,13 @@
                 <a href="{% url 'resource-download' resource.id %}" class="download-link" style="display: block; text-align: center; background: linear-gradient(135deg, var(--navy), var(--navy-soft)); color: white; padding: 10px; text-decoration: none; border-radius: 12px; font-size: 13px; font-weight: 700; margin-bottom: 12px; box-shadow: 0 14px 26px rgba(21,39,63,0.18); transition: transform 0.2s ease, box-shadow 0.2s ease;">
                     Download PDF
                 </a>
+
+                {% if resource.uploaded_by_id == request.user.id %}
+                <form method="post" action="{% url 'resource-delete' resource.pk %}" onsubmit="return confirm('Remove this course material?');" style="margin-bottom: 12px;">
+                    {% csrf_token %}
+                    <button type="submit" style="width: 100%; background: #a33b35; color: white; padding: 9px; border: 0; border-radius: 12px; font-weight: 700; cursor: pointer;">Remove my upload</button>
+                </form>
+                {% endif %}
 
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-soft); border-top: 1px solid rgba(21,39,63,0.08); padding-top: 10px;">
                     <span style="color: var(--gold-deep); font-size: 12px; letter-spacing: 1px;">★★★★★</span>

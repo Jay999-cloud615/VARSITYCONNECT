@@ -6,7 +6,8 @@ class Conversation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Conversation between {', .join([u.username for u in self.participants.all()])'}"
+        usernames = [user.username for user in self.participants.all()]
+        return f"Conversation between {', '.join(usernames)}"
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')

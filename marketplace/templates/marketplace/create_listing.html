@@ -7,7 +7,7 @@
     <h1 style="font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink); margin-top: 0; margin-bottom: 8px;">Create a Listing</h1>
     <p style="color: var(--ink-soft); font-size: 14px; margin-bottom: 24px;">List an item or service for fellow students on campus.</p>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         
         {{ form.as_p }}
