@@ -17,7 +17,23 @@
         {% for listing in listings %}
             <article class="marketplace-card">
                 <a href="{% url 'listing_detail' listing.pk %}" class="marketplace-card-link">
-                    <div class="marketplace-card-image" style="{% if listing.image %}background-image: url('{{ listing.image.url }}'); background-size: cover; background-position: center;{% else %}background: linear-gradient(135deg, #1b2430, #2b394c);{% endif %}">
+                    <div class="marketplace-card-image">
+                        {% if listing.image %}
+                            <img src="{{ listing.image.url }}" alt="{{ listing.title }}" class="marketplace-card-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="marketplace-placeholder" style="display:none;">
+                                <div class="marketplace-placeholder-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
+                                </div>
+                                <span class="marketplace-placeholder-text">{{ listing.get_category_display }}</span>
+                            </div>
+                        {% else %}
+                            <div class="marketplace-placeholder">
+                                <div class="marketplace-placeholder-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18l-1.5 12h-15L3 8Z"></path><path d="M8 9V6a4 4 0 0 1 8 0v3"></path></svg>
+                                </div>
+                                <span class="marketplace-placeholder-text">{{ listing.get_category_display }}</span>
+                            </div>
+                        {% endif %}
                         <span class="marketplace-category-badge">{{ listing.get_category_display }}</span>
                     </div>
                     <div class="marketplace-card-body">
@@ -95,14 +111,68 @@
         color: inherit;
     }
     .marketplace-card-image {
+        position: relative;
         height: 190px;
         padding: 14px;
         display: flex;
         align-items: flex-start;
         border-bottom: 1px solid var(--line);
-        position: relative;
+        background: linear-gradient(135deg, #18202a, #24272b);
+        overflow: hidden;
+    }
+    .marketplace-card-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transition: transform 0.25s ease;
+    }
+    .marketplace-card:hover .marketplace-card-img {
+        transform: scale(1.03);
+    }
+    .marketplace-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #18202a, #24272b);
+        color: var(--white);
+        z-index: 1;
+    }
+    .marketplace-placeholder-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--c-steel);
+    }
+    .marketplace-placeholder-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    .marketplace-placeholder-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #ccd2db;
+        letter-spacing: 0.3px;
     }
     .marketplace-category-badge {
+        position: relative;
+        z-index: 2;
         background: rgba(7, 7, 10, 0.85);
         backdrop-filter: blur(8px);
         color: var(--white);

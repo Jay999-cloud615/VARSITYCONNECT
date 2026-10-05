@@ -97,10 +97,11 @@
     }
     .profile-identity h1 {
         margin: 0 0 4px;
-        font-size: clamp(26px, 3vw, 34px);
+        font-size: clamp(24px, 3vw, 34px);
         font-weight: 800;
-        line-height: 1.15;
-        overflow-wrap: anywhere;
+        line-height: 1.2;
+        overflow-wrap: break-word;
+        word-break: break-word;
         color: var(--white);
     }
     .profile-username,
@@ -108,6 +109,8 @@
         margin: 2px 0 0;
         color: rgba(255,255,255,0.72);
         font-size: 14px;
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
     .profile-joined {
         font-size: 13px;
@@ -189,14 +192,25 @@
         font-size: 14px;
         font-weight: 600;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+        .profile-stats {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+    }
+    @media (max-width: 640px) {
         .profile-header {
             align-items: flex-start;
             flex-wrap: wrap;
-            padding: 22px;
+            padding: 20px 16px;
+            gap: 16px;
         }
         .profile-stats {
             grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .profile-stat {
+            padding: 16px 18px;
         }
     }
 </style>

@@ -386,15 +386,38 @@
         align-self: center;
     }
     .job-card-link:hover { text-decoration: underline; }
-    .job-card-link:hover { text-decoration: underline; }
-    @media (max-width: 640px) {
-        .dashboard-content-grid { grid-template-columns: 1fr; }
-        .dashboard-stats { grid-template-columns: 1fr; }
-        .quick-action-grid,
-        .job-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1024px) {
+        .dashboard-stats {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .dashboard-content-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
     }
     @media (max-width: 640px) {
-        .dashboard-panel { padding: 20px 16px; }
+        .dashboard-stats {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .quick-action-grid,
+        .job-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .dashboard-panel {
+            padding: 20px 16px;
+        }
+        .dashboard-panel-heading h2 {
+            font-size: 19px;
+        }
+        .dashboard-stat {
+            padding: 16px 18px;
+        }
+        .quick-action {
+            padding: 14px 16px;
+        }
     }
 </style>
 {% endblock %}

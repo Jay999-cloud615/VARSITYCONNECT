@@ -210,9 +210,15 @@
         box-shadow: 0 4px 14px rgba(0, 75, 168, 0.25);
     }
     @media (max-width: 560px) {
-        .inbox-card { align-items: flex-start; flex-wrap: wrap; }
+        .inbox-card {
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 14px 16px;
+            gap: 12px;
+        }
         .inbox-card time { display: none; }
-        .inbox-delete { margin-left: 64px; }
+        .inbox-delete { margin-left: 60px; }
+        .inbox-heading h1 { font-size: 24px; }
     }
 </style>
 {% endblock %}
