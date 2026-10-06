@@ -73,7 +73,7 @@ class StudentAuthenticationForm(AuthenticationForm):
         label="Student Number, Username or Student Email",
         widget=forms.TextInput(attrs={
             'autofocus': True,
-            'placeholder': 'e.g. 12345678@stud.cut.ac.za or 12345678',
+            'placeholder': 'e.g. 12345678@stud.cut.ac.za',
             'autocomplete': 'username',
         })
     )
