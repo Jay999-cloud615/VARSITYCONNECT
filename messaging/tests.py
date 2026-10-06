@@ -162,3 +162,34 @@ class MessagingFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 405)
         self.assertTrue(Message.objects.filter(pk=message.pk).exists())
+
+    def test_notification_bell_dot_shows_only_when_user_has_unread_notifications(self):
+        # 1. Initially, user has 0 unread messages -> no blue dot
+        response = self.client.get(reverse('dashboard'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'class="sidebar-bell-dot"')
+
+        # 2. Another user sends a message to self.user
+        conversation = Conversation.objects.create()
+        conversation.participants.add(self.user, self.seller)
+        msg = Message.objects.create(
+            conversation=conversation,
+            sender=self.seller,
+            body='Hello there, is your book available?',
+            is_read=False,
+        )
+
+        # 3. User now has an unread notification -> blue dot appears!
+        response_with_notif = self.client.get(reverse('dashboard'))
+        self.assertContains(response_with_notif, 'class="sidebar-bell-dot"')
+        self.assertContains(response_with_notif, '1 unread message')
+
+        # 4. User opens the chat room with that conversation -> message marked read
+        chat_response = self.client.get(reverse('chat-room', args=[conversation.pk]))
+        self.assertEqual(chat_response.status_code, 200)
+        msg.refresh_from_db()
+        self.assertTrue(msg.is_read)
+
+        # 5. User checks dashboard again -> blue dot has disappeared
+        response_cleared = self.client.get(reverse('dashboard'))
+        self.assertNotContains(response_cleared, 'class="sidebar-bell-dot"')

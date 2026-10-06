@@ -218,3 +218,70 @@ class LogoutTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, '🔔')
         self.assertNotContains(response, 'id="sidebarToggle"')
+
+    def test_student_with_cut_email_can_log_in_via_username_and_email(self):
+        self.client.logout()
+        get_user_model().objects.create_user(
+            username='222084665',
+            email='222084665@stud.cut.ac.za',
+            password='StrongPassword123!',
+        )
+        # Login via student number / username
+        response = self.client.post(
+            reverse('login'),
+            {'username': '222084665', 'password': 'StrongPassword123!', 'login_submit': '1'},
+        )
+        self.assertRedirects(response, reverse('dashboard'))
+
+        # Logout and log in via full student email address
+        self.client.logout()
+        response2 = self.client.post(
+            reverse('login'),
+            {'username': '222084665@stud.cut.ac.za', 'password': 'StrongPassword123!', 'login_submit': '1'},
+        )
+        self.assertRedirects(response2, reverse('dashboard'))
+
+    def test_user_with_non_cut_email_cannot_log_in(self):
+        self.client.logout()
+        get_user_model().objects.create_user(
+            username='outsider',
+            email='outsider@gmail.com',
+            password='Password123!',
+        )
+        response = self.client.post(
+            reverse('login'),
+            {'username': 'outsider', 'password': 'Password123!', 'login_submit': '1'},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+        self.assertContains(response, 'stud.cut.ac.za')
+
+    def test_registration_with_cut_email_succeeds(self):
+        self.client.logout()
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'cutstudent99',
+                'email': '222084665@stud.cut.ac.za',
+                'password1': 'SafePass123!@#',
+                'password2': 'SafePass123!@#',
+            },
+        )
+        self.assertRedirects(response, reverse('dashboard'))
+        created = get_user_model().objects.get(username='cutstudent99')
+        self.assertEqual(created.email, '222084665@stud.cut.ac.za')
+
+    def test_registration_with_invalid_email_domain_fails(self):
+        self.client.logout()
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'fraudster',
+                'email': 'fraudster@yahoo.com',
+                'password1': 'SafePass123!@#',
+                'password2': 'SafePass123!@#',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(get_user_model().objects.filter(username='fraudster').exists())
+        self.assertContains(response, 'stud.cut.ac.za')

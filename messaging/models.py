@@ -15,6 +15,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     hidden_for = models.ManyToManyField(User, blank=True, related_name='hidden_messages')
     body = models.TextField()
+    is_read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

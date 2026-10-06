@@ -71,6 +71,9 @@ def chat_room_view(request, conversation_id):
 			conversation.save()
 			return redirect('chat-room', conversation_id=conversation.id)
 
+	# Mark incoming messages as read when user views this conversation
+	conversation.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
+
 	messages = conversation.messages.exclude(hidden_for=request.user).order_by('timestamp')
 	# Get the other user in the conversation for the header display
 	other_user = conversation.participants.exclude(id=request.user.id).first()

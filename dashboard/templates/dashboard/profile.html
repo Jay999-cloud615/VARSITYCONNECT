@@ -19,6 +19,14 @@
         </div>
     </section>
 
+    {% if messages %}
+        <div class="profile-messages">
+            {% for message in messages %}
+                <div class="profile-message profile-message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <section class="profile-overview" aria-labelledby="profile-statistics-heading">
         <h2 class="profile-stats-heading" id="profile-statistics-heading">Statistics</h2>
         <div class="profile-stats">
@@ -41,6 +49,32 @@
                 <div><strong>{{ resource_count }}</strong><span>Course materials</span></div>
             </a>
         </div>
+    </section>
+
+    <!-- Account Settings: Change Username -->
+    <section class="profile-settings-card" aria-labelledby="profile-settings-heading">
+        <div class="profile-settings-header">
+            <div>
+                <span class="profile-settings-kicker">Account Settings</span>
+                <h2 class="profile-settings-title" id="profile-settings-heading">Change Username</h2>
+                <p class="profile-settings-desc">Update your campus handle displayed across your marketplace items, study materials, and direct messages.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{% url 'profile' %}" class="profile-username-form">
+            {% csrf_token %}
+            <div class="profile-input-group">
+                <label for="new_username_input" class="profile-input-label">New Username</label>
+                <div class="profile-input-wrapper">
+                    <span class="profile-input-prefix">@</span>
+                    <input type="text" id="new_username_input" name="new_username" value="{{ request.user.username }}" required maxlength="30" class="profile-input-field" placeholder="e.g. victor_99" autocomplete="username">
+                </div>
+                <span class="profile-input-help">3–30 characters. Letters, numbers, underscores, dashes, or periods.</span>
+            </div>
+            <button type="submit" name="change_username" value="1" class="profile-save-btn">
+                Save New Username
+            </button>
+        </form>
     </section>
 </div>
 
@@ -192,6 +226,141 @@
         font-size: 14px;
         font-weight: 600;
     }
+
+    /* Flash Messages */
+    .profile-messages {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+    .profile-message {
+        padding: 14px 18px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .profile-message-success {
+        background: rgba(0, 75, 168, 0.1);
+        border: 1px solid rgba(0, 75, 168, 0.3);
+        color: var(--c-cobalt);
+    }
+    .profile-message-error {
+        background: rgba(217, 83, 79, 0.1);
+        border: 1px solid rgba(217, 83, 79, 0.3);
+        color: #d9534f;
+    }
+    .profile-message-info {
+        background: rgba(62, 120, 178, 0.1);
+        border: 1px solid rgba(62, 120, 178, 0.3);
+        color: var(--c-steel);
+    }
+
+    /* Account Settings Card */
+    .profile-settings-card {
+        margin-top: 32px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 32px 36px;
+        box-shadow: var(--shadow-card);
+    }
+    .profile-settings-header {
+        margin-bottom: 24px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+    }
+    .profile-settings-kicker {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.1px;
+        color: var(--c-steel);
+        margin-bottom: 4px;
+    }
+    .profile-settings-title {
+        margin: 0 0 6px 0;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--c-midnight);
+    }
+    .profile-settings-desc {
+        margin: 0;
+        font-size: 14px;
+        color: var(--c-slate);
+    }
+    .profile-username-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 480px;
+    }
+    .profile-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .profile-input-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--c-midnight);
+    }
+    .profile-input-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1.5px solid var(--line);
+        border-radius: 10px;
+        background: #fdfdfd;
+        transition: all 0.2s ease;
+        overflow: hidden;
+    }
+    .profile-input-wrapper:focus-within {
+        border-color: var(--c-cobalt);
+        box-shadow: 0 0 0 3px rgba(0, 75, 168, 0.12);
+        background: var(--white);
+    }
+    .profile-input-prefix {
+        padding: 0 0 0 14px;
+        color: var(--c-steel);
+        font-weight: 700;
+        font-size: 15px;
+        user-select: none;
+    }
+    .profile-input-field {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        padding: 12px 14px 12px 6px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--c-midnight);
+        font-family: inherit;
+    }
+    .profile-input-help {
+        font-size: 12px;
+        color: var(--c-slate);
+    }
+    .profile-save-btn {
+        align-self: flex-start;
+        padding: 12px 24px;
+        background: var(--c-cobalt);
+        color: var(--white);
+        border: 1px solid var(--c-cobalt);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        box-shadow: 0 4px 12px rgba(0, 75, 168, 0.22);
+    }
+    .profile-save-btn:hover {
+        background: #003b84;
+        box-shadow: 0 6px 16px rgba(0, 75, 168, 0.32);
+        transform: translateY(-1px);
+    }
+
     @media (max-width: 900px) {
         .profile-stats {
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

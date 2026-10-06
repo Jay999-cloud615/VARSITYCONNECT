@@ -141,6 +141,47 @@ class ProfileTests(TestCase):
         self.assertContains(response, 'href="{}"'.format(reverse('profile')))
         self.assertContains(response, 'class="nav-item active"')
 
+    def test_user_can_successfully_change_username(self):
+        response = self.client.post(
+            reverse('profile'),
+            {
+                'new_username': 'victor_updated',
+                'change_username': '1',
+            },
+        )
+        self.assertRedirects(response, reverse('profile'))
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'victor_updated')
+
+        profile_response = self.client.get(reverse('profile'))
+        self.assertContains(profile_response, '@victor_updated')
+        self.assertContains(profile_response, 'successfully updated')
+
+    def test_user_cannot_change_username_to_invalid_or_taken_name(self):
+        # Attempt to take other_user's username
+        response = self.client.post(
+            reverse('profile'),
+            {
+                'new_username': 'otheruser',
+                'change_username': '1',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'profileuser')
+        self.assertContains(response, 'already taken')
+
+        # Attempt empty username
+        response2 = self.client.post(
+            reverse('profile'),
+            {
+                'new_username': '',
+                'change_username': '1',
+            },
+        )
+        self.assertEqual(response2.status_code, 200)
+        self.assertContains(response2, 'Username cannot be empty')
+
 
 class DashboardHomeTests(TestCase):
     def setUp(self):
