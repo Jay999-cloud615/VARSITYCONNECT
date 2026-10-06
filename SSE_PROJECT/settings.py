@@ -11,9 +11,20 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load local .env file if present
+_env_file = BASE_DIR / '.env'
+if _env_file.is_file():
+    with open(_env_file, 'r', encoding='utf-8') as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith('#') and '=' in _line:
+                _k, _v = _line.split('=', 1)
+                os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -23,7 +34,7 @@ SECRET_KEY = 'django-insecure-noc!n74b7lol$6t!58s9uxoo^uyq@(_a^f5s)hf$m5zi=3v6td
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".pythonanywhere.com", "*"]
 
 
 # Application definition
@@ -127,5 +138,23 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'  # Where users go after successfully logging in
 LOGOUT_REDIRECT_URL = '/dashboard/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'support@stud.cut.ac.za'
+
+# Email Configuration (SMTP)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'lehlohonolosithole94@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'yxukabgjcozpfdsi')
+
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend'
+    if EMAIL_HOST_USER
+    else 'django.core.mail.backends.console.EmailBackend'
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 'yes')
+DEFAULT_FROM_EMAIL = os.environ.get(
+    'DEFAULT_FROM_EMAIL',
+    f"VarsityConnect <{EMAIL_HOST_USER}>" if EMAIL_HOST_USER else 'VarsityConnect <no-reply@stud.cut.ac.za>'
+)
+EMAIL_TIMEOUT = 10

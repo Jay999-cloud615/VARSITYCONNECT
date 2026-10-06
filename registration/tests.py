@@ -222,14 +222,14 @@ class LogoutTests(TestCase):
     def test_student_with_cut_email_can_log_in_via_username_and_email(self):
         self.client.logout()
         get_user_model().objects.create_user(
-            username='222084665',
-            email='222084665@stud.cut.ac.za',
+            username='224183920',
+            email='224183920@stud.cut.ac.za',
             password='StrongPassword123!',
         )
         # Login via student number / username
         response = self.client.post(
             reverse('login'),
-            {'username': '222084665', 'password': 'StrongPassword123!', 'login_submit': '1'},
+            {'username': '224183920', 'password': 'StrongPassword123!', 'login_submit': '1'},
         )
         self.assertRedirects(response, reverse('dashboard'))
 
@@ -237,7 +237,7 @@ class LogoutTests(TestCase):
         self.client.logout()
         response2 = self.client.post(
             reverse('login'),
-            {'username': '222084665@stud.cut.ac.za', 'password': 'StrongPassword123!', 'login_submit': '1'},
+            {'username': '224183920@stud.cut.ac.za', 'password': 'StrongPassword123!', 'login_submit': '1'},
         )
         self.assertRedirects(response2, reverse('dashboard'))
 
@@ -263,14 +263,14 @@ class LogoutTests(TestCase):
             reverse('register'),
             {
                 'username': 'cutstudent99',
-                'email': '222084665@stud.cut.ac.za',
+                'email': '225918234@stud.cut.ac.za',
                 'password1': 'SafePass123!@#',
                 'password2': 'SafePass123!@#',
             },
         )
         self.assertRedirects(response, reverse('verify_student_email'))
         student = get_user_model().objects.get(username='cutstudent99')
-        self.assertEqual(student.email, '222084665@stud.cut.ac.za')
+        self.assertEqual(student.email, '225918234@stud.cut.ac.za')
 
         # Verification record created with 6-digit OTP code
         verification = student.student_verification
@@ -301,7 +301,7 @@ class LogoutTests(TestCase):
         self.client.logout()
         unverified_user = get_user_model().objects.create_user(
             username='pendingstudent',
-            email='222084668@stud.cut.ac.za',
+            email='222194830@stud.cut.ac.za',
             password='SecretPassword123!',
         )
         from registration.models import StudentEmailVerification
@@ -323,14 +323,14 @@ class LogoutTests(TestCase):
         self.client.logout()
         get_user_model().objects.create_user(
             username='firststudent',
-            email='222084665@stud.cut.ac.za',
+            email='223847291@stud.cut.ac.za',
             password='SafePass123!@#',
         )
         response = self.client.post(
             reverse('register'),
             {
                 'username': 'imposter',
-                'email': '222084665@stud.cut.ac.za',
+                'email': '223847291@stud.cut.ac.za',
                 'password1': 'SafePass123!@#',
                 'password2': 'SafePass123!@#',
             },

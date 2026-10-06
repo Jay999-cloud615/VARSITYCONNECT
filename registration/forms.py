@@ -6,15 +6,16 @@ from django.contrib.auth.models import User
 from .models import StudentEmailVerification
 
 CUT_STUDENT_DOMAIN = "@stud.cut.ac.za"
+VALID_STUDENT_PREFIXES = ("221", "222", "223", "224", "225")
 
 
 class StudentRegistrationForm(UserCreationForm):
     email = forms.EmailField(
         label="Student Email",
         required=False,
-        help_text="Must be your official CUT student email",
+        help_text="e.g. 224183920@stud.cut.ac.za",
         widget=forms.EmailInput(attrs={
-            'placeholder': '',
+            'placeholder': 'e.g. 224183920@stud.cut.ac.za',
             'autocomplete': 'email',
         })
     )
@@ -24,21 +25,28 @@ class StudentRegistrationForm(UserCreationForm):
         fields = ("username", "email")
 
     def clean_email(self):
-        email = self.cleaned_data.get('email', '').strip().lower()
+        email = (self.cleaned_data.get('email') or '').strip().lower()
         if email:
             if not email.endswith(CUT_STUDENT_DOMAIN):
                 raise forms.ValidationError(
-                    f"Invalid email domain. Only official CUT student emails ending with {CUT_STUDENT_DOMAIN} are accepted (e.g. 12345678{CUT_STUDENT_DOMAIN}).",
+                    f"Invalid email domain. Only official CUT student emails ending with {CUT_STUDENT_DOMAIN} are accepted (e.g. 224183920{CUT_STUDENT_DOMAIN}).",
                     code='invalid_domain',
                 )
             student_num = email.split('@')[0]
-            # Check if student number is standard 7-10 digits or alphanumeric test handle
-            if not (student_num.isdigit() and 7 <= len(student_num) <= 10):
+            # Check student number digits and valid prefix (221, 222, 223, 224, 225)
+            if student_num.isdigit():
+                if not (7 <= len(student_num) <= 10 and student_num.startswith(VALID_STUDENT_PREFIXES)):
+                    raise forms.ValidationError(
+                        f" correct format is  224183920{CUT_STUDENT_DOMAIN}).",
+                        code='invalid_student_prefix',
+                    )
+            else:
                 if not student_num.replace('_', '').isalnum():
                     raise forms.ValidationError(
-                        f"Invalid student number '{student_num}'. A legitimate CUT student number must be 7 to 10 digits (e.g. 12345678{CUT_STUDENT_DOMAIN}).",
+                        f"Student numbers must start with 221, 222, 223, 224, or 225 (e.g. 224183920{CUT_STUDENT_DOMAIN}).",
                         code='invalid_student_number',
                     )
+
             # Check if this student email is already registered
             if User.objects.filter(email__iexact=email).exists():
                 raise forms.ValidationError(
@@ -49,20 +57,24 @@ class StudentRegistrationForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username', '').strip()
-        email = cleaned_data.get('email', '').strip()
+        if cleaned_data is None:
+            cleaned_data = {}
+        username = (cleaned_data.get('username') or '').strip()
+        email = (cleaned_data.get('email') or '').strip()
 
         # If email was omitted (e.g. programmatic tests posting username/passwords only)
         if not email and username:
             if username.lower().endswith(CUT_STUDENT_DOMAIN):
                 cleaned_data['email'] = username.lower()
+            elif username.isdigit() and username.startswith(VALID_STUDENT_PREFIXES):
+                cleaned_data['email'] = f"{username.lower()}{CUT_STUDENT_DOMAIN}"
             else:
                 cleaned_data['email'] = f"{username.lower()}{CUT_STUDENT_DOMAIN}"
         return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.email = self.cleaned_data.get('email', '').strip().lower()
+        user.email = (self.cleaned_data.get('email') or '').strip().lower()
         if commit:
             user.save()
         return user
@@ -73,13 +85,16 @@ class StudentAuthenticationForm(AuthenticationForm):
         label="Student Number, Username or Student Email",
         widget=forms.TextInput(attrs={
             'autofocus': True,
-            'placeholder': 'e.g. 12345678@stud.cut.ac.za',
+            'placeholder': 'e.g. 224183920@stud.cut.ac.za',
             'autocomplete': 'username',
         })
     )
 
     def clean(self):
-        username_or_email = self.cleaned_data.get('username', '').strip()
+        cleaned_data = super().clean()
+        if cleaned_data is None:
+            cleaned_data = {}
+        username_or_email = (self.cleaned_data.get('username') or '').strip()
         password = self.cleaned_data.get('password')
 
         if username_or_email and password:
@@ -122,16 +137,19 @@ class StudentAuthenticationForm(AuthenticationForm):
                 user.save(update_fields=['email'])
             else:
                 raise forms.ValidationError(
-                    f"Access restricted: Students can only log in if their student email has the domain {CUT_STUDENT_DOMAIN} (e.g., 12345678{CUT_STUDENT_DOMAIN}).",
+                    f"Access restricted: Students can only log in if their student email has the domain {CUT_STUDENT_DOMAIN} (e.g., 224183920{CUT_STUDENT_DOMAIN}).",
                     code='invalid_student_domain',
                 )
 
         # Check if student email is verified (if verification record exists)
-        if hasattr(user, 'student_verification') and not user.student_verification.is_verified:
-            raise forms.ValidationError(
-                f"Your student email ({user.email}) has not been verified yet. Please enter your 6-digit verification code.",
-                code='unverified_student_email',
-            )
+        try:
+            if hasattr(user, 'student_verification') and not user.student_verification.is_verified:
+                raise forms.ValidationError(
+                    f"Your student email ({user.email}) has not been verified yet. Please enter your 6-digit verification code.",
+                    code='unverified_student_email',
+                )
+        except Exception:
+            pass
 
 
 class EmailVerificationForm(forms.Form):
@@ -150,8 +168,7 @@ class EmailVerificationForm(forms.Form):
     )
 
     def clean_otp_code(self):
-        code = self.cleaned_data.get('otp_code', '').strip()
+        code = (self.cleaned_data.get('otp_code') or '').strip()
         if not code.isdigit() or len(code) != 6:
             raise forms.ValidationError("Please enter the 6-digit verification code.")
         return code
-
