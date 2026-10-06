@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Student Email - Varsity Connect{% endblock %}
+
+{% block content %}
+<div class="verify-page">
+    <section class="verify-shell">
+        <div class="verify-panel">
+            <div class="verify-brand-mark" aria-hidden="true">V</div>
+            <span class="verify-eyebrow">CUT Student Verification</span>
+            <h1 class="verify-title">Verify your student email</h1>
+            <p class="verify-desc">
+                We sent a 6-digit verification code to <strong class="verify-target-email">{{ student_email }}</strong> to verify that your official Central University of Technology email address works.
+            </p>
+
+            {% if messages %}
+                <div class="verify-messages">
+                    {% for message in messages %}
+                        <div class="verify-message verify-message-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if otp_code_hint %}
+                <div class="verify-demo-hint">
+                    <span class="verify-demo-badge">Demo / Test Code</span>
+                    <span class="verify-demo-text">Your generated code is: <strong>{{ otp_code_hint }}</strong></span>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'verify_student_email' %}" class="verify-form">
+                {% csrf_token %}
+                <div class="verify-field">
+                    <label for="{{ form.otp_code.id_for_label }}" class="verify-label">Enter 6-Digit Verification Code</label>
+                    {{ form.otp_code }}
+                    {% if form.otp_code.errors %}
+                        <div class="verify-error">{{ form.otp_code.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="verify-submit-btn">
+                    Verify & Continue to Campus Hub
+                </button>
+            </form>
+
+            <div class="verify-actions">
+                <form method="POST" action="{% url 'verify_student_email' %}" class="verify-resend-form">
+                    {% csrf_token %}
+                    <button type="submit" name="resend_code" value="1" class="verify-resend-btn">
+                        ↻ Resend verification code
+                    </button>
+                </form>
+                <a href="{% url 'login' %}" class="verify-back-link">Return to login</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .verify-page {
+        width: min(540px, 100%);
+        margin: 36px auto 60px;
+    }
+    .verify-shell {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--white);
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+    }
+    .verify-panel {
+        padding: 40px 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .verify-brand-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--c-cobalt), var(--c-steel));
+        color: var(--white);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 22px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.3);
+    }
+    .verify-eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--c-steel);
+        margin-bottom: 6px;
+    }
+    .verify-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--c-midnight);
+        margin: 0 0 10px 0;
+        line-height: 1.2;
+    }
+    .verify-desc {
+        font-size: 14.5px;
+        color: var(--c-slate);
+        line-height: 1.5;
+        margin: 0 0 24px 0;
+    }
+    .verify-target-email {
+        color: var(--c-cobalt);
+        word-break: break-all;
+    }
+    .verify-messages {
+        width: 100%;
+        margin-bottom: 20px;
+        display: grid;
+        gap: 8px;
+    }
+    .verify-message {
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        text-align: left;
+    }
+    .verify-message-success {
+        background: rgba(0, 75, 168, 0.1);
+        border: 1px solid rgba(0, 75, 168, 0.3);
+        color: var(--c-cobalt);
+    }
+    .verify-message-error {
+        background: rgba(217, 83, 79, 0.1);
+        border: 1px solid rgba(217, 83, 79, 0.3);
+        color: #d9534f;
+    }
+    .verify-message-info {
+        background: rgba(62, 120, 178, 0.1);
+        border: 1px solid rgba(62, 120, 178, 0.3);
+        color: var(--c-steel);
+    }
+    .verify-demo-hint {
+        width: 100%;
+        background: linear-gradient(135deg, rgba(62, 120, 178, 0.12), rgba(0, 75, 168, 0.08));
+        border: 1px dashed var(--c-steel);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13.5px;
+    }
+    .verify-demo-badge {
+        font-size: 10.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        background: var(--c-cobalt);
+        color: var(--white);
+        padding: 3px 8px;
+        border-radius: 5px;
+    }
+    .verify-demo-text strong {
+        font-size: 16px;
+        letter-spacing: 2px;
+        color: var(--c-midnight);
+    }
+    .verify-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .verify-field {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .verify-label {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--c-midnight);
+    }
+    .verify-otp-input {
+        width: 220px;
+        height: 54px;
+        text-align: center;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 8px;
+        color: var(--c-midnight);
+        border: 2px solid var(--line);
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.2s ease;
+        background: #fdfdfd;
+        font-family: inherit;
+    }
+    .verify-otp-input:focus {
+        border-color: var(--c-cobalt);
+        box-shadow: 0 0 0 4px rgba(0, 75, 168, 0.14);
+        background: var(--white);
+    }
+    .verify-error {
+        color: #d9534f;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .verify-submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: var(--c-cobalt);
+        color: var(--white);
+        border: 1px solid var(--c-cobalt);
+        border-radius: 9px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 14px rgba(0, 75, 168, 0.25);
+    }
+    .verify-submit-btn:hover {
+        background: #003b84;
+        box-shadow: 0 6px 18px rgba(0, 75, 168, 0.35);
+        transform: translateY(-1px);
+    }
+    .verify-actions {
+        width: 100%;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+    }
+    .verify-resend-form {
+        margin: 0;
+    }
+    .verify-resend-btn {
+        background: none;
+        border: none;
+        color: var(--c-steel);
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        transition: color 0.15s ease;
+    }
+    .verify-resend-btn:hover {
+        color: var(--c-cobalt);
+    }
+    .verify-back-link {
+        color: var(--c-slate);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .verify-back-link:hover {
+        color: var(--c-midnight);
+    }
+</style>
+{% endblock %}

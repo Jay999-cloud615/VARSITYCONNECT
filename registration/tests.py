@@ -256,8 +256,9 @@ class LogoutTests(TestCase):
         self.assertFalse(response.wsgi_request.user.is_authenticated)
         self.assertContains(response, 'stud.cut.ac.za')
 
-    def test_registration_with_cut_email_succeeds(self):
+    def test_registration_with_cut_email_requires_and_verifies_otp_code(self):
         self.client.logout()
+        # 1. Register with legitimate student email
         response = self.client.post(
             reverse('register'),
             {
@@ -267,9 +268,76 @@ class LogoutTests(TestCase):
                 'password2': 'SafePass123!@#',
             },
         )
-        self.assertRedirects(response, reverse('dashboard'))
-        created = get_user_model().objects.get(username='cutstudent99')
-        self.assertEqual(created.email, '222084665@stud.cut.ac.za')
+        self.assertRedirects(response, reverse('verify_student_email'))
+        student = get_user_model().objects.get(username='cutstudent99')
+        self.assertEqual(student.email, '222084665@stud.cut.ac.za')
+
+        # Verification record created with 6-digit OTP code
+        verification = student.student_verification
+        self.assertFalse(verification.is_verified)
+        self.assertEqual(len(verification.otp_code), 6)
+        self.assertTrue(verification.otp_code.isdigit())
+
+        # 2. Submitting invalid OTP code fails
+        wrong_code_resp = self.client.post(
+            reverse('verify_student_email'),
+            {'otp_code': '000000'},
+        )
+        self.assertEqual(wrong_code_resp.status_code, 200)
+        verification.refresh_from_db()
+        self.assertFalse(verification.is_verified)
+
+        # 3. Submitting the legitimate OTP code verifies the email and logs student in
+        valid_code_resp = self.client.post(
+            reverse('verify_student_email'),
+            {'otp_code': verification.otp_code},
+        )
+        self.assertRedirects(valid_code_resp, reverse('dashboard'))
+        verification.refresh_from_db()
+        self.assertTrue(verification.is_verified)
+        self.assertTrue(valid_code_resp.wsgi_request.user.is_authenticated)
+
+    def test_unverified_student_cannot_log_in_until_verified(self):
+        self.client.logout()
+        unverified_user = get_user_model().objects.create_user(
+            username='pendingstudent',
+            email='222084668@stud.cut.ac.za',
+            password='SecretPassword123!',
+        )
+        from registration.models import StudentEmailVerification
+        StudentEmailVerification.objects.create(
+            user=unverified_user,
+            email=unverified_user.email,
+            otp_code='654321',
+            is_verified=False,
+        )
+
+        # Login attempt before verification is blocked and redirected to verification
+        response = self.client.post(
+            reverse('login'),
+            {'username': 'pendingstudent', 'password': 'SecretPassword123!', 'login_submit': '1'},
+        )
+        self.assertRedirects(response, reverse('verify_student_email'))
+
+    def test_registration_rejects_already_registered_student_email(self):
+        self.client.logout()
+        get_user_model().objects.create_user(
+            username='firststudent',
+            email='222084665@stud.cut.ac.za',
+            password='SafePass123!@#',
+        )
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'imposter',
+                'email': '222084665@stud.cut.ac.za',
+                'password1': 'SafePass123!@#',
+                'password2': 'SafePass123!@#',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(get_user_model().objects.filter(username='imposter').exists())
+        self.assertContains(response, 'already registered')
 
     def test_registration_with_invalid_email_domain_fails(self):
         self.client.logout()
